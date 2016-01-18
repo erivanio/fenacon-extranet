@@ -1,0 +1,12 @@
+*.lock
+*.DS_Store
+*.swp
+*.out
+*.pyc
+*.egg
+*.ini
+.idea
+media/uploads/
+static/
+fenacon_extranet/settings.ini
+migration/
