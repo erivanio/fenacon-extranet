@@ -31,6 +31,11 @@ TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+from easy_thumbnails.conf import Settings as thumbnail_settings
+THUMBNAIL_PROCESSORS = (
+    'image_cropping.thumbnail_processors.crop_corners',
+) + thumbnail_settings.THUMBNAIL_PROCESSORS
+
 from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
 
 TEMPLATE_CONTEXT_PROCESSORS = TCP + (
@@ -44,6 +49,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'apps.core',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -60,6 +66,7 @@ ROOT_URLCONF = 'fenacon_extranet.urls'
 
 WSGI_APPLICATION = 'fenacon_extranet.wsgi.application'
 
+AUTH_USER_MODEL = 'core.User'
 
 DATABASES = {
     'default': {
@@ -92,3 +99,20 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+CKEDITOR_UPLOAD_PATH = 'uploads/ckeditor'
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': [
+            {'name': 'clipboard',  'items': ['Undo', 'Redo']},
+            {'name': 'basicstyles', 'items': ['Bold', 'Italic', 'Underline', 'RemoveFormat']},
+            {'name': 'paragraph', 'items': ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent']},
+            {'name': 'tools', 'items': ['Maximize']}
+        ],
+    },
+}
+
+SOUTH_MIGRATION_MODULES = {
+    'easy_thumbnails': 'easy_thumbnails.south_migrations',
+}

@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
-from django.views.generic import TemplateView
+from django.utils.decorators import method_decorator
+from django.views.generic import TemplateView, DetailView
 from apps.core.forms import LoginForm
+from apps.core.models import User
 
 
 class LoginView(TemplateView):
@@ -25,8 +28,8 @@ class LoginView(TemplateView):
             if u is not None:
                 if u.is_active:
                     login(request, u)
-                    return redirect('dashboard')
-            messages.error(self.request, 'Email ou senha inválidos')
+                    return redirect('dashboard', slug=u.slug)
+            messages.error(self.request, 'Usuário ou senha inválidos')
 
         return redirect('login')
 
@@ -35,3 +38,12 @@ class LogoutView(TemplateView):
     def get(self, request, *args, **kwargs):
         logout(request)
         return redirect('home')
+
+
+class DashboardDetailView(DetailView):
+    model = User
+    template_name = 'index2.html'
+
+    @method_decorator(login_required(login_url='/'))
+    def dispatch(self, *args, **kwargs):
+        return super(DashboardDetailView, self).dispatch(*args, **kwargs)
