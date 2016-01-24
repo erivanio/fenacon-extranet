@@ -84,3 +84,43 @@ def user_pre_save(signal, instance, sender, **kwargs):
         instance.slug = slugify(instance.username)
 
 signals.pre_save.connect(user_pre_save, sender=User)
+
+
+class Folder(models.Model):
+    PERMISSION_FOLDER = (
+        ('public', 'Público'),
+        ('private', 'Somente eu')
+    )
+    name = models.CharField('Nome', max_length=200)
+    created_at = models.DateTimeField(verbose_name='Data de Publicação', default=datetime.now)
+    user = models.ForeignKey(User, verbose_name='Usuário')
+    status = models.BooleanField(default=True)
+    permission = models.CharField(max_length=10, choices=PERMISSION_FOLDER, default='public')
+
+    class Meta:
+        verbose_name = 'Pastas'
+        verbose_name_plural = 'Pastas'
+        ordering = ['name']
+
+    def __unicode__(self):
+        return self.name
+
+
+class File(models.Model):
+    name = models.CharField('Nome', max_length=200, blank=True, null=True)
+    file = models.FileField(upload_to='uploads/files/')
+    folder = models.ForeignKey(Folder, verbose_name='Pasta')
+    created_at = models.DateTimeField(verbose_name='Data de Publicação', default=datetime.now)
+    user = models.ForeignKey(User, verbose_name='Usuário')
+    status = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = 'Arquivo'
+        verbose_name_plural = 'Arquivos'
+        ordering = ['created_at']
+
+    def __unicode__(self):
+        if self.name:
+            return self.name
+        else:
+            return u'%s' % str(self.file).split('/')[-1]
