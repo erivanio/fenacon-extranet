@@ -4,9 +4,9 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.utils.decorators import method_decorator
-from django.views.generic import TemplateView, DetailView
-from apps.core.forms import LoginForm
-from apps.core.models import User
+from django.views.generic import TemplateView, DetailView, CreateView
+from apps.core.forms import LoginForm, FolderForm, FileForm
+from apps.core.models import User, Folder, File
 
 
 class LoginView(TemplateView):
@@ -47,3 +47,52 @@ class DashboardDetailView(DetailView):
     @method_decorator(login_required(login_url='/'))
     def dispatch(self, *args, **kwargs):
         return super(DashboardDetailView, self).dispatch(*args, **kwargs)
+
+
+class FolderCreateView(CreateView):
+    model = Folder
+    form_class = FolderForm
+
+    @method_decorator(login_required(login_url='/'))
+    def dispatch(self, *args, **kwargs):
+        return super(FolderCreateView, self).dispatch(*args, **kwargs)
+
+    def form_valid(self, form):
+        folder = Folder()
+        folder.name = form.cleaned_data['name']
+        folder.permission = form.cleaned_data['permission']
+        folder.status = True
+        folder.user = self.request.user
+        folder.save()
+        messages.success(self.request, 'Pasta criada com sucesso!')
+        return redirect('dashboard', pk=folder.user.slug)
+
+    def form_invalid(self, form):
+        if 'name' in form.errors:
+            messages.error(self.request, 'O campo nome é obrigatório.')
+        return self.render_to_response(self.get_context_data(form=form))
+
+
+class FileCreateView(CreateView):
+    model = File
+    form_class = FileForm
+
+    @method_decorator(login_required(login_url='/'))
+    def dispatch(self, *args, **kwargs):
+        return super(FileCreateView, self).dispatch(*args, **kwargs)
+
+    def form_valid(self, form):
+        file = File()
+        file.name = form.cleaned_data['name']
+        file.file = form.cleaned_data['file']
+        # file.folder = adicionar folder pegando id ou slug pela url
+        file.status = True
+        file.user = self.request.user
+        file.save()
+        messages.success(self.request, 'Arquivo salvo com sucesso!')
+        return redirect('dashboard', pk=file.user.slug)
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'Os campos com * são obrigatórios.')
+        return self.render_to_response(self.get_context_data(form=form))
+

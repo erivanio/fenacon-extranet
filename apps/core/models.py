@@ -96,6 +96,7 @@ class Folder(models.Model):
     user = models.ForeignKey(User, verbose_name='Usuário')
     status = models.BooleanField(default=True)
     permission = models.CharField(max_length=10, choices=PERMISSION_FOLDER, default='public')
+    slug = models.SlugField(max_length=150, blank=True)
 
     class Meta:
         verbose_name = 'Pastas'
@@ -104,6 +105,13 @@ class Folder(models.Model):
 
     def __unicode__(self):
         return self.name
+
+
+def folder_pre_save(signal, instance, sender, **kwargs):
+    if not instance.slug:
+        instance.slug = slugify(instance.name)
+
+signals.pre_save.connect(folder_pre_save, sender=Folder)
 
 
 class File(models.Model):
