@@ -4,3 +4,4 @@ django-decouple==2.1
 easy_thumbnails==2.0.1
 django-image-cropping==0.8.2
 django-ckeditor==4.4.4
+django-widget-tweaks==1.4.1

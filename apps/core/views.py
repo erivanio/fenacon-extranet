@@ -4,9 +4,9 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.utils.decorators import method_decorator
-from django.views.generic import TemplateView, DetailView
-from apps.core.forms import LoginForm
-from apps.core.models import User
+from django.views.generic import TemplateView, DetailView, CreateView
+from apps.core.forms import LoginForm, FolderForm
+from apps.core.models import User, Folder
 
 
 class LoginView(TemplateView):
@@ -42,8 +42,18 @@ class LogoutView(TemplateView):
 
 class DashboardDetailView(DetailView):
     model = User
-    template_name = 'index2.html'
+    template_name = 'dashboard.html'
 
     @method_decorator(login_required(login_url='/'))
     def dispatch(self, *args, **kwargs):
         return super(DashboardDetailView, self).dispatch(*args, **kwargs)
+
+
+class FolderCreateView(CreateView):
+    model = Folder
+    form_class = FolderForm
+    template_name = 'folder/create-folder.html'
+
+    @method_decorator(login_required(login_url='/'))
+    def dispatch(self, *args, **kwargs):
+        return super(FolderCreateView, self).dispatch(*args, **kwargs)

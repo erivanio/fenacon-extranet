@@ -10,5 +10,5 @@ urlpatterns = [
 urlpatterns += patterns('',
     url(r'^media/(.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
     url(r'^static/(.*)$', 'django.views.static.serve', {'document_root': settings.STATIC_ROOT}),
-    (r'^ckeditor/', include('ckeditor_uploader.urls')),
+    (r'^ckeditor/', include('ckeditor.urls')),
 )
