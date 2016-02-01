@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django import forms
-from apps.core.models import Folder
+from apps.core.models import Folder, File
 
 
 class LoginForm(forms.Form):
@@ -19,3 +19,9 @@ class FolderForm(forms.ModelForm):
         ('private', 'Somente eu')
     )
     permission = forms.ChoiceField(choices=PERMISSION_FOLDER)
+
+
+class FileForm(forms.ModelForm):
+    class Meta:
+        model = File
+        fields = ['name', 'file']
