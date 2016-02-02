@@ -119,7 +119,7 @@ class FolderEditView(UpdateView):
 
 class FolderListView(ListView):
     model = Folder
-    template_name = 'folder/folder_list.html'
+    template_name = 'folder/list-folder.html'
 
     def get_context_data(self, **kwargs):
         context = super(FolderListView, self).get_context_data(**kwargs)
@@ -134,19 +134,20 @@ class FolderListView(ListView):
 
 class FolderDetailView(DetailView):
     model = Folder
-    template_name = 'folder/folder_detail.html'
+    template_name = 'file/list-files.html'
 
 
 class FileCreateView(CreateView):
     model = File
     form_class = FileForm
+    template_name = 'file/add-file.html'
 
     @method_decorator(login_required(login_url='/'))
     def dispatch(self, *args, **kwargs):
         return super(FileCreateView, self).dispatch(*args, **kwargs)
 
     def form_valid(self, form):
-        folder = Folder.objects.get(id=self.kwargs['folder_id'])
+        folder = Folder.objects.get(id=form.cleaned_data['folder'])
         if folder.user == self.request.user:
             file = File()
             file.name = form.cleaned_data['name']

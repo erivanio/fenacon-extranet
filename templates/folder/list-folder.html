@@ -1,0 +1,35 @@
+{% extends 'elements/base.html' %}
+{% load widget_tweaks %}
+{% block title %}Criar Pasta de Conteúdo{% endblock %}
+{% block content %}
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            Pastas
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-clock-o"></i>Dashboard</a></li>
+            <li class="active">Pastas</li>
+        </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+        <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="info-box">
+              <a href="#">
+            <span class="info-box-icon bg-aqua"><i class="ion ion-ios-folder"></i></span>
+
+            <div class="info-box-content">
+              <span class="info-box-text">Jurídico</span>
+              <span class="info-box-number">90 <small>arquivos</small></span>
+            </div>
+              </a>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+      </div>
+    </section>
+{% endblock %}

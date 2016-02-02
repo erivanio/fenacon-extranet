@@ -52,7 +52,13 @@ class FolderForm(forms.ModelForm):
 
 
 class FileForm(forms.ModelForm):
+
+    # def __init__(self, *args, **kwargs):
+    #     self.bill_id = kwargs.pop('bill_id')
+    #     super(FileForm, self).__init__(*args, **kwargs)
+    #     self.fields['folder'].queryset = Folder.objects.filter(user=True)
+
     class Meta:
         model = File
-        fields = ['name', 'file']
+        fields = ['name', 'file', 'folder']
 
