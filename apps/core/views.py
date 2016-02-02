@@ -2,10 +2,11 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.http import Http404
 from django.shortcuts import render, redirect
 from django.utils.decorators import method_decorator
-from django.views.generic import TemplateView, DetailView, CreateView
-from apps.core.forms import LoginForm, FolderForm, FileForm
+from django.views.generic import TemplateView, DetailView, CreateView, ListView, UpdateView
+from apps.core.forms import LoginForm, FolderForm, FileForm, UserEditForm
 from apps.core.models import User, Folder, File
 
 
@@ -38,6 +39,22 @@ class LogoutView(TemplateView):
     def get(self, request, *args, **kwargs):
         logout(request)
         return redirect('home')
+
+
+class UserEditView(UpdateView):
+    model = User
+    form_class = UserEditForm
+    template_name = 'user/user_edit.html'
+
+    def get_object(self, *args, **kwargs):
+        object = super(UserEditView, self).get_object(*args, **kwargs)
+        if object != self.request.user:
+            raise Http404
+        return object
+
+    def get_success_url(self):
+        messages.success(self.request, 'Perfil modificado com sucesso!')
+        return redirect('dashboard', pk=self.object.slug)
 
 
 class DashboardDetailView(DetailView):
@@ -74,6 +91,26 @@ class FolderCreateView(CreateView):
         return self.render_to_response(self.get_context_data(form=form))
 
 
+class FolderListView(ListView):
+    model = Folder
+    template_name = 'folder/folder_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(FolderListView, self).get_context_data(**kwargs)
+        context['public_folders'] = Folder.objects.filter(permission='public',
+                                                          status=True).exclude(user=self.request.user).order_by('-name')
+        return context
+
+    def get_queryset(self):
+        object_list = Folder.objects.filter(user=self.request.user, status=True).order_by('-name')
+        return object_list
+
+
+class FolderDetailView(DetailView):
+    model = Folder
+    template_name = 'folder/folder_detail.html'
+
+
 class FileCreateView(CreateView):
     model = File
     form_class = FileForm
@@ -83,17 +120,30 @@ class FileCreateView(CreateView):
         return super(FileCreateView, self).dispatch(*args, **kwargs)
 
     def form_valid(self, form):
-        file = File()
-        file.name = form.cleaned_data['name']
-        file.file = form.cleaned_data['file']
-        # file.folder = adicionar folder pegando id ou slug pela url
-        file.status = True
-        file.user = self.request.user
-        file.save()
-        messages.success(self.request, 'Arquivo salvo com sucesso!')
-        return redirect('dashboard', pk=file.user.slug)
+        folder = Folder.objects.get(id=self.kwargs['folder_id'])
+        if folder.user == self.request.user:
+            file = File()
+            file.name = form.cleaned_data['name']
+            file.file = form.cleaned_data['file']
+            file.folder = folder
+            file.status = True
+            file.user = self.request.user
+            file.save()
+            messages.success(self.request, 'Arquivo salvo com sucesso!')
+            return redirect('folder_detail', folder_id=self.kwargs['folder_id'])
+        else:
+            raise Http404
 
     def form_invalid(self, form):
         messages.error(self.request, 'Os campos com * são obrigatórios.')
         return self.render_to_response(self.get_context_data(form=form))
+
+
+class FileListView(ListView):
+    model = Folder
+    template_name = 'file/file_list.html'
+
+    def get_queryset(self):
+        object_list = File.objects.filter(user=self.request.user, status=True).order_by('-name')
+        return object_list
 
