@@ -4,6 +4,7 @@ import os
 import random
 import string
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.contenttypes.fields import GenericForeignKey
 from django.db import models
 from django.db.models import signals
 from django.utils.text import slugify
@@ -132,3 +133,20 @@ class File(models.Model):
             return self.name
         else:
             return u'%s' % str(self.file).split('/')[-1]
+
+
+class History(models.Model):
+    created_at = models.DateTimeField(verbose_name='Data de Criação', default=datetime.now)
+    user = models.ForeignKey(User, verbose_name='Usuário')
+    object_id = models.PositiveIntegerField()
+    content_type = models.ForeignKey('contenttypes.ContentType')
+    content_object = GenericForeignKey('content_type', 'object_id')
+    content = models.TextField('Conteúdo')
+
+    class Meta:
+        verbose_name = 'Histórico'
+        verbose_name_plural = 'Históricos'
+        ordering = ['created_at']
+
+    def __unicode__(self):
+        return self.user

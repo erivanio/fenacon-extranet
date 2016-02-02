@@ -6,7 +6,7 @@ from django.http import Http404
 from django.shortcuts import render, redirect
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView, DetailView, CreateView, ListView, UpdateView
-from apps.core.forms import LoginForm, FolderForm, FileForm, UserEditForm
+from apps.core.forms import LoginForm, FolderForm, FileForm, UserEditForm, UserCreateForm
 from apps.core.models import User, Folder, File
 
 
@@ -39,6 +39,16 @@ class LogoutView(TemplateView):
     def get(self, request, *args, **kwargs):
         logout(request)
         return redirect('home')
+
+
+class UserCreateView(CreateView):
+    model = User
+    form_class = UserCreateForm
+    template_name = 'user/user_create.html'
+
+    def form_valid(self, form):
+        form.save()
+        return redirect('dashboard', pk=self.request.user.slug)
 
 
 class UserEditView(UpdateView):
@@ -89,6 +99,22 @@ class FolderCreateView(CreateView):
         if 'name' in form.errors:
             messages.error(self.request, 'O campo nome é obrigatório.')
         return self.render_to_response(self.get_context_data(form=form))
+
+
+class FolderEditView(UpdateView):
+    model = Folder
+    form_class = FolderForm
+    template_name = 'folder/create-folder.html'
+
+    def get_object(self, *args, **kwargs):
+        object = super(FolderEditView, self).get_object(*args, **kwargs)
+        if object.user != self.request.user:
+            raise Http404
+        return object
+
+    def get_success_url(self):
+        messages.success(self.request, 'Pasta modificada com sucesso!')
+        return redirect('dashboard', pk=self.object.slug)
 
 
 class FolderListView(ListView):
@@ -146,4 +172,3 @@ class FileListView(ListView):
     def get_queryset(self):
         object_list = File.objects.filter(user=self.request.user, status=True).order_by('-name')
         return object_list
-
