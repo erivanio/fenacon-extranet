@@ -12,7 +12,7 @@ class LoginForm(forms.Form):
 class UserCreateForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ('username', 'email', 'is_superuser')
+        fields = ('username', 'email', 'is_superuser', 'first_name', 'last_name', 'job')
 
     def clean(self):
         password1 = self.data.get("password1")
@@ -35,8 +35,7 @@ class UserCreateForm(forms.ModelForm):
 class UserEditForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['username', 'email', 'photo']
-    username = forms.CharField(label='Nome')
+        fields = ['username', 'email', 'photo', 'first_name', 'last_name', 'job']
 
 
 class FolderForm(forms.ModelForm):
