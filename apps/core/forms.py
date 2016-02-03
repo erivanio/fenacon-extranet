@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django import forms
-from apps.core.models import Folder, File, User
+from apps.core.models import Folder, File, User, Area
 
 
 class LoginForm(forms.Form):
@@ -52,13 +52,13 @@ class FolderForm(forms.ModelForm):
 
 
 class FileForm(forms.ModelForm):
-
-    # def __init__(self, *args, **kwargs):
-    #     self.bill_id = kwargs.pop('bill_id')
-    #     super(FileForm, self).__init__(*args, **kwargs)
-    #     self.fields['folder'].queryset = Folder.objects.filter(user=True)
-
     class Meta:
         model = File
-        fields = ['name', 'file', 'folder']
+        fields = ['name', 'file']
+
+
+class AreaForm(forms.ModelForm):
+    class Meta:
+        model = Area
+        fields = ['name']
 

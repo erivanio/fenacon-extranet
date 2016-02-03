@@ -38,6 +38,9 @@ class User(AbstractBaseUser):
         verbose_name = 'Usuário'
         verbose_name_plural = 'Usuários'
 
+    first_name = models.CharField('Primeiro nome', max_length=50, blank=True, null=True)
+    last_name = models.CharField('Sobrenome', max_length=50, blank=True, null=True)
+    job = models.CharField('Cargo', max_length=50, blank=True, null=True)
     email = models.EmailField(verbose_name='Email', max_length=255, unique=True, db_index=True, blank=True, null=True)
     username = models.CharField('Nome', max_length=50, unique=True)
     slug = models.SlugField(max_length=150, blank=True, unique=True)
@@ -60,14 +63,23 @@ class User(AbstractBaseUser):
             'detail': True,
             }).url
 
+    def __unicode__(self):
+        return self.get_display_name()
+
     def get_full_name(self):
-        return self.email
+        """
+        Returns the first_name plus the last_name, with a space in between.
+        """
+        return ' '.join([self.first_name, self.last_name]).strip()
 
     def get_short_name(self):
-        return self.email
+        """
+        Returns the short name for the user.
+        """
+        return self.first_name
 
-    def __unicode__(self):
-        return self.email
+    def get_display_name(self):
+        return self.username
 
     def has_perm(self, perm, obj=None):
         return True
@@ -87,12 +99,35 @@ def user_pre_save(signal, instance, sender, **kwargs):
 signals.pre_save.connect(user_pre_save, sender=User)
 
 
+class Area(models.Model):
+    created_at = models.DateTimeField(verbose_name='Data de Criação', default=datetime.now)
+    user = models.ForeignKey(User, verbose_name='Usuário')
+    name = models.CharField('Nome', max_length=200)
+    status = models.BooleanField(default=True)
+    slug = models.SlugField(max_length=150, blank=True)
+
+    class Meta:
+        verbose_name = 'Área'
+        verbose_name_plural = 'Áreas'
+        ordering = ['created_at']
+
+    def __unicode__(self):
+        return self.name
+
+def area_pre_save(signal, instance, sender, **kwargs):
+    if not instance.slug:
+        instance.slug = slugify(instance.name)
+
+signals.pre_save.connect(area_pre_save, sender=Area)
+
+
 class Folder(models.Model):
     PERMISSION_FOLDER = (
         ('public', 'Público'),
         ('private', 'Somente eu')
     )
-    folder = models.ForeignKey('self', related_name='children', verbose_name='Pasta', null=True, blank=True)
+    parent = models.ForeignKey('self', related_name='children', verbose_name='Pasta', null=True, blank=True)
+    area = models.ForeignKey(Area, verbose_name='Área', null=True, blank=True)
     name = models.CharField('Nome', max_length=200)
     created_at = models.DateTimeField(verbose_name='Data de Publicação', default=datetime.now)
     user = models.ForeignKey(User, verbose_name='Usuário')
@@ -119,7 +154,8 @@ signals.pre_save.connect(folder_pre_save, sender=Folder)
 class File(models.Model):
     name = models.CharField('Nome', max_length=200, blank=True, null=True)
     file = models.FileField(upload_to='uploads/files/')
-    folder = models.ForeignKey(Folder, verbose_name='Pasta')
+    folder = models.ForeignKey(Folder, verbose_name='Pasta', blank=True, null=True)
+    area = models.ForeignKey(Area, verbose_name='Área', null=True, blank=True)
     created_at = models.DateTimeField(verbose_name='Data de Publicação', default=datetime.now)
     user = models.ForeignKey(User, verbose_name='Usuário')
     status = models.BooleanField(default=True)
@@ -134,6 +170,13 @@ class File(models.Model):
             return self.name
         else:
             return u'%s' % str(self.file).split('/')[-1]
+
+
+def file_pre_save(signal, instance, sender, **kwargs):
+    if not instance.name:
+        instance.name = str(instance.file).split('/')[-1]
+
+signals.pre_save.connect(file_pre_save, sender=File)
 
 
 class History(models.Model):

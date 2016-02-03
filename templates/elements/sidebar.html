@@ -26,12 +26,9 @@
                     <i class="fa fa-angle-left pull-right"></i>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="{% url 'list_folder' %}"><i class="fa fa-circle-o"></i> Diretoria</a></li>
-                    <li><a href="#"><i class="fa fa-circle-o"></i> Administrativo</a></li>
-                    <li><a href="#"><i class="fa fa-circle-o"></i> Comunicação</a></li>
-                    <li><a href="#"><i class="fa fa-circle-o"></i> Financeiro</a></li>
-                    <li><a href="#"><i class="fa fa-circle-o"></i> Jurídico</a></li>
-                    <li><a href="#"><i class="fa fa-circle-o"></i> Projetos</a></li>
+                    {% for area in areas %}
+                    <li><a href="{% url 'area_detail' area.slug area.pk %}"><i class="fa fa-circle-o"></i> {{ area.nome }}</a></li>
+                    {% endfor %}
                 </ul>
             </li>
             <li>

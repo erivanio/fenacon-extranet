@@ -6,8 +6,8 @@ from django.http import Http404
 from django.shortcuts import render, redirect
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView, DetailView, CreateView, ListView, UpdateView
-from apps.core.forms import LoginForm, FolderForm, FileForm, UserEditForm, UserCreateForm
-from apps.core.models import User, Folder, File
+from apps.core.forms import LoginForm, FolderForm, FileForm, UserEditForm, UserCreateForm, AreaForm
+from apps.core.models import User, Folder, File, Area
 
 
 class LoginView(TemplateView):
@@ -74,6 +74,14 @@ class DashboardDetailView(DetailView):
     def dispatch(self, *args, **kwargs):
         return super(DashboardDetailView, self).dispatch(*args, **kwargs)
 
+    def get_context_data(self, **kwargs):
+        context = super(DashboardDetailView, self).get_context_data(**kwargs)
+        # import ipdb; ipdb.set_trace()
+        context['folders'] = Folder.objects.filter(user=self.request.user, parent__isnull=True, status=True).order_by('-name')
+        context['files'] = File.objects.filter(user=self.request.user, folder__isnull=True, status=True).order_by('-name')
+
+        return context
+
 
 class FolderCreateView(CreateView):
     model = Folder
@@ -88,6 +96,7 @@ class FolderCreateView(CreateView):
         folder = Folder()
         folder.name = form.cleaned_data['name']
         folder.permission = form.cleaned_data['permission']
+        folder.parent = form.cleaned_data['parent']
         folder.status = True
         folder.user = self.request.user
         folder.save()
@@ -113,7 +122,7 @@ class FolderEditView(UpdateView):
 
     def get_success_url(self):
         messages.success(self.request, 'Pasta modificada com sucesso!')
-        return redirect('dashboard', pk=self.object.slug)
+        return redirect('dashboard', pk=self.object.user.slug)
 
 
 class FolderListView(ListView):
@@ -122,18 +131,54 @@ class FolderListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(FolderListView, self).get_context_data(**kwargs)
-        context['public_folders'] = Folder.objects.filter(permission='public',
-                                                          status=True).exclude(user=self.request.user).order_by('-name')
+        context['files'] = File.objects.filter(folder=self, status=True).order_by('-name')
         return context
 
-    def get_queryset(self):
-        object_list = Folder.objects.filter(user=self.request.user, status=True).order_by('-name')
+    def get_queryset(self, area_id=None, folder_id=None):
+        object_list = Folder.objects.none()
+        if 'areas' in self.request.path:
+            object_list = Folder.objects.filter(area_id=area_id, status=True).order_by('-name')
+        elif 'pastas' in self.request.path:
+            object_list = Folder.objects.filter(folder_id=folder_id, status=True).order_by('-name')
         return object_list
 
 
 class FolderDetailView(DetailView):
     model = Folder
-    template_name = 'file/list-files.html'
+    template_name = 'folder/list-folder.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(FolderDetailView, self).get_context_data(**kwargs)
+        context['folders'] = Folder.objects.filter(parent=self, status=True).order_by('-name')
+        context['files'] = File.objects.filter(folder=self, status=True).order_by('-name')
+
+        return context
+
+
+class AreaDetailView(DetailView):
+    model = Folder
+    template_name = 'folder/list-folder.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(AreaDetailView, self).get_context_data(**kwargs)
+        context['folders'] = Folder.objects.filter(area=self, status=True).order_by('-name')
+        context['files'] = File.objects.filter(area=self, status=True).order_by('-name')
+
+        return context
+
+
+class AreaCreateView(CreateView):
+    model = Area
+    form_class = AreaForm
+    template_name = 'area/create-area.html'
+
+    @method_decorator(login_required(login_url='/'))
+    def dispatch(self, *args, **kwargs):
+        return super(AreaCreateView, self).dispatch(*args, **kwargs)
+
+    def get_success_url(self):
+        messages.success(self.request, 'Área criada com sucesso!')
+        return redirect('dashboard', pk=self.object.user.slug)
 
 
 class FileCreateView(CreateView):
@@ -165,10 +210,10 @@ class FileCreateView(CreateView):
         return self.render_to_response(self.get_context_data(form=form))
 
 
-class FileListView(ListView):
-    model = Folder
-    template_name = 'file/file_list.html'
-
-    def get_queryset(self):
-        object_list = File.objects.filter(user=self.request.user, status=True).order_by('-name')
-        return object_list
+# class FileListView(ListView):
+#     model = Folder
+#     template_name = 'file/file_list.html'
+#
+#     def get_queryset(self):
+#         object_list = File.objects.filter(user=self.request.user, status=True).order_by('-name')
+#         return object_list

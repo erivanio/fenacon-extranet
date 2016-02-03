@@ -5,7 +5,7 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            Adicionar arquivo
+            Criar usuário
         </h1>
         <ol class="breadcrumb">
             <li><a href="#"><i class="fa fa-clock-o"></i> Início</a></li>
@@ -22,21 +22,34 @@
             <div class="col-md-12">
                 <div class="box box-info">
                     <!-- /.box-header -->
-                    <form role="form" method="POST" action="{% url 'add_file' %}">
+                    <form role="form" method="POST" action="{% url 'create_folder' %}">
                         <div class="box-body">
                             {% csrf_token %}
                             <!-- text input -->
                             <div class="form-group">
-                                <label>Nome</label>
+                                <label>Usuário</label>
                                 {{ form.name|append_attr:"class: form-control" }}
                             </div>
-
-                            <!-- select -->
                             <div class="form-group">
-                                <label>Arquivo</label>
-                                {{ form.file|append_attr:"class: form-control" }}
+                                <label>Email</label>
+                                {{ form.email|append_attr:"class: form-control" }}
                             </div>
-
+                            <div class="form-group">
+                                <label>Primeiro Nome</label>
+                                {{ form.first_name|append_attr:"class: form-control" }}
+                            </div>
+                            <div class="form-group">
+                                <label>Sobrenome</label>
+                                {{ form.last_name|append_attr:"class: form-control" }}
+                            </div>
+                            <div class="form-group">
+                                <label>Cargo</label>
+                                {{ form.job|append_attr:"class: form-control" }}
+                            </div>
+                            <div class="form-group">
+                                <label>Superusuário</label>
+                                {{ form.is_superuser|append_attr:"class: form-control" }}
+                            </div>
                         </div>
                         <div class="box-footer">
                             <button type="submit" class="btn btn-primary">Salvar</button>
