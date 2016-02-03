@@ -46,8 +46,7 @@ class UserCreateView(CreateView):
     form_class = UserCreateForm
     template_name = 'user/user_create.html'
 
-    def form_valid(self, form):
-        form.save()
+    def get_success_url(self):
         return redirect('dashboard', pk=self.request.user.slug)
 
 

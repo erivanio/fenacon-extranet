@@ -92,6 +92,7 @@ class Folder(models.Model):
         ('public', 'Público'),
         ('private', 'Somente eu')
     )
+    folder = models.ForeignKey('self', related_name='children', verbose_name='Pasta', null=True, blank=True)
     name = models.CharField('Nome', max_length=200)
     created_at = models.DateTimeField(verbose_name='Data de Publicação', default=datetime.now)
     user = models.ForeignKey(User, verbose_name='Usuário')
