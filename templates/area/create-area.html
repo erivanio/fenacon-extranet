@@ -1,6 +1,6 @@
 {% extends 'elements/base.html' %}
 {% load widget_tweaks %}
-{% block title %}Criar Pasta de Conteúdo{% endblock %}
+{% block title %}Criar nova área{% endblock %}
 {% block content %}
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -9,8 +9,7 @@
         </h1>
         <ol class="breadcrumb">
             <li><a href="#"><i class="fa fa-clock-o"></i> Início</a></li>
-            <li><a href="#">UI</a></li>
-            <li class="active">Timeline</li>
+            <li class="active">Adicionar área</li>
         </ol>
     </section>
 
@@ -20,6 +19,13 @@
         <!-- row -->
         <div class="row">
             <div class="col-md-12">
+                {% if messages %}
+                      {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                              {{ message }}
+                        </div>
+                      {% endfor %}
+                  {% endif %}
                 <div class="box box-info">
                     <!-- /.box-header -->
                     {{ form.non_field_errors }}

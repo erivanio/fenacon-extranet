@@ -1,16 +1,15 @@
 {% extends 'elements/base.html' %}
 {% load widget_tweaks %}
-{% block title %}Criar novo usuário{% endblock %}
+{% block title %}Editar perfil{% endblock %}
 {% block content %}
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            Criar usuário
+            Editar perfil
         </h1>
         <ol class="breadcrumb">
             <li><a href="#"><i class="fa fa-clock-o"></i> Início</a></li>
-            <li><a href="#">Configurações</a></li>
-            <li class="active">Adicionar usuário</li>
+            <li class="active">Editar perfil</li>
         </ol>
     </section>
 
@@ -30,14 +29,10 @@
                 <div class="box box-info">
                     <!-- /.box-header -->
                     <div style="color:red">{{ form.non_field_errors }}</div>
-                    <form role="form" method="POST" action="{% url 'create_user' %}">
+                    <form role="form" method="POST" action="{% url 'edit_user' request.user.slug %}" enctype="multipart/form-data">
                         <div class="box-body">
                             {% csrf_token %}
                             <!-- text input -->
-                            <div class="form-group">
-                                <label>Usuário *</label>
-                                {{ form.username|append_attr:"class: form-control" }}
-                            </div>
                             <div class="form-group">
                                 <label>Email</label>
                                 {{ form.email|append_attr:"class: form-control"|attr:"type:email" }}
@@ -55,16 +50,10 @@
                                 {{ form.job|append_attr:"class: form-control" }}
                             </div>
                             <div class="form-group">
-                                <label>Superusuário</label>
-                                <p>{{ form.is_superuser }}</p>
-                            </div>
-                            <div class="form-group">
-                                <label>Senha *</label>
-                                <input class="form-control" id="id_password1" name="password1" type="password">
-                            </div>
-                            <div class="form-group">
-                                <label>Confirme a senha *</label>
-                                <input class="form-control" id="id_password2" name="password2" type="password">
+                              <label for="id_photo">Foto</label>
+                              {{ form.photo }}
+
+                              <p class="help-block">Adicione uma foto para o perfil</p>
                             </div>
                         </div>
                         <div class="box-footer">

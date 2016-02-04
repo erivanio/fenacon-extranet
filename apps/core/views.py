@@ -2,6 +2,7 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
@@ -47,7 +48,8 @@ class UserCreateView(CreateView):
     template_name = 'user/user_create.html'
 
     def get_success_url(self):
-        return redirect('dashboard', slug=self.request.user.slug)
+        messages.success(self.request, 'Usuário criado com sucesso!')
+        return reverse('create_user')
 
 
 class UserEditView(UpdateView):
@@ -63,7 +65,7 @@ class UserEditView(UpdateView):
 
     def get_success_url(self):
         messages.success(self.request, 'Perfil modificado com sucesso!')
-        return redirect('dashboard', pk=self.object.slug)
+        return reverse('edit_user', kwargs={'slug': self.request.user.slug})
 
 
 class DashboardDetailView(DetailView):
@@ -178,7 +180,7 @@ class AreaCreateView(CreateView):
 
     def get_success_url(self):
         messages.success(self.request, 'Área criada com sucesso!')
-        return redirect('dashboard', pk=self.object.user.slug)
+        return reverse('create_area')
 
 
 class FileCreateView(CreateView):

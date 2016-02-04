@@ -28,6 +28,9 @@ class UserCreateForm(forms.ModelForm):
         if not username:
             raise forms.ValidationError("O campo usuário é obrigatório")
 
+        if not password1 or not password2:
+            raise forms.ValidationError("Digite uma senha e confirme")
+
         return self.cleaned_data
 
     def save(self, commit=True):
@@ -42,7 +45,7 @@ class UserCreateForm(forms.ModelForm):
 class UserEditForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['username', 'email', 'photo', 'first_name', 'last_name', 'job']
+        fields = ['email', 'photo', 'first_name', 'last_name', 'job']
 
 
 class FolderForm(forms.ModelForm):

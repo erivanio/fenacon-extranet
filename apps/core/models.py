@@ -41,7 +41,7 @@ class User(AbstractBaseUser):
     first_name = models.CharField('Primeiro nome', max_length=50, blank=True, null=True)
     last_name = models.CharField('Sobrenome', max_length=50, blank=True, null=True)
     job = models.CharField('Cargo', max_length=50, blank=True, null=True)
-    email = models.EmailField(verbose_name='Email', max_length=255, unique=True, db_index=True, blank=True, null=True)
+    email = models.EmailField(verbose_name='Email', max_length=255, blank=True, null=True)
     username = models.CharField('Nome', max_length=50, unique=True)
     slug = models.SlugField(max_length=150, blank=True, unique=True)
     is_active = models.BooleanField('Ativo?', default=True)

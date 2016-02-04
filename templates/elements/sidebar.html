@@ -16,7 +16,7 @@
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu">
             <li class="active">
-                <a href="#">
+                <a href="{% url 'dashboard' request.user.slug %}">
                     <i class="fa fa-clock-o"></i> <span>Início</span>
                 </a>
             </li>

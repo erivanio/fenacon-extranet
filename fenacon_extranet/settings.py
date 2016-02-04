@@ -43,7 +43,10 @@ TEMPLATE_CONTEXT_PROCESSORS = TCP + (
 )
 
 INSTALLED_APPS = (
+    'easy_thumbnails',
+    'image_cropping',
     'widget_tweaks',
+    'ckeditor',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
