@@ -1,6 +1,6 @@
 {% extends 'elements/base.html' %}
 {% load widget_tweaks %}
-{% block title %}Criar Pasta de Conteúdo{% endblock %}
+{% block title %}Criar novo usuário{% endblock %}
 {% block content %}
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -9,8 +9,8 @@
         </h1>
         <ol class="breadcrumb">
             <li><a href="#"><i class="fa fa-clock-o"></i> Início</a></li>
-            <li><a href="#">UI</a></li>
-            <li class="active">Timeline</li>
+            <li><a href="#">Configurações</a></li>
+            <li class="active">Adicionar usuário</li>
         </ol>
     </section>
 
@@ -22,13 +22,14 @@
             <div class="col-md-12">
                 <div class="box box-info">
                     <!-- /.box-header -->
-                    <form role="form" method="POST" action="{% url 'create_folder' %}">
+                    <div style="color:red">{{ form.non_field_errors }}</div>
+                    <form role="form" method="POST" action="{% url 'create_user' %}">
                         <div class="box-body">
                             {% csrf_token %}
                             <!-- text input -->
                             <div class="form-group">
-                                <label>Usuário</label>
-                                {{ form.name|append_attr:"class: form-control" }}
+                                <label>Usuário *</label>
+                                {{ form.username|append_attr:"class: form-control" }}
                             </div>
                             <div class="form-group">
                                 <label>Email</label>
@@ -48,15 +49,15 @@
                             </div>
                             <div class="form-group">
                                 <label>Superusuário</label>
-                                {{ form.is_superuser|append_attr:"class: form-control" }}
+                                <p>{{ form.is_superuser }}</p>
                             </div>
                             <div class="form-group">
-                                <label>Senha</label>
-                                {{ form.is_superuser|append_attr:"class: form-control"|attr:"type:password" }}
+                                <label>Senha *</label>
+                                <input class="form-control" id="id_password1" name="password1" type="password">
                             </div>
                             <div class="form-group">
-                                <label>Confirme a senha</label>
-                                {{ form.is_superuser|append_attr:"class: form-control"|attr:"type:password" }}
+                                <label>Confirme a senha *</label>
+                                <input class="form-control" id="id_password2" name="password2" type="password">
                             </div>
                         </div>
                         <div class="box-footer">

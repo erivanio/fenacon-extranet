@@ -79,7 +79,10 @@ class User(AbstractBaseUser):
         return self.first_name
 
     def get_display_name(self):
-        return self.username
+        if self.first_name and self.last_name:
+            return self.get_full_name()
+        else:
+            return self.username
 
     def has_perm(self, perm, obj=None):
         return True

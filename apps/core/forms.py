@@ -17,9 +17,16 @@ class UserCreateForm(forms.ModelForm):
     def clean(self):
         password1 = self.data.get("password1")
         password2 = self.data.get("password2")
+        username = self.data.get("username")
 
         if password1 and password1 != password2:
             raise forms.ValidationError("Senhas não conferem!")
+
+        if username in User.objects.all().values_list('username', flat=True):
+            raise forms.ValidationError("Este usuário já existe")
+
+        if not username:
+            raise forms.ValidationError("O campo usuário é obrigatório")
 
         return self.cleaned_data
 

@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView, DetailView, CreateView, ListView, UpdateView
 from apps.core.forms import LoginForm, FolderForm, FileForm, UserEditForm, UserCreateForm, AreaForm
@@ -47,7 +47,7 @@ class UserCreateView(CreateView):
     template_name = 'user/user_create.html'
 
     def get_success_url(self):
-        return redirect('dashboard', pk=self.request.user.slug)
+        return redirect('dashboard', slug=self.request.user.slug)
 
 
 class UserEditView(UpdateView):

@@ -31,18 +31,18 @@
                     {% endfor %}
                 </ul>
             </li>
-            <li>
-                <a href="widgets.html">
-                    <i class="fa fa-credit-card"></i> <span>Reembolso de Viagens</span>
-                </a>
-            </li>
-            <li>
-                <a href="log.html">
-                    <i class="fa fa-calendar"></i> <span>Histórico de atividades</span>
-                </a>
-            </li>
+{#            <li>#}
+{#                <a href="widgets.html">#}
+{#                    <i class="fa fa-credit-card"></i> <span>Reembolso de Viagens</span>#}
+{#                </a>#}
+{#            </li>#}
+{#            <li>#}
+{#                <a href="log.html">#}
+{#                    <i class="fa fa-calendar"></i> <span>Histórico de atividades</span>#}
+{#                </a>#}
+{#            </li>#}
 
-            <li><a href="documentation/index.html"><i class="fa fa-trash"></i> <span>Arquivos excluídos</span></a></li>
+            <li><a href="#"><i class="fa fa-trash"></i> <span>Arquivos excluídos</span></a></li>
             <li class="treeview">
                 <a href="#">
                     <i class="fa fa-gears"></i>
@@ -50,10 +50,10 @@
                     <i class="fa fa-angle-left pull-right"></i>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="layout/top-nav.html"><i class="fa fa-user"></i> Usuários</a></li>
-                    <li><a href="layout/boxed.html"><i class="fa fa-users"></i> Grupos de usuários</a></li>
-                    <li><a href="layout/fixed.html"><i class="fa fa-shield"></i> Permissões</a></li>
-                    <li><a href="layout/collapsed-sidebar.html"><i class="fa fa-gear"></i> Outras configurações</a></li>
+                    <li><a href="{% url 'create_user' %}"><i class="fa fa-user"></i>Adicionar Usuários</a></li>
+{#                    <li><a href="layout/boxed.html"><i class="fa fa-users"></i> Grupos de usuários</a></li>#}
+{#                    <li><a href="layout/fixed.html"><i class="fa fa-shield"></i> Permissões</a></li>#}
+{#                    <li><a href="layout/collapsed-sidebar.html"><i class="fa fa-gear"></i> Outras configurações</a></li>#}
                 </ul>
             </li>
         </ul>

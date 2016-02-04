@@ -22,7 +22,8 @@
             <div class="col-md-12">
                 <div class="box box-info">
                     <!-- /.box-header -->
-                    <form role="form" method="POST" action="{% url 'create_folder' %}">
+                    {{ form.non_field_errors }}
+                    <form role="form" method="POST" action="{% url 'create_area' %}">
                         <div class="box-body">
                             {% csrf_token %}
                             <!-- text input -->
