@@ -53,6 +53,22 @@
 <script src="{{ MEDIA_URL }}dist/js/app.min.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="{{ MEDIA_URL }}dist/js/demo.js"></script>
+<script type="text/javascript">
+    $('#id_btn_folder').click(function(e){
+        $.ajax({
+            type: "POST",
+            url: "{% url 'create_folder' %}",
+            data: $('#id_form_folder').serialize(),
+            success: function (data) {
+                location.reload();
+            },
+            error: function (data) {
+                location.reload();
+            }
+        });
+        e.preventDefault();
+    });
+</script>
 {% block extrajs %}{% endblock %}
 </body>
 </html>

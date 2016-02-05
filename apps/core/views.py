@@ -84,30 +84,30 @@ class DashboardDetailView(DetailView):
         return context
 
 
-class FolderCreateView(CreateView):
-    model = Folder
-    form_class = FolderForm
-    template_name = 'folder/create-folder.html'
-
-    @method_decorator(login_required(login_url='/'))
-    def dispatch(self, *args, **kwargs):
-        return super(FolderCreateView, self).dispatch(*args, **kwargs)
-
-    def form_valid(self, form):
-        folder = Folder()
-        folder.name = form.cleaned_data['name']
-        folder.permission = form.cleaned_data['permission']
-        folder.parent = form.cleaned_data['parent']
-        folder.status = True
-        folder.user = self.request.user
-        folder.save()
-        messages.success(self.request, 'Pasta criada com sucesso!')
-        return redirect('dashboard', pk=folder.user.slug)
-
-    def form_invalid(self, form):
-        if 'name' in form.errors:
-            messages.error(self.request, 'O campo nome é obrigatório.')
-        return self.render_to_response(self.get_context_data(form=form))
+# class FolderCreateView(CreateView):
+#     model = Folder
+#     form_class = FolderForm
+#     template_name = 'folder/create-folder.html'
+#
+#     @method_decorator(login_required(login_url='/'))
+#     def dispatch(self, *args, **kwargs):
+#         return super(FolderCreateView, self).dispatch(*args, **kwargs)
+#
+#     def form_valid(self, form):
+#         folder = Folder()
+#         folder.name = form.cleaned_data['name']
+#         folder.permission = form.cleaned_data['permission']
+#         folder.parent = form.cleaned_data['parent']
+#         folder.status = True
+#         folder.user = self.request.user
+#         folder.save()
+#         messages.success(self.request, 'Pasta criada com sucesso!')
+#         return redirect('dashboard', pk=folder.user.slug)
+#
+#     def form_invalid(self, form):
+#         if 'name' in form.errors:
+#             messages.error(self.request, 'O campo nome é obrigatório.')
+#         return self.render_to_response(self.get_context_data(form=form))
 
 
 class FolderEditView(UpdateView):
@@ -126,22 +126,22 @@ class FolderEditView(UpdateView):
         return redirect('dashboard', pk=self.object.user.slug)
 
 
-class FolderListView(ListView):
-    model = Folder
-    template_name = 'folder/list-folder.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(FolderListView, self).get_context_data(**kwargs)
-        context['files'] = File.objects.filter(folder=self, status=True).order_by('-name')
-        return context
-
-    def get_queryset(self, area_id=None, folder_id=None):
-        object_list = Folder.objects.none()
-        if 'areas' in self.request.path:
-            object_list = Folder.objects.filter(area_id=area_id, status=True).order_by('-name')
-        elif 'pastas' in self.request.path:
-            object_list = Folder.objects.filter(folder_id=folder_id, status=True).order_by('-name')
-        return object_list
+# class FolderListView(ListView):
+#     model = Folder
+#     template_name = 'folder/list-folder.html'
+#
+#     def get_context_data(self, **kwargs):
+#         context = super(FolderListView, self).get_context_data(**kwargs)
+#         context['files'] = File.objects.filter(folder=self, status=True).order_by('-name')
+#         return context
+#
+#     def get_queryset(self, area_id=None, folder_id=None):
+#         object_list = Folder.objects.none()
+#         if 'areas' in self.request.path:
+#             object_list = Folder.objects.filter(area_id=area_id, status=True).order_by('-name')
+#         elif 'pastas' in self.request.path:
+#             object_list = Folder.objects.filter(folder_id=folder_id, status=True).order_by('-name')
+#         return object_list
 
 
 class FolderDetailView(DetailView):
@@ -217,6 +217,28 @@ class FileCreateView(CreateView):
     def form_invalid(self, form):
         messages.error(self.request, 'Os campos com * são obrigatórios.')
         return self.render_to_response(self.get_context_data(form=form))
+
+
+def create_folder(request):
+    if request.method == 'POST':
+        folder = Folder()
+        folder.name = request.POST.get('name')
+        folder.permission = request.POST.get('permission')
+        folder.user = request.user
+        if request.POST.get('parent'):
+            parent = Folder.objects.get(id=int(request.POST.get('parent')))
+            folder.parent = parent
+            folder.save()
+            return reverse('detail_folder', kwargs={'slug': parent.slug, 'pk': parent.pk})
+        elif request.POST.get('area'):
+            area = Area.objects.get(id=int(request.POST.get('area')))
+            folder.area = area
+            folder.save()
+            return reverse('detail_area', kwargs={'slug': area.slug, 'pk': area.pk})
+        else:
+            folder.save()
+            return reverse('dashboard', kwargs={'slug': request.user.slug})
+
 
 
 # class FileListView(ListView):

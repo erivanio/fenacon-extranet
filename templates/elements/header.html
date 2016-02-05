@@ -1,3 +1,5 @@
+{% load widget_tweaks %}
+{% load name_model %}
 <header class="main-header">
     <!-- Logo -->
     <a href="{% url 'dashboard' request.user.slug %}" class="logo">
@@ -39,7 +41,7 @@
                                 </li>
                                 <!-- end message -->
                                 <li>
-                                    <a data-toggle="modal" data-target="#modal_teste">
+                                    <a data-toggle="modal" data-target="#modal_pasta">
                                         <div class="pull-left">
                                             <i class="fa fa-folder"></i>
                                         </div>
@@ -49,7 +51,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="{% url 'add_file' %}">
+                                    <a  data-toggle="modal" data-target="#modal_arquivo">
                                         <div class="pull-left">
                                             <i class="fa fa-cloud-upload"></i>
                                         </div>
@@ -152,30 +154,76 @@
     </nav>
 
 </header>
-<div class="modal fade" id="modal_teste" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="exampleModalLabel">New message</h4>
+<div class="modal fade" id="modal_pasta" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Adicionar Pasta</h4>
+            </div>
+            <div class="modal-body">
+                <form id="id_form_folder">
+                    <div class="box-body">
+                        <!-- text input -->
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label>Nome</label>
+                            <input class=" form-control" id="id_name" maxlength="200" name="name" type="text">
+                        </div>
+                        <div class="form-group">
+                            <label>Permissão</label>
+                            <select class=" form-control" id="id_permission" name="permission">
+                                <option value="public">Público</option>
+                                <option value="private">Somente eu</option>
+                            </select>
+                        </div>
+                        {% if object %}
+                            {% if object|to_class_name == 'Area' %}
+                                <input class=" form-control" id="id_area" value="{{ object.id }}" name="area" type="hidden">
+                            {% elif object|to_class_name == 'Folder' %}
+                                <input class=" form-control" id="id_parent" value="{{ object.id }}" name="parent" type="hidden">
+                            {% endif %}
+                        {% endif %}
                     </div>
-                    <div class="modal-body">
-                        <form>
-                            <div class="form-group">
-                                <label for="recipient-name" class="control-label">Recipient:</label>
-                                <input type="text" class="form-control" id="recipient-name">
-                            </div>
-                            <div class="form-group">
-                                <label for="message-text" class="control-label">Message:</label>
-                                <textarea class="form-control" id="message-text"></textarea>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Send message</button>
-                    </div>
-                </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                <button type="button" id="id_btn_folder" class="btn btn-primary">Salvar</button>
             </div>
         </div>
+    </div>
+</div>
+<div class="modal fade" id="modal_arquivo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Adicionar arquivo</h4>
+            </div>
+            <div class="modal-body">
+                <form id="id_form_folder">
+                    <div class="box-body">
+                        <!-- text input -->
+                        <div class="form-group">
+                            <label>Nome</label>
+                            <input class=" form-control" id="id_name" maxlength="200" name="name" type="text">
+                        </div>
+                        <div class="form-group">
+                              <label for="id_file">Arquivo</label>
+                              <input id="id_file" name="file" type="file">
+
+                              <p class="help-block">Adicione o arquivo para upload</p>
+                            </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                <button type="button" id="id_btn_folder" class="btn btn-primary">Salvar</button>
+            </div>
+        </div>
+    </div>
+</div>

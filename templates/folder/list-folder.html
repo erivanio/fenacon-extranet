@@ -5,7 +5,7 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            Pastas
+            Pasta {{ object }}
         </h1>
         <ol class="breadcrumb">
             <li><a href="#"><i class="fa fa-clock-o"></i>Dashboard</a></li>
@@ -16,10 +16,10 @@
     <!-- Main content -->
     <section class="content">
         <div class="row">
-            {% for folder in object_list %}
+            {% for folder in folders %}
             <div class="col-md-3 col-sm-6 col-xs-12">
                 <div class="info-box">
-                    <a href="{% url 'detail_folder' folder.pk %}">
+                    <a href="{% url 'detail_folder' folder.slug folder.pk %}">
                         <span class="info-box-icon bg-aqua"><i class="ion ion-ios-folder"></i></span>
 
                         <div class="info-box-content">
@@ -42,7 +42,7 @@
 
                         <div class="info-box-content">
                             <span class="info-box-text">{{ file.name }}</span>
-                            <span class="info-box-number">{{ file.file|filesize }}</span>
+                            <span class="info-box-number">{{ file.file.size }}</span>
                         </div>
                     </a>
                     <!-- /.info-box-content -->
