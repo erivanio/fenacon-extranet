@@ -1,0 +1,54 @@
+{% extends 'elements/base.html' %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            Área {{ object }}
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-clock-o"></i> Início</a></li>
+            <li class="active">Área {{ object }}</li>
+        </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+            {% for folder in folders %}
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <a href="{% url 'detail_folder' folder.pk %}">
+                        <span class="info-box-icon bg-aqua"><i class="ion ion-ios-folder"></i></span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-text">{{ folder.name }}</span>
+                            <span class="info-box-number">{{ folder.children.count }}
+                                <small>{% if folder.children.count > 1 %}arquivos{% else %}arquivo{% endif %}</small>
+                            </span>
+                        </div>
+                    </a>
+                    <!-- /.info-box-content -->
+                </div>
+                <!-- /.info-box -->
+            </div>
+            {% endfor %}
+            {% for file in files %}
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <a href="{{ file.file }}" download>
+                        <span class="info-box-icon bg-green"><i class="glyphicon glyphicon-download-alt"></i></span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-text">{{ file.name }}</span>
+                            <span class="info-box-number">{{ file.file.size }}</span>
+                        </div>
+                    </a>
+                    <!-- /.info-box-content -->
+                </div>
+                <!-- /.info-box -->
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+{% endblock %}

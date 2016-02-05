@@ -27,7 +27,7 @@
                 </a>
                 <ul class="treeview-menu">
                     {% for area in areas %}
-                    <li><a href="{% url 'area_detail' area.slug area.pk %}"><i class="fa fa-circle-o"></i> {{ area.nome }}</a></li>
+                    <li><a href="{% url 'detail_area' area.slug area.pk %}"><i class="fa fa-circle-o"></i> {{ area.name }}</a></li>
                     {% endfor %}
                 </ul>
             </li>

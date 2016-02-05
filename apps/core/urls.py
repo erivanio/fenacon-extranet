@@ -13,6 +13,6 @@ urlpatterns = patterns('',
     url(r'^pasta/criar$', FolderCreateView.as_view(), name='create_folder'),
     url(r'^pasta/(?P<folder_slug>[\w_-]+)-(?P<folder_id>\d+)/arquivos', FolderDetailView.as_view(), name='detail_folder'),
     url(r'^pasta/listagem', FolderListView.as_view(), name='list_folder'),
-    url(r'^area/(?P<area_slug>[\w_-]+)-(?P<area_id>\d+)', AreaDetailView.as_view(), name='detail_area'),
+    url(r'^area/(?P<slug>[\w_-]+)-(?P<pk>\d+)', AreaDetailView.as_view(), name='detail_area'),
     url(r'^area/criar/$', AreaCreateView.as_view(), name='create_area'),
 )

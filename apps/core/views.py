@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
-from django.http import Http404
+from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView, DetailView, CreateView, ListView, UpdateView
@@ -78,7 +78,6 @@ class DashboardDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(DashboardDetailView, self).get_context_data(**kwargs)
-        # import ipdb; ipdb.set_trace()
         context['folders'] = Folder.objects.filter(user=self.request.user, parent__isnull=True, status=True).order_by('-name')
         context['files'] = File.objects.filter(user=self.request.user, folder__isnull=True, status=True).order_by('-name')
 
@@ -151,20 +150,20 @@ class FolderDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(FolderDetailView, self).get_context_data(**kwargs)
-        context['folders'] = Folder.objects.filter(parent=self, status=True).order_by('-name')
-        context['files'] = File.objects.filter(folder=self, status=True).order_by('-name')
+        context['folders'] = Folder.objects.filter(parent=kwargs['object'], status=True).order_by('-name')
+        context['files'] = File.objects.filter(folder=kwargs['object'], status=True).order_by('-name')
 
         return context
 
 
 class AreaDetailView(DetailView):
-    model = Folder
-    template_name = 'folder/list-folder.html'
+    model = Area
+    template_name = 'area/detail_area.html'
 
     def get_context_data(self, **kwargs):
         context = super(AreaDetailView, self).get_context_data(**kwargs)
-        context['folders'] = Folder.objects.filter(area=self, status=True).order_by('-name')
-        context['files'] = File.objects.filter(area=self, status=True).order_by('-name')
+        context['folders'] = Folder.objects.filter(area=kwargs['object'], status=True).order_by('-name')
+        context['files'] = File.objects.filter(area=kwargs['object'], status=True).order_by('-name')
 
         return context
 
@@ -181,6 +180,14 @@ class AreaCreateView(CreateView):
     def get_success_url(self):
         messages.success(self.request, 'Área criada com sucesso!')
         return reverse('create_area')
+
+    def form_valid(self, form):
+        area = Area()
+        area.name = form.cleaned_data['name']
+        area.status = True
+        area.user = self.request.user
+        area.save()
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class FileCreateView(CreateView):
