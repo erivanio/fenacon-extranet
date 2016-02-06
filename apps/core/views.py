@@ -7,12 +7,17 @@ from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView, DetailView, CreateView, ListView, UpdateView
-from apps.core.forms import LoginForm, FolderForm, FileForm, UserEditForm, UserCreateForm, AreaForm
+from apps.core.forms import LoginForm, UserEditForm, UserCreateForm, AreaForm, FolderForm
 from apps.core.models import User, Folder, File, Area
 
 
 class LoginView(TemplateView):
     template_name = 'login.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated():
+            return redirect('dashboard', slug=request.user.slug)
+        return super(LoginView, self).dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(LoginView, self).get_context_data(**kwargs)
@@ -39,7 +44,7 @@ class LoginView(TemplateView):
 class LogoutView(TemplateView):
     def get(self, request, *args, **kwargs):
         logout(request)
-        return redirect('home')
+        return redirect('login')
 
 
 class UserCreateView(CreateView):
@@ -84,32 +89,6 @@ class DashboardDetailView(DetailView):
         return context
 
 
-# class FolderCreateView(CreateView):
-#     model = Folder
-#     form_class = FolderForm
-#     template_name = 'folder/create-folder.html'
-#
-#     @method_decorator(login_required(login_url='/'))
-#     def dispatch(self, *args, **kwargs):
-#         return super(FolderCreateView, self).dispatch(*args, **kwargs)
-#
-#     def form_valid(self, form):
-#         folder = Folder()
-#         folder.name = form.cleaned_data['name']
-#         folder.permission = form.cleaned_data['permission']
-#         folder.parent = form.cleaned_data['parent']
-#         folder.status = True
-#         folder.user = self.request.user
-#         folder.save()
-#         messages.success(self.request, 'Pasta criada com sucesso!')
-#         return redirect('dashboard', pk=folder.user.slug)
-#
-#     def form_invalid(self, form):
-#         if 'name' in form.errors:
-#             messages.error(self.request, 'O campo nome é obrigatório.')
-#         return self.render_to_response(self.get_context_data(form=form))
-
-
 class FolderEditView(UpdateView):
     model = Folder
     form_class = FolderForm
@@ -124,24 +103,6 @@ class FolderEditView(UpdateView):
     def get_success_url(self):
         messages.success(self.request, 'Pasta modificada com sucesso!')
         return redirect('dashboard', pk=self.object.user.slug)
-
-
-# class FolderListView(ListView):
-#     model = Folder
-#     template_name = 'folder/list-folder.html'
-#
-#     def get_context_data(self, **kwargs):
-#         context = super(FolderListView, self).get_context_data(**kwargs)
-#         context['files'] = File.objects.filter(folder=self, status=True).order_by('-name')
-#         return context
-#
-#     def get_queryset(self, area_id=None, folder_id=None):
-#         object_list = Folder.objects.none()
-#         if 'areas' in self.request.path:
-#             object_list = Folder.objects.filter(area_id=area_id, status=True).order_by('-name')
-#         elif 'pastas' in self.request.path:
-#             object_list = Folder.objects.filter(folder_id=folder_id, status=True).order_by('-name')
-#         return object_list
 
 
 class FolderDetailView(DetailView):
@@ -190,35 +151,6 @@ class AreaCreateView(CreateView):
         return HttpResponseRedirect(self.get_success_url())
 
 
-class FileCreateView(CreateView):
-    model = File
-    form_class = FileForm
-    template_name = 'file/add-file.html'
-
-    @method_decorator(login_required(login_url='/'))
-    def dispatch(self, *args, **kwargs):
-        return super(FileCreateView, self).dispatch(*args, **kwargs)
-
-    def form_valid(self, form):
-        folder = Folder.objects.get(id=form.cleaned_data['folder'])
-        if folder.user == self.request.user:
-            file = File()
-            file.name = form.cleaned_data['name']
-            file.file = form.cleaned_data['file']
-            file.folder = folder
-            file.status = True
-            file.user = self.request.user
-            file.save()
-            messages.success(self.request, 'Arquivo salvo com sucesso!')
-            return redirect('folder_detail', folder_id=self.kwargs['folder_id'])
-        else:
-            raise Http404
-
-    def form_invalid(self, form):
-        messages.error(self.request, 'Os campos com * são obrigatórios.')
-        return self.render_to_response(self.get_context_data(form=form))
-
-
 def create_folder(request):
     if request.method == 'POST':
         folder = Folder()
@@ -229,22 +161,40 @@ def create_folder(request):
             parent = Folder.objects.get(id=int(request.POST.get('parent')))
             folder.parent = parent
             folder.save()
+            messages.success(request, 'Pasta criada com sucesso!')
             return reverse('detail_folder', kwargs={'slug': parent.slug, 'pk': parent.pk})
         elif request.POST.get('area'):
             area = Area.objects.get(id=int(request.POST.get('area')))
             folder.area = area
             folder.save()
-            return reverse('detail_area', kwargs={'slug': area.slug, 'pk': area.pk})
+            messages.success(request, 'Pasta criada com sucesso!')
+            return redirect(reverse('detail_area', kwargs={'slug': area.slug, 'pk': area.pk}))
         else:
             folder.save()
+            messages.success(request, 'Pasta criada com sucesso!')
             return reverse('dashboard', kwargs={'slug': request.user.slug})
 
 
+def create_file(request):
+    if request.method == 'POST':
+        file = File()
+        file.name = request.POST.get('name')
+        file.file = request.FILES.get('file')
+        file.user = request.user
+        if request.POST.get('folder'):
+            folder = Folder.objects.get(id=int(request.POST.get('folder')))
+            file.folder = folder
+            file.save()
+            messages.success(request, 'Arquivo adicionado com sucesso!')
+            return reverse('detail_folder', kwargs={'slug': folder.slug, 'pk': folder.pk})
+        elif request.POST.get('area'):
+            area = Area.objects.get(id=int(request.POST.get('area')))
+            file.area = area
+            file.save()
+            messages.success(request, 'Arquivo adicionado com sucesso!')
+            return reverse('detail_area', kwargs={'slug': area.slug, 'pk': area.pk})
+        else:
+            file.save()
+            messages.success(request, 'Arquivo adicionado com sucesso!')
+            return reverse('dashboard', kwargs={'slug': request.user.slug})
 
-# class FileListView(ListView):
-#     model = Folder
-#     template_name = 'file/file_list.html'
-#
-#     def get_queryset(self):
-#         object_list = File.objects.filter(user=self.request.user, status=True).order_by('-name')
-#         return object_list

@@ -1,5 +1,6 @@
 {% extends 'elements/base.html' %}
 {% load widget_tweaks %}
+{% load utils %}
 {% block title %}Criar Pasta de Conteúdo{% endblock %}
 {% block content %}
     <!-- Content Header (Page header) -->
@@ -16,6 +17,7 @@
     <!-- Main content -->
     <section class="content">
         <div class="row">
+            {% include 'elements/messages.html' %}
             {% for folder in folders %}
             <div class="col-md-3 col-sm-6 col-xs-12">
                 <div class="info-box">
@@ -24,8 +26,8 @@
 
                         <div class="info-box-content">
                             <span class="info-box-text">{{ folder.name }}</span>
-                            <span class="info-box-number">{{ folder.children.count }}
-                                <small>{% if folder.children.count > 1 %}arquivos{% else %}arquivo{% endif %}</small>
+                            <span class="info-box-number">{{ folder|len_files }}
+                                <small>{% if folder|len_files > 1 %}arquivos{% else %}arquivo{% endif %}</small>
                             </span>
                         </div>
                     </a>
@@ -37,12 +39,12 @@
             {% for file in files %}
             <div class="col-md-3 col-sm-6 col-xs-12">
                 <div class="info-box">
-                    <a href="{{ file.file }}" download>
+                    <a href="{{ MEDIA_URL }}{{ file.file }}" download>
                         <span class="info-box-icon bg-green"><i class="glyphicon glyphicon-download-alt"></i></span>
 
                         <div class="info-box-content">
                             <span class="info-box-text">{{ file.name }}</span>
-                            <span class="info-box-number">{{ file.file.size }}</span>
+                            <span class="info-box-number">{{ file.file.size|filesizeformat }}</span>
                         </div>
                     </a>
                     <!-- /.info-box-content -->

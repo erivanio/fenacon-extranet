@@ -1,5 +1,5 @@
 {% load widget_tweaks %}
-{% load name_model %}
+{% load utils %}
 <header class="main-header">
     <!-- Logo -->
     <a href="{% url 'dashboard' request.user.slug %}" class="logo">
@@ -203,27 +203,34 @@
                         aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="exampleModalLabel">Adicionar arquivo</h4>
             </div>
+            <form id="id_form_file" method="post" enctype="multipart/form-data">
             <div class="modal-body">
-                <form id="id_form_folder">
                     <div class="box-body">
                         <!-- text input -->
+                        {% csrf_token %}
                         <div class="form-group">
                             <label>Nome</label>
                             <input class=" form-control" id="id_name" maxlength="200" name="name" type="text">
                         </div>
                         <div class="form-group">
                               <label for="id_file">Arquivo</label>
-                              <input id="id_file" name="file" type="file">
-
+                              <input id="id_file" name="file" type="file" required>
                               <p class="help-block">Adicione o arquivo para upload</p>
-                            </div>
+                        </div>
+                        {% if object %}
+                            {% if object|to_class_name == 'Area' %}
+                                <input class=" form-control" id="id_area" value="{{ object.id }}" name="area" type="hidden">
+                            {% elif object|to_class_name == 'Folder' %}
+                                <input class=" form-control" id="id_folder" value="{{ object.id }}" name="folder" type="hidden">
+                            {% endif %}
+                        {% endif %}
                     </div>
-                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
-                <button type="button" id="id_btn_folder" class="btn btn-primary">Salvar</button>
+                <button type="submit" id="id_btn_file" class="btn btn-primary">Salvar</button>
             </div>
+            </form>
         </div>
     </div>
 </div>

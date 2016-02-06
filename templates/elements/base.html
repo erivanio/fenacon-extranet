@@ -59,14 +59,38 @@
             type: "POST",
             url: "{% url 'create_folder' %}",
             data: $('#id_form_folder').serialize(),
-            success: function (data) {
+            success: function () {
                 location.reload();
             },
-            error: function (data) {
+            error: function () {
                 location.reload();
             }
         });
         e.preventDefault();
+    });
+</script>
+<script type="text/javascript">
+    $("#id_form_file").submit(function(){
+
+        var formData = new FormData($(this)[0]);
+
+        $.ajax({
+            url: "{% url 'create_file' %}",
+            type: 'POST',
+            data: formData,
+            async: false,
+            success: function () {
+                location.reload();
+            },
+            error: function () {
+                location.reload();
+            },
+            cache: false,
+            contentType: false,
+            processData: false
+        });
+
+        return false;
     });
 </script>
 {% block extrajs %}{% endblock %}
