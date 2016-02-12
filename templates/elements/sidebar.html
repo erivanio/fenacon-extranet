@@ -42,7 +42,7 @@
 {#                </a>#}
 {#            </li>#}
 
-            <li><a href="#"><i class="fa fa-trash"></i> <span>Arquivos excluídos</span></a></li>
+            <li><a href="{% url 'garbage' request.user.slug %}"><i class="fa fa-trash"></i> <span>Arquivos excluídos</span></a></li>
             <li class="treeview">
                 <a href="#">
                     <i class="fa fa-gears"></i>

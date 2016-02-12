@@ -6,7 +6,7 @@ from django.core.urlresolvers import reverse
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
-from django.views.generic import TemplateView, DetailView, CreateView, ListView, UpdateView
+from django.views.generic import TemplateView, DetailView, CreateView, ListView, UpdateView, DeleteView
 from apps.core.forms import LoginForm, UserEditForm, UserCreateForm, AreaForm, FolderForm
 from apps.core.models import User, Folder, File, Area
 
@@ -89,6 +89,22 @@ class DashboardDetailView(DetailView):
         return context
 
 
+class GarbageDetailView(DetailView):
+    model = User
+    template_name = 'deleted_files.html'
+
+    @method_decorator(login_required(login_url='/'))
+    def dispatch(self, *args, **kwargs):
+        return super(GarbageDetailView, self).dispatch(*args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(GarbageDetailView, self).get_context_data(**kwargs)
+        context['folders'] = Folder.objects.filter(user=self.request.user, status=False).order_by('-name')
+        context['files'] = File.objects.filter(user=self.request.user, status=False).order_by('-name')
+
+        return context
+
+
 class FolderEditView(UpdateView):
     model = Folder
     form_class = FolderForm
@@ -149,6 +165,38 @@ class AreaCreateView(CreateView):
         area.user = self.request.user
         area.save()
         return HttpResponseRedirect(self.get_success_url())
+
+
+class FolderDeleteView(DeleteView):
+    model = Folder
+
+    def get_object(self, queryset=None):
+        obj = super(FolderDeleteView, self).get_object()
+        if not obj.user == self.request.user:
+            raise Http404
+        for folder in obj.children.all():
+            folder.delete()
+        for file in obj.file_set.all():
+            file.delete()
+        return obj
+
+    def get_success_url(self):
+        messages.success(self.request, 'Pasta deletada com sucesso!')
+        return u'/%s/lixeira/' % self.request.user.slug
+
+
+class FileDeleteView(DeleteView):
+    model = File
+
+    def get_object(self, queryset=None):
+        obj = super(FileDeleteView, self).get_object()
+        if not obj.user == self.request.user:
+            raise Http404
+        return obj
+
+    def get_success_url(self):
+        messages.success(self.request, 'Arquivo deletado com sucesso!')
+        return u'/%s/lixeira/' % self.request.user.slug
 
 
 def create_folder(request):

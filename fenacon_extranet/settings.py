@@ -48,6 +48,7 @@ INSTALLED_APPS = (
     'image_cropping',
     'widget_tweaks',
     'ckeditor',
+    'annoying',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

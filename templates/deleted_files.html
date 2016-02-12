@@ -1,14 +1,14 @@
 {% extends 'elements/base.html' %}
 {% load utils %}
-{% block title %}Dashboard{% endblock %}
+{% block title %}Itens apagados{% endblock %}
 {% block content %}
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            Início
+            Itens apagados
         </h1>
         <ol class="breadcrumb">
-            <li class="active"><i class="fa fa-clock-o"></i> Início</li>
+            <li class="active"><i class="fa fa-clock-o"></i> Itens apagados</li>
         </ol>
     </section>
 
@@ -49,12 +49,15 @@
                         </div>
                         <div class="modal-body">
                                 <div class="box-body">
-                                    Tem certeza que deseja excluir esta pasta?
+                                    Tem certeza que deseja excluir permanentemente esta pasta?
                                 </div>
                         </div>
                         <div class="modal-footer">
+                            <form method="POST" action="{% url 'folder_delete' folder.pk %}">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Não</button>
-                            <button type="button" onclick="del_folder({{ folder.pk }});" id="id_btn_file" class="btn btn-primary">Sim</button>
+                            {% csrf_token %}
+                            <input type="submit" id="id_btn_folder" value="Sim" class="btn btn-primary">
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -89,12 +92,15 @@
                         </div>
                         <div class="modal-body">
                                 <div class="box-body">
-                                    Tem certeza que deseja excluir este arquivo?
+                                    Tem certeza que deseja excluir permanentemente este arquivo?
                                 </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Não</button>
-                            <button type="button" onclick="del_file({{ file.pk }});" id="id_btn_file" class="btn btn-primary">Sim</button>
+                            <form method="POST" action="{% url 'file_delete' file.pk %}">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Não</button>
+                                {% csrf_token %}
+                                <input type="submit" id="id_btn_folder" value="Sim" class="btn btn-primary">
+                            </form>
                         </div>
                     </div>
                 </div>
