@@ -4,6 +4,7 @@
 *.out
 *.pyc
 *.egg
+*.log
 *.ini
 .idea
 media/uploads/

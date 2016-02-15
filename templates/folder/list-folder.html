@@ -1,7 +1,7 @@
 {% extends 'elements/base.html' %}
 {% load widget_tweaks %}
 {% load utils %}
-{% block title %}Criar Pasta de Conteúdo{% endblock %}
+{% block title %}Pasta {{ object }}{% endblock %}
 {% block content %}
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -9,8 +9,20 @@
             Pasta {{ object }}
         </h1>
         <ol class="breadcrumb">
-            <li><a href="#"><i class="fa fa-clock-o"></i>Dashboard</a></li>
-            <li class="active">Pastas</li>
+            {% if object.status %}
+            <li><a href="{% url 'dashboard' request.user.slug %}"><i class="fa fa-clock-o"></i>Início</a></li>
+            {% else %}
+            <li><a href="{% url 'garbage' request.user.slug %}"><i class="fa fa-clock-o"></i>Lixeira</a></li>
+            {% endif %}
+            {% if object.parent.parent %}
+            <li>...</li>
+            {% endif %}
+            {% if object.area %}
+            <li><a href="{% url 'detail_area' object.area.slug object.area.pk %}">{{ object.area }}</a></li>
+            {% elif object.parent %}
+            <li><a href="{% url 'detail_folder' object.parent.slug object.parent.pk %}">{{ object.parent }}</a></li>
+            {% endif %}
+            <li class="active">{{ object }}</li>
         </ol>
     </section>
 
