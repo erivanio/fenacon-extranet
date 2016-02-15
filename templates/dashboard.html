@@ -4,12 +4,21 @@
 {% block content %}
     <!-- Content Header (Page header) -->
     <section class="content-header">
+        {% if request.GET.q %}
+        <h1>
+            Resultado de <span>"{{ request.GET.q  }}"</span>
+        </h1>
+        <ol class="breadcrumb">
+            <li class="active"><i class="fa fa-clock-o"></i> Busca</li>
+        </ol>
+        {% else %}
         <h1>
             Início
         </h1>
         <ol class="breadcrumb">
             <li class="active"><i class="fa fa-clock-o"></i> Início</li>
         </ol>
+        {% endif %}
     </section>
 
     <!-- Main content -->

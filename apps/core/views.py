@@ -83,8 +83,17 @@ class DashboardDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(DashboardDetailView, self).get_context_data(**kwargs)
-        context['folders'] = Folder.objects.filter(user=self.request.user, parent__isnull=True, status=True).order_by('-name')
-        context['files'] = File.objects.filter(user=self.request.user, folder__isnull=True, status=True).order_by('-name')
+        if self.request.GET.get('q'):
+            q = self.request.GET.get('q')
+            context['folders'] = Folder.objects.filter(user=self.request.user, name__icontains=q,
+                                                       parent__isnull=True, status=True).order_by('-name')
+            context['files'] = File.objects.filter(user=self.request.user, name__icontains=q,
+                                                   folder__isnull=True, status=True).order_by('-name')
+        else:
+            context['folders'] = Folder.objects.filter(user=self.request.user,
+                                                       parent__isnull=True, status=True).order_by('-name')
+            context['files'] = File.objects.filter(user=self.request.user,
+                                                   folder__isnull=True, status=True).order_by('-name')
 
         return context
 
