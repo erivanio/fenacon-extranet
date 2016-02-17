@@ -9,7 +9,7 @@ def to_class_name(value):
 
 @register.filter
 def len_files(folder):
-    folders = folder.children.all().count()
-    files = folder.file_set.all().count()
+    folders = folder.children.filter(status=True).count()
+    files = folder.file_set.filter(status=True).count()
     result = folders + files
     return result

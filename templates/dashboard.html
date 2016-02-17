@@ -29,7 +29,7 @@
             <div class="col-md-3 col-sm-6 col-xs-12" id="div_folder_{{ folder.pk }}">
                 <div class="info-box">
                     <div class="box-tools pull-right">
-                        <a data-toggle="modal" data-target="#modal_pasta_{{ folder.pk }}" type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i>
+                        <a data-toggle="modal" title="excluir" data-target="#modal_pasta_{{ folder.pk }}" type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-trash-o fa-fw"></i>
                         </a>
                       </div>
                     <a href="{% url 'detail_folder' folder.slug folder.pk %}">
@@ -73,7 +73,7 @@
             <div class="col-md-3 col-sm-6 col-xs-12" id="div_file_{{ file.pk }}">
                 <div class="info-box">
                     <div class="box-tools pull-right">
-                        <a data-toggle="modal" data-target="#modal_arquivo_{{ file.pk }}" type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i>
+                        <a data-toggle="modal" title="excluir" data-target="#modal_arquivo_{{ file.pk }}" type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-trash-o fa-fw"></i>
                         </a>
                       </div>
                     <a href="{{ MEDIA_URL }}{{ file.file }}" download>

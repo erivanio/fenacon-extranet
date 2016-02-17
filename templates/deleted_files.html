@@ -8,7 +8,7 @@
             Lixeira
         </h1>
         <ol class="breadcrumb">
-            <li class="active"><i class="fa fa-clock-o"></i>Lixeira</li>
+            <li class="active"><i class="fa fa-trash-o fa-fw"></i>Lixeira</li>
         </ol>
     </section>
 
@@ -20,7 +20,9 @@
             <div class="col-md-3 col-sm-6 col-xs-12" id="div_folder_{{ folder.pk }}">
                 <div class="info-box">
                     <div class="box-tools pull-right">
-                        <a data-toggle="modal" data-target="#modal_pasta_{{ folder.pk }}" type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i>
+                        <a data-toggle="modal" data-target="#restaurar_pasta_{{ folder.pk }}" title="restaurar" type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-rotate-left"></i>
+                        </a>
+                        <a data-toggle="modal" data-target="#modal_pasta_{{ folder.pk }}" title="excluir" type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-trash-o fa-fw"></i>
                         </a>
                       </div>
                     <a href="{% url 'detail_folder' folder.slug folder.pk %}">
@@ -39,13 +41,33 @@
 
                 <!-- /.info-box -->
             </div>
+            <div class="modal fade" id="restaurar_pasta_{{ folder.pk }}" tabindex="-1" role="dialog" aria-labelledby="restoreModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="restoreModalLabel">Restaurar pasta</h4>
+                        </div>
+                        <div class="modal-body">
+                                <div class="box-body">
+                                    Tem certeza que deseja restaurar esta pasta?
+                                </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Não</button>
+                            <button type="button" onclick="add_folder({{ folder.pk }});" id="id_btn_restore_folder" class="btn btn-primary">Sim</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="modal fade" id="modal_pasta_{{ folder.pk }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                     aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title" id="exampleModalLabel">Excluir pasta</h4>
+                            <h4 class="modal-title" id="exampleFolderLabel">Excluir pasta</h4>
                         </div>
                         <div class="modal-body">
                                 <div class="box-body">
@@ -67,7 +89,9 @@
             <div class="col-md-3 col-sm-6 col-xs-12" id="div_file_{{ file.pk }}">
                 <div class="info-box">
                     <div class="box-tools pull-right">
-                        <a data-toggle="modal" data-target="#modal_arquivo_{{ file.pk }}" type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i>
+                        <a data-toggle="modal" data-target="#restaurar_arquivo_{{ file.pk }}" title="restaurar" type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-rotate-left"></i>
+                        </a>
+                        <a data-toggle="modal" data-target="#modal_arquivo_{{ file.pk }}" title="excluir" type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa fa-trash-o fa-fw"></i>
                         </a>
                       </div>
                     <a href="{{ MEDIA_URL }}{{ file.file }}" download>
@@ -81,6 +105,26 @@
                     <!-- /.info-box-content -->
                 </div>
                 <!-- /.info-box -->
+            </div>
+            <div class="modal fade" id="restaurar_arquivo_{{ file.pk }}" tabindex="-1" role="dialog" aria-labelledby="restoreFileModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="restoreFileModalLabel">Restaurar arquivo</h4>
+                        </div>
+                        <div class="modal-body">
+                                <div class="box-body">
+                                    Tem certeza que deseja restaurar este arquivo?
+                                </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Não</button>
+                            <button type="button" onclick="add_file({{ file.pk }});" id="id_btn_restore_file" class="btn btn-primary">Sim</button>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="modal fade" id="modal_arquivo_{{ file.pk }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                 <div class="modal-dialog" role="document">
@@ -99,7 +143,7 @@
                             <form method="POST" action="{% url 'file_delete' file.pk %}">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Não</button>
                                 {% csrf_token %}
-                                <input type="submit" id="id_btn_folder" value="Sim" class="btn btn-primary">
+                                <input type="submit" id="id_btn_file" value="Sim" class="btn btn-primary">
                             </form>
                         </div>
                     </div>
@@ -111,13 +155,13 @@
 {% endblock %}
 {% block extrajs %}
 <script type="text/javascript">
-    function del_folder(folder_pk) {
+    function add_folder(folder_pk) {
         $.ajax({
             type: "GET",
-            url: "/pasta/deletar/" + folder_pk + "/",
+            url: "/pasta/restaurar/" + folder_pk + "/",
             success: function () {
                 $("#div_folder_" + folder_pk).remove();
-                $('#modal_pasta_' + folder_pk).modal('toggle');
+                $('#restaurar_pasta_' + folder_pk).modal('toggle');
             },
             error: function (data) {
                 alert("Ocorreu um erro, por favor, tente novamente.");
@@ -126,13 +170,13 @@
     }
 </script>
 <script type="text/javascript">
-    function del_file(file_pk) {
+    function add_file(file_pk) {
         $.ajax({
             type: "GET",
-            url: "/arquivo/deletar/" + file_pk + "/",
+            url: "/arquivo/restaurar/" + file_pk + "/",
             success: function () {
                 $("#div_file_" + file_pk).remove();
-                $('#modal_arquivo_' + file_pk).modal('toggle');
+                $('#restaurar_arquivo_' + file_pk).modal('toggle');
             },
             error: function (data) {
                 alert("Ocorreu um erro, por favor, tente novamente.");
