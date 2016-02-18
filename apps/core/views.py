@@ -63,10 +63,10 @@ class UserEditView(UpdateView):
     template_name = 'user/user_edit.html'
 
     def get_object(self, *args, **kwargs):
-        object = super(UserEditView, self).get_object(*args, **kwargs)
-        if object != self.request.user:
+        obj = super(UserEditView, self).get_object(*args, **kwargs)
+        if obj != self.request.user:
             raise Http404
-        return object
+        return obj
 
     def get_success_url(self):
         messages.success(self.request, 'Perfil modificado com sucesso!')
@@ -114,20 +114,20 @@ class GarbageDetailView(DetailView):
         return context
 
 
-class FolderEditView(UpdateView):
+class FolderUpdateView(UpdateView):
     model = Folder
     form_class = FolderForm
-    template_name = 'folder/create-folder.html'
+    template_name = 'folder/update-folder.html'
 
     def get_object(self, *args, **kwargs):
-        object = super(FolderEditView, self).get_object(*args, **kwargs)
-        if object.user != self.request.user:
+        obj = super(FolderUpdateView, self).get_object(*args, **kwargs)
+        if obj.user != self.request.user:
             raise Http404
-        return object
+        return obj
 
     def get_success_url(self):
         messages.success(self.request, 'Pasta modificada com sucesso!')
-        return redirect('dashboard', pk=self.object.user.slug)
+        return reverse('detail_folder', kwargs={'slug': self.object.slug, 'pk': self.object.pk})
 
 
 class FolderDetailView(DetailView):
@@ -174,6 +174,26 @@ class AreaCreateView(CreateView):
         area.user = self.request.user
         area.save()
         return HttpResponseRedirect(self.get_success_url())
+
+
+class AreaUpdateView(UpdateView):
+    model = Area
+    form_class = AreaForm
+    template_name = 'area/create-area.html'
+
+    @method_decorator(login_required(login_url='/'))
+    def dispatch(self, *args, **kwargs):
+        return super(AreaUpdateView, self).dispatch(*args, **kwargs)
+
+    def get_object(self, *args, **kwargs):
+        obj = super(AreaUpdateView, self).get_object(*args, **kwargs)
+        if obj.user != self.request.user:
+            raise Http404
+        return obj
+
+    def get_success_url(self):
+        messages.success(self.request, 'Área modificada com sucesso!')
+        return reverse('detail_area', kwargs={'slug': self.object.slug, 'pk': self.object.pk})
 
 
 class FolderDeleteView(DeleteView):

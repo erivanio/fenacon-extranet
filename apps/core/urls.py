@@ -2,14 +2,14 @@
 from django.conf.urls import patterns, url
 from apps.core.views import LogoutView, LoginView, DashboardDetailView, \
     FolderDetailView, AreaDetailView, AreaCreateView, UserCreateView, UserEditView, GarbageDetailView, FileDeleteView, \
-    FolderDeleteView
-
+    FolderDeleteView, AreaUpdateView, FolderUpdateView
 
 urlpatterns = patterns('',
     url(r'^$', LoginView.as_view(), name='login'),
     url(r'^pasta/restaurar/(?P<folder_pk>\d+)/$', 'apps.core.ajax.add_status_folder', name='add_folder'),
     url(r'^pasta/deletar/(?P<folder_pk>\d+)/$', 'apps.core.ajax.remove_status_folder', name='remove_folder'),
     url(r'^pasta/excluir/(?P<pk>\d+)/$', FolderDeleteView.as_view(), name='folder_delete'),
+    url(r'^pasta/editar/(?P<slug>[\w_-]+)-(?P<pk>\d+)/$', FolderUpdateView.as_view(), name='update_folder'),
     url(r'^arquivo/excluir/(?P<pk>\d+)/$', FileDeleteView.as_view(), name='file_delete'),
     url(r'^logout/$', LogoutView.as_view(), name='logout'),
     url(r'^(?P<slug>[\w_-]+)/$', DashboardDetailView.as_view(), name='dashboard'),
@@ -22,5 +22,6 @@ urlpatterns = patterns('',
     url(r'^pasta/criar-pasta/$', 'apps.core.views.create_folder', name='create_folder'),
     url(r'^pasta/pasta-listar/(?P<slug>[\w_-]+)-(?P<pk>\d+)/', FolderDetailView.as_view(), name='detail_folder'),
     url(r'^area/area-listar/(?P<slug>[\w_-]+)-(?P<pk>\d+)/', AreaDetailView.as_view(), name='detail_area'),
+    url(r'^area-editar/(?P<slug>[\w_-]+)-(?P<pk>\d+)/$', AreaUpdateView.as_view(), name='update_area'),
     url(r'^area/criar-area/$', AreaCreateView.as_view(), name='create_area'),
 )

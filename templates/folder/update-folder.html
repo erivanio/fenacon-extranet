@@ -1,20 +1,28 @@
 {% extends 'elements/base.html' %}
 {% load widget_tweaks %}
-{% block title %}{% if object %}Editar area{% else %}Criar nova area{% endif %}{% endblock %}
+{% block title %}Editar pasta{% endblock %}
 {% block content %}
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            {% if object %}Editar área{% else %}Criar nova área{% endif %}
+            Editar pasta
         </h1>
         <ol class="breadcrumb">
-            <li><a href="#"><i class="fa fa-clock-o"></i> Início</a></li>
-            {% if object %}
-                <li><a href="{% url 'detail_area' object.slug object.pk %}">{{ object }}</a></li>
-                <li class="active">Editar área</li>
+            {% if object.status %}
+            <li><a href="{% url 'dashboard' request.user.slug %}"><i class="fa fa-clock-o"></i>Início</a></li>
             {% else %}
-                <li class="active">Criar nova área</li>
+            <li><a href="{% url 'garbage' request.user.slug %}"><i class="fa fa-clock-o"></i>Lixeira</a></li>
             {% endif %}
+            {% if object.parent.parent %}
+            <li>...</li>
+            {% endif %}
+            {% if object.area %}
+            <li><a href="{% url 'detail_area' object.area.slug object.area.pk %}">{{ object.area }}</a></li>
+            {% elif object.parent %}
+            <li><a href="{% url 'detail_folder' object.parent.slug object.parent.pk %}">{{ object.parent }}</a></li>
+            {% endif %}
+            <li><a href="{% url 'detail_folder' object.slug object.pk %}">{{ object }}</a></li>
+            <li class="active">Editar</li>
         </ol>
     </section>
 
@@ -34,13 +42,17 @@
                 <div class="box box-info">
                     <!-- /.box-header -->
                     {{ form.non_field_errors }}
-                    <form role="form" method="POST" action="{% if object %}{% url 'update_area' object.slug object.pk %}{% else %}{% url 'create_area' %}{% endif %}">
+                    <form role="form" method="POST" action="{% url 'update_folder' object.slug object.pk %}">
                         <div class="box-body">
                             {% csrf_token %}
                             <!-- text input -->
                             <div class="form-group">
                                 <label>Nome</label>
                                 {{ form.name|append_attr:"class: form-control" }}
+                            </div>
+                            <div class="form-group">
+                                <label>Permissão</label>
+                                {{ form.permission|append_attr:"class: form-control" }}
                             </div>
                         </div>
                         <div class="box-footer">
