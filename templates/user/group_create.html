@@ -1,0 +1,52 @@
+{% extends 'elements/base.html' %}
+{% load widget_tweaks %}
+{% block title %}Criar novo grupo{% endblock %}
+{% block content %}
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            Criar grupo
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-clock-o"></i> Início</a></li>
+            <li class="active">Criar grupo</li>
+        </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+
+        <!-- row -->
+        <div class="row">
+            <div class="col-md-12">
+              {% include 'elements/messages.html' %}
+                <div class="box box-info">
+                    <!-- /.box-header -->
+                    <div style="color:red">{{ form.non_field_errors }}</div>
+                    <form role="form" method="POST" action="{% url 'create_user' %}">
+                        <div class="box-body">
+                            {% csrf_token %}
+                            <!-- text input -->
+                            <div class="form-group">
+                                <label>Nome *</label>
+                                {{ form.name|append_attr:"class: form-control" }}
+                            </div>
+                            <div class="form-group">
+                                <label>Permissões</label>
+                                {{ form.permissions|append_attr:"class: form-control"}}
+                            </div>
+                            <div class="form-group">
+                                <label>Acesso a área</label>
+                                {{ form.areas|append_attr:"class: form-control" }}
+                            </div>
+                        </div>
+                        <div class="box-footer">
+                            <button type="submit" class="btn btn-primary">Salvar</button>
+                        </div>
+                    </form>
+                    <!-- /.box-body -->
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

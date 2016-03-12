@@ -6,9 +6,9 @@ from django.core.urlresolvers import reverse
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
-from django.views.generic import TemplateView, DetailView, CreateView, ListView, UpdateView, DeleteView
-from apps.core.forms import LoginForm, UserEditForm, UserCreateForm, AreaForm, FolderForm
-from apps.core.models import User, Folder, File, Area
+from django.views.generic import TemplateView, DetailView, CreateView, UpdateView, DeleteView
+from apps.core.forms import LoginForm, UserEditForm, UserCreateForm, AreaForm, FolderForm, GroupCreateForm
+from apps.core.models import User, Folder, File, Area, Group
 
 
 class LoginView(TemplateView):
@@ -45,6 +45,16 @@ class LogoutView(TemplateView):
     def get(self, request, *args, **kwargs):
         logout(request)
         return redirect('login')
+
+
+class GroupCreateView(CreateView):
+    model = Group
+    form_class = GroupCreateForm
+    template_name = 'user/group_create.html'
+
+    def get_success_url(self):
+        messages.success(self.request, 'Grupo criado com sucesso!')
+        return reverse('create_group')
 
 
 class UserCreateView(CreateView):

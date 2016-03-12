@@ -1,18 +1,24 @@
 # -*- coding: utf-8 -*-
 from django import forms
-from apps.core.models import Folder, User, Area
+from apps.core.models import Folder, User, Area, Group
 
 
 class LoginForm(forms.Form):
-    name = forms.CharField(label=('Usuário'))
-    password = forms.CharField(label=('Senha'), widget=forms.PasswordInput)
+    name = forms.CharField(label='Usuário')
+    password = forms.CharField(label='Senha', widget=forms.PasswordInput)
     remember_me = forms.CheckboxInput()
+
+
+class GroupCreateForm(forms.ModelForm):
+    class Meta:
+        model = Group
+        fields = ('name', 'permissions', 'areas')
 
 
 class UserCreateForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ('username', 'email', 'is_superuser', 'first_name', 'last_name', 'job')
+        fields = ('username', 'email', 'is_superuser', 'first_name', 'last_name', 'job', 'groups', 'permissions')
 
     def clean(self):
         password1 = self.data.get("password1")
@@ -45,7 +51,7 @@ class UserCreateForm(forms.ModelForm):
 class UserEditForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['email', 'photo', 'first_name', 'last_name', 'job']
+        fields = ['email', 'photo', 'first_name', 'last_name', 'job', 'groups', 'permissions']
 
 
 class FolderForm(forms.ModelForm):

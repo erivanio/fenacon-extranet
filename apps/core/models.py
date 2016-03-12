@@ -33,6 +33,49 @@ def update_filename(instance, filename):
     return os.path.join(path, format)
 
 
+class Permission(models.Model):
+    name = models.CharField('Nome', max_length=200)
+    slug = models.SlugField(max_length=150, blank=True)
+
+    class Meta:
+        verbose_name = 'Grupo'
+        verbose_name_plural = 'Grupos'
+        ordering = ['name']
+
+    def __unicode__(self):
+        return self.name
+
+
+def permission_pre_save(signal, instance, sender, **kwargs):
+    if not instance.slug:
+        instance.slug = slugify(instance.name)
+
+signals.pre_save.connect(permission_pre_save, sender=Permission)
+
+
+class Group(models.Model):
+    created_at = models.DateTimeField(verbose_name='Data de Criação', default=datetime.now)
+    name = models.CharField('Nome', max_length=200)
+    slug = models.SlugField(max_length=150, blank=True)
+    permissions = models.ManyToManyField(Permission, verbose_name="Permissões")
+    areas = models.ManyToManyField('core.Area', verbose_name="areas")
+
+    class Meta:
+        verbose_name = 'Grupo'
+        verbose_name_plural = 'Grupos'
+        ordering = ['name']
+
+    def __unicode__(self):
+        return self.name
+
+
+def group_pre_save(signal, instance, sender, **kwargs):
+    if not instance.slug:
+        instance.slug = slugify(instance.name)
+
+signals.pre_save.connect(group_pre_save, sender=Group)
+
+
 class User(AbstractBaseUser):
     class Meta:
         verbose_name = 'Usuário'
@@ -50,6 +93,8 @@ class User(AbstractBaseUser):
     created_date = models.DateTimeField('Criado em', default=datetime.now)
     photo = models.ImageField('Foto', upload_to=update_filename, blank=True, null=True)
     photo_thumb = ImageRatioField('photo', '65x65')
+    permissions = models.ManyToManyField(Permission, verbose_name="Permissões")
+    groups = models.ManyToManyField(Group, verbose_name="Grupos")
     objects = UserManager()
 
     USERNAME_FIELD = 'username'
@@ -116,6 +161,7 @@ class Area(models.Model):
 
     def __unicode__(self):
         return self.name
+
 
 def area_pre_save(signal, instance, sender, **kwargs):
     if not instance.slug:

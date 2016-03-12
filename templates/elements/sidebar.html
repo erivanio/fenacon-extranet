@@ -43,6 +43,7 @@
 {#            </li>#}
 
             <li><a href="{% url 'garbage' request.user.slug %}"><i class="fa fa-trash"></i> <span>Arquivos excluídos</span></a></li>
+            {% if user.is_superuser %}
             <li class="treeview">
                 <a href="#">
                     <i class="fa fa-gears"></i>
@@ -51,11 +52,12 @@
                 </a>
                 <ul class="treeview-menu">
                     <li><a href="{% url 'create_user' %}"><i class="fa fa-user"></i>Adicionar Usuários</a></li>
-{#                    <li><a href="layout/boxed.html"><i class="fa fa-users"></i> Grupos de usuários</a></li>#}
+                    <li><a href="{% url 'create_group' %}"><i class="fa fa-users"></i> Adicionar Grupos de usuários</a></li>
 {#                    <li><a href="layout/fixed.html"><i class="fa fa-shield"></i> Permissões</a></li>#}
 {#                    <li><a href="layout/collapsed-sidebar.html"><i class="fa fa-gear"></i> Outras configurações</a></li>#}
                 </ul>
             </li>
+            {% endif %}
         </ul>
     </section>
     <!-- /.sidebar -->

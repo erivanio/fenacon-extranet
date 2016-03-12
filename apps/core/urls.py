@@ -2,7 +2,7 @@
 from django.conf.urls import patterns, url
 from apps.core.views import LogoutView, LoginView, DashboardDetailView, \
     FolderDetailView, AreaDetailView, AreaCreateView, UserCreateView, UserEditView, GarbageDetailView, FileDeleteView, \
-    FolderDeleteView, AreaUpdateView, FolderUpdateView
+    FolderDeleteView, AreaUpdateView, FolderUpdateView, GroupCreateView
 
 urlpatterns = patterns('',
     url(r'^$', LoginView.as_view(), name='login'),
@@ -16,6 +16,7 @@ urlpatterns = patterns('',
     url(r'^(?P<slug>[\w_-]+)/lixeira/$', GarbageDetailView.as_view(), name='garbage'),
     url(r'^(?P<slug>[\w_-]+)/editar/', UserEditView.as_view(), name='edit_user'),
     url(r'^usuario/novo/', UserCreateView.as_view(), name='create_user'),
+    url(r'^grupo/novo/', GroupCreateView.as_view(), name='create_group'),
     url(r'^arquivo/adicionar-arquivo/', 'apps.core.views.create_file', name='create_file'),
     url(r'^arquivo/restaurar/(?P<file_pk>\d+)/$', 'apps.core.ajax.add_status_file', name='add_file'),
     url(r'^arquivo/deletar/(?P<file_pk>\d+)/$', 'apps.core.ajax.remove_status_file', name='remove_file'),
