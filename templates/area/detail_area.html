@@ -4,9 +4,41 @@
 {% block content %}
     <!-- Content Header (Page header) -->
     <section class="content-header">
+
+
         <h1>
             Área {{ object }}
+            {% if user.is_superuser %}
+            <div class="btn-group">
+                <a href="{% url 'update_area' object.slug object.pk %}" title="editar" class="btn btn-default btn-sm"><i class="fa fa-pencil"></i></a>
+                <button data-toggle="modal" data-target="#modal_area_{{ object.pk }}" title="excluir" type="button" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i></button>
+            </div>
+            {% endif %}
         </h1>
+        <div class="modal fade" id="modal_area_{{ object.pk }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="exampleModalLabel">Excluir área</h4>
+                    </div>
+                    <div class="modal-body">
+                            <div class="box-body">
+                                Tem certeza que deseja excluir esta área?
+                            </div>
+                    </div>
+                    <div class="modal-footer">
+                        <form method="POST" action="{% url 'delete_area' object.pk %}">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Não</button>
+                        {% csrf_token %}
+                        <input type="submit" id="id_btn_area" value="Sim" class="btn btn-primary">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <ol class="breadcrumb">
             <li><a href="#"><i class="fa fa-clock-o"></i> Início</a></li>
             <li class="active">Área {{ object }}</li>

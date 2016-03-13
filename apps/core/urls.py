@@ -2,7 +2,7 @@
 from django.conf.urls import patterns, url
 from apps.core.views import LogoutView, LoginView, DashboardDetailView, \
     FolderDetailView, AreaDetailView, AreaCreateView, UserCreateView, UserEditView, GarbageDetailView, FileDeleteView, \
-    FolderDeleteView, AreaUpdateView, FolderUpdateView, GroupCreateView
+    FolderDeleteView, AreaUpdateView, FolderUpdateView, GroupCreateView, AreaDeleteView
 
 urlpatterns = patterns('',
     url(r'^$', LoginView.as_view(), name='login'),
@@ -25,4 +25,5 @@ urlpatterns = patterns('',
     url(r'^area/area-listar/(?P<slug>[\w_-]+)-(?P<pk>\d+)/', AreaDetailView.as_view(), name='detail_area'),
     url(r'^area-editar/(?P<slug>[\w_-]+)-(?P<pk>\d+)/$', AreaUpdateView.as_view(), name='update_area'),
     url(r'^area/criar-area/$', AreaCreateView.as_view(), name='create_area'),
+    url(r'^area/deletar/(?P<pk>\d+)/$', AreaDeleteView.as_view(), name='delete_area'),
 )

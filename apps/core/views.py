@@ -204,6 +204,22 @@ class AreaUpdateView(UpdateView):
         return reverse('detail_area', kwargs={'slug': self.object.slug, 'pk': self.object.pk})
 
 
+class AreaDeleteView(DeleteView):
+    model = Area
+
+    def get_object(self, queryset=None):
+        obj = super(AreaDeleteView, self).get_object()
+        for folder in obj.folder_set.all():
+            folder.delete()
+        for file in obj.file_set.all():
+            file.delete()
+        return obj
+
+    def get_success_url(self):
+        messages.success(self.request, 'Área deletada com sucesso!')
+        return reverse('dashboard', kwargs={'slug': self.request.user.slug})
+
+
 class FolderDeleteView(DeleteView):
     model = Folder
 
