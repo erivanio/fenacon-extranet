@@ -74,7 +74,7 @@ class UserEditView(UpdateView):
 
     def get_object(self, *args, **kwargs):
         obj = super(UserEditView, self).get_object(*args, **kwargs)
-        if obj != self.request.user:
+        if obj != self.request.user or not self.request.user.is_superuser:
             raise Http404
         return obj
 
@@ -131,8 +131,6 @@ class FolderUpdateView(UpdateView):
 
     def get_object(self, *args, **kwargs):
         obj = super(FolderUpdateView, self).get_object(*args, **kwargs)
-        if obj.user != self.request.user:
-            raise Http404
         return obj
 
     def get_success_url(self):
@@ -197,7 +195,7 @@ class AreaUpdateView(UpdateView):
 
     def get_object(self, *args, **kwargs):
         obj = super(AreaUpdateView, self).get_object(*args, **kwargs)
-        if obj.user != self.request.user:
+        if not self.request.user.is_superuser:
             raise Http404
         return obj
 
@@ -211,8 +209,6 @@ class FolderDeleteView(DeleteView):
 
     def get_object(self, queryset=None):
         obj = super(FolderDeleteView, self).get_object()
-        if not obj.user == self.request.user:
-            raise Http404
         for folder in obj.children.all():
             folder.delete()
         for file in obj.file_set.all():
@@ -229,8 +225,6 @@ class FileDeleteView(DeleteView):
 
     def get_object(self, queryset=None):
         obj = super(FileDeleteView, self).get_object()
-        if not obj.user == self.request.user:
-            raise Http404
         return obj
 
     def get_success_url(self):

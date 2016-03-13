@@ -26,6 +26,7 @@
         <div class="row">
             {% include 'elements/messages.html' %}
             {% for folder in folders %}
+            {% if request.user == folder.user or user.is_superuser or folder.permission == 'public' %}
             <div class="col-md-3 col-sm-6 col-xs-12" id="div_folder_{{ folder.pk }}">
                 <div class="info-box">
                     <div class="box-tools pull-right">
@@ -73,6 +74,7 @@
                     </div>
                 </div>
             </div>
+            {% endif %}
             {% endfor %}
             {% for file in files %}
             <div class="col-md-3 col-sm-6 col-xs-12" id="div_file_{{ file.pk }}">
