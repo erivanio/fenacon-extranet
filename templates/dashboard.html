@@ -1,6 +1,6 @@
 {% extends 'elements/base.html' %}
 {% load utils %}
-{% block title %}Início{% endblock %}
+{% block title %}{{ object }}{% endblock %}
 {% block content %}
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -13,10 +13,15 @@
         </ol>
         {% else %}
         <h1>
-            Início
+            {% if request.user == object %}Início{% else %}{{ object.get_display_name }}{% endif %}
         </h1>
         <ol class="breadcrumb">
-            <li class="active"><i class="fa fa-clock-o"></i> Início</li>
+            {% if request.user == object %}
+                <li class="active"><i class="fa fa-clock-o"></i> Início</li>
+            {% else %}
+                <li><i class="fa fa-clock-o"></i> Início</li>
+                <li class="active"><i class="fa fa-user"></i> {{ object.get_display_name }}</li>
+            {% endif %}
         </ol>
         {% endif %}
     </section>
