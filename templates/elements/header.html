@@ -29,6 +29,7 @@
                         <li>
                             <!-- inner menu: contains the actual data -->
                             <ul class="menu">
+                                {% if user.is_superuser %}
                                 <li><!-- start message -->
                                     <a href="{% url 'create_area' %}">
                                         <div class="pull-left">
@@ -39,7 +40,9 @@
                                         </h4>
                                     </a>
                                 </li>
+                                {% endif %}
                                 <!-- end message -->
+                                {% if user.is_superuser or user|has_folder_permission %}
                                 <li>
                                     <a data-toggle="modal" data-target="#modal_pasta">
                                         <div class="pull-left">
@@ -50,6 +53,8 @@
                                         </h4>
                                     </a>
                                 </li>
+                                {% endif %}
+                                {% if user.is_superuser or user|has_file_permission %}
                                 <li>
                                     <a  data-toggle="modal" data-target="#modal_arquivo">
                                         <div class="pull-left">
@@ -60,9 +65,7 @@
                                         </h4>
                                     </a>
                                 </li>
-                                <li>
-
-                                </li>
+                                {% endif %}
                             </ul>
                         </li>
                     </ul>

@@ -57,8 +57,8 @@ class Group(models.Model):
     created_at = models.DateTimeField(verbose_name='Data de Criação', default=datetime.now)
     name = models.CharField('Nome', max_length=200)
     slug = models.SlugField(max_length=150, blank=True)
-    permissions = models.ManyToManyField(Permission, verbose_name="Permissões")
-    areas = models.ManyToManyField('core.Area', verbose_name="areas")
+    permissions = models.ManyToManyField(Permission, verbose_name="Permissões", blank=True, null=True)
+    areas = models.ManyToManyField('core.Area', verbose_name="areas", blank=True, null=True)
 
     class Meta:
         verbose_name = 'Grupo'
@@ -93,8 +93,9 @@ class User(AbstractBaseUser):
     created_date = models.DateTimeField('Criado em', default=datetime.now)
     photo = models.ImageField('Foto', upload_to=update_filename, blank=True, null=True)
     photo_thumb = ImageRatioField('photo', '65x65')
-    permissions = models.ManyToManyField(Permission, verbose_name="Permissões")
-    groups = models.ManyToManyField(Group, verbose_name="Grupos")
+    permissions = models.ManyToManyField(Permission, verbose_name="Permissões", blank=True, null=True)
+    groups = models.ManyToManyField(Group, verbose_name="Grupos", blank=True, null=True)
+    areas = models.ManyToManyField('core.Area', related_name="permission_areas", verbose_name="areas", blank=True, null=True)
     objects = UserManager()
 
     USERNAME_FIELD = 'username'

@@ -35,8 +35,10 @@
                 <div class="info-box">
                     <div class="box-tools pull-right">
                         <a href="{% url 'update_folder' folder.slug folder.pk %}" title="editar" type="button" class="btn btn-box-tool"><i class="fa fa-pencil"></i></a>
+                        {% if user.is_superuser or user|has_remove_permission %}
                         <a data-toggle="modal" data-target="#modal_pasta_{{ folder.pk }}" title="excluir" type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-trash-o fa-fw"></i>
                         </a>
+                        {% endif %}
                       </div>
                     <a href="{% url 'detail_folder' folder.slug folder.pk %}">
                         <span class="info-box-icon bg-aqua"><i class="ion ion-ios-folder"></i></span>
@@ -79,8 +81,10 @@
             <div class="col-md-3 col-sm-6 col-xs-12" id="div_file_{{ file.pk }}">
                 <div class="info-box">
                     <div class="box-tools pull-right">
+                        {% if user.is_superuser or user|has_remove_permission %}
                         <a data-toggle="modal" data-target="#modal_arquivo_{{ file.pk }}" title="excluir" type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-trash-o fa-fw"></i>
                         </a>
+                        {% endif %}
                       </div>
                     <a href="{{ MEDIA_URL }}{{ file.file }}" download>
                         <span class="info-box-icon bg-green"><i class="glyphicon glyphicon-download-alt"></i></span>

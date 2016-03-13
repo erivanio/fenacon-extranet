@@ -1,3 +1,4 @@
+{% load utils %}
 <!-- Left side column. contains the logo and sidebar -->
 <aside class="main-sidebar">
     <!-- sidebar: style can be found in sidebar.less -->
@@ -27,7 +28,10 @@
                 </a>
                 <ul class="treeview-menu">
                     {% for area in areas %}
-                    <li><a href="{% url 'detail_area' area.slug area.pk %}"><i class="fa fa-circle-o"></i> {{ area.name }}</a></li>
+                        {% has_area user area as result %}
+                        {% if user.is_superuser or result %}
+                            <li><a href="{% url 'detail_area' area.slug area.pk %}"><i class="fa fa-circle-o"></i> {{ area.name }}</a></li>
+                        {% endif %}
                     {% endfor %}
                 </ul>
             </li>

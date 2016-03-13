@@ -23,7 +23,7 @@
                 <div class="box box-info">
                     <!-- /.box-header -->
                     <div style="color:red">{{ form.non_field_errors }}</div>
-                    <form role="form" method="POST" action="{% url 'create_user' %}">
+                    <form role="form" method="POST" action="{% url 'create_group' %}">
                         <div class="box-body">
                             {% csrf_token %}
                             <!-- text input -->
