@@ -57,8 +57,8 @@ class Group(models.Model):
     created_at = models.DateTimeField(verbose_name='Data de Criação', default=datetime.now)
     name = models.CharField('Nome', max_length=200)
     slug = models.SlugField(max_length=150, blank=True)
-    permissions = models.ManyToManyField(Permission, verbose_name="Permissões", blank=True, null=True)
-    areas = models.ManyToManyField('core.Area', verbose_name="areas", blank=True, null=True)
+    permissions = models.ManyToManyField(Permission, verbose_name="Permissões", blank=True)
+    areas = models.ManyToManyField('core.Area', verbose_name="areas", blank=True)
 
     class Meta:
         verbose_name = 'Grupo'
@@ -93,9 +93,9 @@ class User(AbstractBaseUser):
     created_date = models.DateTimeField('Criado em', default=datetime.now)
     photo = models.ImageField('Foto', upload_to=update_filename, blank=True, null=True)
     photo_thumb = ImageRatioField('photo', '65x65')
-    permissions = models.ManyToManyField(Permission, verbose_name="Permissões", blank=True, null=True)
-    groups = models.ManyToManyField(Group, verbose_name="Grupos", blank=True, null=True)
-    areas = models.ManyToManyField('core.Area', related_name="permission_areas", verbose_name="areas", blank=True, null=True)
+    permissions = models.ManyToManyField(Permission, verbose_name="Permissões", blank=True)
+    groups = models.ManyToManyField(Group, verbose_name="Grupos", blank=True)
+    areas = models.ManyToManyField('core.Area', related_name="permission_areas", verbose_name="areas", blank=True)
     objects = UserManager()
 
     USERNAME_FIELD = 'username'
@@ -180,6 +180,7 @@ class Folder(models.Model):
     area = models.ForeignKey(Area, verbose_name='Área', null=True, blank=True)
     name = models.CharField('Nome', max_length=200)
     created_at = models.DateTimeField(verbose_name='Data de Publicação', default=datetime.now)
+    deleted_at = models.DateTimeField(verbose_name='Data de deleção', null=True, blank=True)
     user = models.ForeignKey(User, verbose_name='Usuário')
     status = models.BooleanField(default=True)
     permission = models.CharField(max_length=10, choices=PERMISSION_FOLDER, default='public')
@@ -207,6 +208,7 @@ class File(models.Model):
     folder = models.ForeignKey(Folder, verbose_name='Pasta', blank=True, null=True)
     area = models.ForeignKey(Area, verbose_name='Área', null=True, blank=True)
     created_at = models.DateTimeField(verbose_name='Data de Publicação', default=datetime.now)
+    deleted_at = models.DateTimeField(verbose_name='Data de deleção', null=True, blank=True)
     user = models.ForeignKey(User, verbose_name='Usuário')
     status = models.BooleanField(default=True)
 
