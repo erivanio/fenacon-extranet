@@ -51,7 +51,7 @@ class UserCreateForm(forms.ModelForm):
 class UserEditForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['email', 'photo', 'first_name', 'last_name', 'job', 'groups', 'permissions', 'areas']
+        fields = ['email', 'photo', 'first_name', 'last_name', 'job', 'is_superuser', 'groups', 'permissions', 'areas']
 
 
 class FolderForm(forms.ModelForm):
