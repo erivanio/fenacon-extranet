@@ -82,7 +82,7 @@ class UserEditView(UpdateView):
 
     def get_object(self, *args, **kwargs):
         obj = super(UserEditView, self).get_object(*args, **kwargs)
-        if obj != self.request.user or not self.request.user.is_superuser:
+        if obj != self.request.user and not self.request.user.is_superuser:
             raise Http404
         return obj
 
