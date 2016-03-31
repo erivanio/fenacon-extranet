@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.urlresolvers import reverse
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import redirect
@@ -52,6 +52,10 @@ class GroupCreateView(CreateView):
     form_class = GroupCreateForm
     template_name = 'user/group_create.html'
 
+    @method_decorator(user_passes_test(lambda u: u.is_superuser))
+    def dispatch(self, *args, **kwargs):
+        return super(GroupCreateView, self).dispatch(*args, **kwargs)
+
     def get_success_url(self):
         messages.success(self.request, 'Grupo criado com sucesso!')
         return reverse('create_group')
@@ -65,10 +69,15 @@ class UserListView(ListView):
     def dispatch(self, *args, **kwargs):
         return super(UserListView, self).dispatch(*args, **kwargs)
 
+
 class UserCreateView(CreateView):
     model = User
     form_class = UserCreateForm
     template_name = 'user/user_create.html'
+
+    @method_decorator(user_passes_test(lambda u: u.is_superuser))
+    def dispatch(self, *args, **kwargs):
+        return super(UserCreateView, self).dispatch(*args, **kwargs)
 
     def get_success_url(self):
         messages.success(self.request, 'Usuário criado com sucesso!')
@@ -175,7 +184,7 @@ class AreaCreateView(CreateView):
     form_class = AreaForm
     template_name = 'area/create-area.html'
 
-    @method_decorator(login_required(login_url='/'))
+    @method_decorator(user_passes_test(lambda u: u.is_superuser))
     def dispatch(self, *args, **kwargs):
         return super(AreaCreateView, self).dispatch(*args, **kwargs)
 
@@ -197,15 +206,9 @@ class AreaUpdateView(UpdateView):
     form_class = AreaForm
     template_name = 'area/create-area.html'
 
-    @method_decorator(login_required(login_url='/'))
+    @method_decorator(user_passes_test(lambda u: u.is_superuser))
     def dispatch(self, *args, **kwargs):
         return super(AreaUpdateView, self).dispatch(*args, **kwargs)
-
-    def get_object(self, *args, **kwargs):
-        obj = super(AreaUpdateView, self).get_object(*args, **kwargs)
-        if not self.request.user.is_superuser:
-            raise Http404
-        return obj
 
     def get_success_url(self):
         messages.success(self.request, 'Área modificada com sucesso!')
