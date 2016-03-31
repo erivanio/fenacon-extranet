@@ -103,14 +103,14 @@ class DashboardDetailView(DetailView):
         context = super(DashboardDetailView, self).get_context_data(**kwargs)
         if self.request.GET.get('q'):
             q = self.request.GET.get('q')
-            context['folders'] = Folder.objects.filter(user=self.request.user, name__icontains=q,
+            context['folders'] = Folder.objects.filter(user__slug=self.kwargs['slug'], name__icontains=q,
                                                        parent__isnull=True, status=True).order_by('-name')
-            context['files'] = File.objects.filter(user=self.request.user, name__icontains=q,
+            context['files'] = File.objects.filter(user__slug=self.kwargs['slug'], name__icontains=q,
                                                    folder__isnull=True, status=True).order_by('-name')
         else:
-            context['folders'] = Folder.objects.filter(user=self.request.user,
+            context['folders'] = Folder.objects.filter(user__slug=self.kwargs['slug'],
                                                        parent__isnull=True, status=True).order_by('-name')
-            context['files'] = File.objects.filter(user=self.request.user,
+            context['files'] = File.objects.filter(user__slug=self.kwargs['slug'],
                                                    folder__isnull=True, status=True).order_by('-name')
 
         return context

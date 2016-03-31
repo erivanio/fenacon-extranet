@@ -28,5 +28,5 @@ urlpatterns = patterns('',
     url(r'^area/criar-area/$', AreaCreateView.as_view(), name='create_area'),
     url(r'^area/deletar/(?P<pk>\d+)/$', AreaDeleteView.as_view(), name='delete_area'),
     url(r'^usuario/(?P<slug>[\w_-]+)/$', DashboardDetailView.as_view(), name='dashboard'),
-    url(r'^historico/$', TemplateView.as_view(template_name='history.html'), name='dashboard'),
+    url(r'^historico/$', TemplateView.as_view(template_name='history.html'), name='historico'),
 )
