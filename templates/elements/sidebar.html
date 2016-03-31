@@ -28,8 +28,8 @@
                 </a>
                 <ul class="treeview-menu">
                     {% for area in areas %}
-                        {% has_area user area as result %}
-                        {% if user.is_superuser or result %}
+                        {% has_area request.user area as result %}
+                        {% if request.user.is_superuser or result %}
                             <li><a href="{% url 'detail_area' area.slug area.pk %}"><i class="fa fa-circle-o"></i> {{ area.name }}</a></li>
                         {% endif %}
                     {% endfor %}
@@ -52,7 +52,7 @@
 {#            </li>#}
 
             <li><a href="{% url 'garbage' request.user.slug %}"><i class="fa fa-trash"></i> <span>Arquivos excluídos</span></a></li>
-            {% if user.is_superuser %}
+            {% if request.user.is_superuser %}
             <li class="treeview">
                 <a href="#">
                     <i class="fa fa-gears"></i>
