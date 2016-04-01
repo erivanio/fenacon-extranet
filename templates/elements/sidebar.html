@@ -45,11 +45,13 @@
 {#                    <i class="fa fa-credit-card"></i> <span>Reembolso de Viagens</span>#}
 {#                </a>#}
 {#            </li>#}
-{#            <li>#}
-{#                <a href="log.html">#}
-{#                    <i class="fa fa-calendar"></i> <span>Histórico de atividades</span>#}
-{#                </a>#}
-{#            </li>#}
+            {% if request.user.is_superuser or request.user|has_history_permission %}
+            <li>
+                <a href="{% url 'history' %}">
+                    <i class="fa fa-calendar"></i> <span>Histórico de atividades</span>
+                </a>
+            </li>
+            {% endif %}
 
             <li><a href="{% url 'garbage' request.user.slug %}"><i class="fa fa-trash"></i> <span>Arquivos excluídos</span></a></li>
             {% if request.user.is_superuser %}

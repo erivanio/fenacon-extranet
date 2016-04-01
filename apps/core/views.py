@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
+
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -8,7 +10,7 @@ from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView, DetailView, CreateView, UpdateView, DeleteView, ListView
 from apps.core.forms import LoginForm, UserEditForm, UserCreateForm, AreaForm, FolderForm, GroupCreateForm
-from apps.core.models import User, Folder, File, Area, Group
+from apps.core.models import User, Folder, File, Area, Group, History
 
 
 class LoginView(TemplateView):
@@ -79,6 +81,17 @@ class UserCreateView(CreateView):
     def dispatch(self, *args, **kwargs):
         return super(UserCreateView, self).dispatch(*args, **kwargs)
 
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.save()
+        history = History()
+        history.created_at = datetime.now()
+        history.icon = 'fa-user'
+        history.content = '<a href="%s">%s</a> adicionou o usuário <a href="%s">%s</a>' % (self.request.user.get_absolute_url(), self.request.user.get_display_name(), self.object.get_absolute_url(), self.object.get_display_name())
+        history.save()
+
+        return HttpResponseRedirect(self.get_success_url())
+
     def get_success_url(self):
         messages.success(self.request, 'Usuário criado com sucesso!')
         return reverse('create_user')
@@ -94,6 +107,20 @@ class UserEditView(UpdateView):
         if obj != self.request.user and not self.request.user.is_superuser:
             raise Http404
         return obj
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.save()
+        history = History()
+        history.created_at = datetime.now()
+        history.icon = 'fa-user'
+        if self.request.user != self.object:
+            history.content = '<a href="%s">%s</a> editou o perfil do usuário <a href="%s">%s</a>' % (self.request.user.get_absolute_url(), self.request.user.get_display_name(), self.object.get_absolute_url(), self.object.get_display_name())
+        else:
+            history.content = '<a href="%s">%s</a> editou seu perfil' % (self.request.user.get_absolute_url(), self.request.user.get_display_name())
+        history.save()
+
+        return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
         messages.success(self.request, 'Perfil modificado com sucesso!')
@@ -149,6 +176,17 @@ class FolderUpdateView(UpdateView):
     def get_object(self, *args, **kwargs):
         obj = super(FolderUpdateView, self).get_object(*args, **kwargs)
         return obj
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.save()
+        history = History()
+        history.created_at = datetime.now()
+        history.icon = 'fa-folder'
+        history.content = '<a href="%s">%s</a> editou a pasta <a href="%s">%s</a>' % (self.request.user.get_absolute_url(), self.request.user.get_display_name(), self.object.get_absolute_url(), self.object.name)
+        history.save()
+
+        return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
         messages.success(self.request, 'Pasta modificada com sucesso!')
@@ -259,6 +297,15 @@ class FileDeleteView(DeleteView):
         return u'/%s/lixeira/' % self.request.user.slug
 
 
+class HistoryListView(ListView):
+    model = History
+    template_name = 'history.html'
+
+    @method_decorator(login_required(login_url='/'))
+    def dispatch(self, *args, **kwargs):
+        return super(HistoryListView, self).dispatch(*args, **kwargs)
+
+
 def create_folder(request):
     if request.method == 'POST':
         folder = Folder()
@@ -269,16 +316,31 @@ def create_folder(request):
             parent = Folder.objects.get(id=int(request.POST.get('parent')))
             folder.parent = parent
             folder.save()
+            history = History()
+            history.created_at = datetime.now()
+            history.icon = 'fa-folder'
+            history.content = '<a href="%s">%s</a> adicionou a pasta "%s" na pasta <a href="%s">%s</a>' % (folder.user.get_absolute_url(), folder.user.get_display_name(), folder.name, parent.get_absolute_url(), parent.name)
+            history.save()
             messages.success(request, 'Pasta criada com sucesso!')
             return reverse('detail_folder', kwargs={'slug': parent.slug, 'pk': parent.pk})
         elif request.POST.get('area'):
             area = Area.objects.get(id=int(request.POST.get('area')))
             folder.area = area
             folder.save()
+            history = History()
+            history.created_at = datetime.now()
+            history.icon = 'fa-folder'
+            history.content = '<a href="%s">%s</a> adicionou a pasta "%s" em <a href="%s">%s</a>' % (folder.user.get_absolute_url(), folder.user.get_display_name(), folder.name, area.get_absolute_url(), area.name)
+            history.save()
             messages.success(request, 'Pasta criada com sucesso!')
             return redirect(reverse('detail_area', kwargs={'slug': area.slug, 'pk': area.pk}))
         else:
             folder.save()
+            history = History()
+            history.created_at = datetime.now()
+            history.icon = 'fa-folder'
+            history.content = '<a href="%s">%s</a> adicionou a pasta "%s"' % (folder.user.get_absolute_url(), folder.user.get_display_name(), folder.name)
+            history.save()
             messages.success(request, 'Pasta criada com sucesso!')
             return reverse('dashboard', kwargs={'slug': request.user.slug})
 
@@ -293,16 +355,32 @@ def create_file(request):
             folder = Folder.objects.get(id=int(request.POST.get('folder')))
             file.folder = folder
             file.save()
+            history = History()
+            history.created_at = datetime.now()
+            history.icon = 'fa-file'
+            history.content = '<a href="%s">%s</a> adicionou o arquivo "%s" a pasta <a href="%s">%s</a>' % (file.user.get_absolute_url(), file.user.get_display_name(), file.name, folder.get_absolute_url(), folder.name)
+            history.save()
             messages.success(request, 'Arquivo adicionado com sucesso!')
             return reverse('detail_folder', kwargs={'slug': folder.slug, 'pk': folder.pk})
         elif request.POST.get('area'):
             area = Area.objects.get(id=int(request.POST.get('area')))
             file.area = area
             file.save()
+            import ipdb;ipdb.set_trace()
+            history = History()
+            history.created_at = datetime.now()
+            history.icon = 'fa-file'
+            history.content = '<a href="%s">%s</a> adicionou o arquivo "%s" em <a href="%s">%s</a>' % (file.user.get_absolute_url(), file.user.get_display_name(), file.name, area.get_absolute_url(), area.name)
+            history.save()
             messages.success(request, 'Arquivo adicionado com sucesso!')
             return reverse('detail_area', kwargs={'slug': area.slug, 'pk': area.pk})
         else:
             file.save()
+            history = History()
+            history.created_at = datetime.now()
+            history.icon = 'fa-file'
+            history.content = '<a href="%s">%s</a> adicionou o arquivo "%s"' % (file.user.get_absolute_url(), file.user.get_display_name(), file.name)
+            history.save()
             messages.success(request, 'Arquivo adicionado com sucesso!')
             return reverse('dashboard', kwargs={'slug': request.user.slug})
 

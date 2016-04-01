@@ -4,6 +4,7 @@ import os
 import random
 import string
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models import signals
 from django.utils.text import slugify
@@ -135,6 +136,9 @@ class User(AbstractBaseUser):
     def has_module_perms(self, app_label):
         return True
 
+    def get_absolute_url(self):
+        return reverse('dashboard', kwargs={'slug': self.slug})
+
     @property
     def is_staff(self):
         return self.is_superuser
@@ -161,6 +165,9 @@ class Area(models.Model):
 
     def __unicode__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse('detail_area', kwargs={'slug': self.slug, 'pk': self.pk})
 
 
 def area_pre_save(signal, instance, sender, **kwargs):
@@ -192,6 +199,9 @@ class Folder(models.Model):
 
     def __unicode__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse('detail_folder', kwargs={'slug': self.slug, 'pk': self.pk})
 
 
 def folder_pre_save(signal, instance, sender, **kwargs):
@@ -232,13 +242,13 @@ signals.pre_save.connect(file_pre_save, sender=File)
 
 class History(models.Model):
     created_at = models.DateTimeField(verbose_name='Data de Criação', default=datetime.now)
-    user = models.ForeignKey(User, verbose_name='Usuário')
     content = models.TextField('Conteúdo')
+    icon = models.CharField(max_length=200, null=True, blank=True)
 
     class Meta:
         verbose_name = 'Histórico'
         verbose_name_plural = 'Históricos'
-        ordering = ['created_at']
+        ordering = ['-created_at']
 
     def __unicode__(self):
-        return self.user
+        return self.content
