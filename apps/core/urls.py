@@ -29,4 +29,5 @@ urlpatterns = patterns('',
     url(r'^area/deletar/(?P<pk>\d+)/$', AreaDeleteView.as_view(), name='delete_area'),
     url(r'^usuario/(?P<slug>[\w_-]+)/$', DashboardDetailView.as_view(), name='dashboard'),
     url(r'^historico/$', HistoryListView.as_view(), name='history'),
+    url(r'^criar-reembolso/$', TemplateView.as_view(template_name='financier/create_refund.html'), name='reembolso'),
 )
