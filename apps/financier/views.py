@@ -21,6 +21,10 @@ class TravelRefundCreateView(CreateView):
     def dispatch(self, *args, **kwargs):
         return super(TravelRefundCreateView, self).dispatch(*args, **kwargs)
 
+    def get_success_url(self):
+        messages.success(self.request, 'Solicitação modificada com sucesso!')
+        return reverse('list_refund')
+
 
 class TravelRefundListView(ListView):
     model = TravelRefund

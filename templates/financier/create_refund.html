@@ -29,9 +29,9 @@
         <div class="row">
             <div class="col-md-12">
               {% include 'elements/messages.html' %}
+                <div style="color:red">{{ form.non_field_errors }}</div>
                 <div class="box box-info">
                     <!-- /.box-header -->
-                    <div style="color:red">{{ form.non_field_errors }}</div>
                     <form role="form" method="POST" action="{% if object %}{% url 'update_refund' object.pk %}{% else %}{% url 'create_refund' %}{% endif %}">
                         <div class="box-body">
                             {% csrf_token %}
@@ -40,10 +40,12 @@
                                 <div class="col-lg-4">
                                     <label>Beneficiário *</label>
                                     {{ form.beneficiary|append_attr:"class: form-control" }}
+                                    <div style="color:red">{{ form.beneficiary.errors }}</div>
                                 </div>
                                 <div class="col-lg-4">
                                     <label>Autorizador *</label>
                                     {{ form.authorizer|append_attr:"class: form-control" }}
+                                    <div style="color:red">{{ form.authorizer.errors }}</div>
                                 </div>
                                 <div class="col-lg-4">
                                     <label>Estado</label>
@@ -60,12 +62,14 @@
                                       <div class="input-group-addon">
                                         <i class="fa fa-calendar"></i>
                                       </div>
-                                      {{ form.going_date|append_attr:"class: form-control pull-right"|attr:"id:datepicker" }}
+                                      {{ form.going_date|append_attr:"class: form-control pull-right datepicker" }}
                                     </div>
+                                    <div style="color:red">{{ form.going_date.errors }}</div>
                                 </div>
                                 <div class="col-lg-6">
                                     <label>Empresa *</label>
                                     {{ form.going_enterprise|append_attr:"class: form-control" }}
+                                    <div style="color:red">{{ form.going_enterprise.errors }}</div>
                                 </div>
                             </div>
                             <div class="row">
@@ -102,12 +106,14 @@
                                       <div class="input-group-addon">
                                         <i class="fa fa-calendar"></i>
                                       </div>
-                                      {{ form.back_date|append_attr:"class: form-control pull-right"|attr:"id:datepicker" }}
+                                      {{ form.back_date|append_attr:"class: form-control pull-right datepicker" }}
                                     </div>
+                                    <div style="color:red">{{ form.back_date.errors }}</div>
                                 </div>
                                 <div class="col-lg-6">
                                     <label>Empresa *</label>
                                     {{ form.back_enterprise|append_attr:"class: form-control" }}
+                                    <div style="color:red">{{ form.back_enterprise.errors }}</div>
                                 </div>
                             </div>
                             <div class="row">
@@ -194,19 +200,23 @@
 {% block extrajs %}
 <!-- bootstrap datepicker -->
 <script src="{{ MEDIA_URL }}plugins/datepicker/bootstrap-datepicker.js"></script>
+<script src="{{ MEDIA_URL }}plugins/datepicker/locales/bootstrap-datepicker.pt-BR.js"></script>
 <!-- bootstrap timepicker -->
 <script src="{{ MEDIA_URL }}plugins/timepicker/bootstrap-timepicker.min.js"></script>
 <script>
   $(function () {
 
     //Date picker
-    $('#datepicker').datepicker({
-      autoclose: true
+    $('.datepicker').datepicker({
+        format: 'dd/mm/yyyy',
+        language: 'pt-BR',
+        autoclose: true
     });
 
     //Timepicker
     $(".timepicker").timepicker({
-      showInputs: false
+        showMeridian: false,
+        showInputs: false
     });
   });
 </script>
