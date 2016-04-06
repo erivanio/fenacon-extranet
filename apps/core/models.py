@@ -37,8 +37,8 @@ class Permission(models.Model):
     slug = models.SlugField(max_length=150, blank=True)
 
     class Meta:
-        verbose_name = 'Grupo'
-        verbose_name_plural = 'Grupos'
+        verbose_name = 'Permissão'
+        verbose_name_plural = 'Permissões'
         ordering = ['name']
 
     def __unicode__(self):
