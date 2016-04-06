@@ -48,10 +48,122 @@
                       {% elif refund.status == '4' %}<span class="label label-danger">Rejeitado</span>{% endif %}
                   </td>
                 <td>
-                    <a href="#" class="btn btn-xs btn-flat btn-info"><i class="fa fa-eye"></i></a>
+                    <button type="button" class="btn btn-xs btn-flat btn-info" data-toggle="modal" data-target="#refund_{{ refund.pk }}"><i class="fa fa-eye"></i></button>
                     <a href="{% url 'update_refund' refund.pk %}" class="btn btn-xs btn-flat btn-warning"><i class="fa fa-pencil"></i></a>
                 </td>
                 </tr>
+                <!-- Modal -->
+                <div class="modal fade" id="refund_{{ refund.pk }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Reembolso de Viagem</h4>
+                      </div>
+                      <div class="modal-body">
+                          <div class="row">
+                              <div class="col-md-12">
+                                  <div class="col-md-6">
+                                        <p><b>Estado:</b> {{ refund.beneficiary.get_display_name }}</p>
+                                  </div>
+                                  <div class="col-md-6">
+                                        <p><b>Autorizador:</b> {{ refund.authorizer }}</p>
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="row">
+                              <div class="col-md-12">
+                                  <div class="col-md-6">
+                                    <p><b>Estado:</b>
+                                    {% if refund.status == '1' %}<span class="label label-warning">Aguardando</span>
+                                    {% elif refund.status == '2' %}<span class="label label-success">Aprovada</span>
+                                    {% elif refund.status == '3' %}<span class="label label-primary">Pago</span>
+                                    {% elif refund.status == '4' %}<span class="label label-danger">Rejeitado</span>{% endif %}</p>
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="box-header with-border">
+                              <h3 class="box-title">Ida</h3>
+                          </div>
+                          <div class="row">
+                              <div class="col-md-12">
+                                  <div class="col-md-6">
+                                        <p><b>Data:</b> {{ refund.going_date }}</p>
+                                  </div>
+                                  <div class="col-md-6">
+                                        <p><b>Empresa:</b> {{ refund.going_enterprise }}</p>
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="row">
+                              <div class="col-md-12">
+                                  <div class="col-md-6">
+                                        <p><b>Hora de saída:</b> {{ refund.going_exit_time }}</p>
+                                  </div>
+                                  <div class="col-md-6">
+                                        <p><b>Hora de chegada:</b> {{ refund.going_arrival_time }}</p>
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="box-header with-border">
+                              <h3 class="box-title">Volta</h3>
+                          </div>
+                          <div class="row">
+                              <div class="col-md-12">
+                                  <div class="col-md-6">
+                                        <p><b>Data:</b> {{ refund.back_date }}</p>
+                                  </div>
+                                  <div class="col-md-6">
+                                        <p><b>Empresa:</b> {{ refund.back_enterprise }}</p>
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="row">
+                              <div class="col-md-12">
+                                  <div class="col-md-6">
+                                        <p><b>Hora de saída:</b> {{ refund.back_exit_time }}</p>
+                                  </div>
+                                  <div class="col-md-6">
+                                        <p><b>Hora de chegada:</b> {{ refund.back_arrival_time }}</p>
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="box-header with-border">
+                              <h3 class="box-title">Despesas</h3>
+                          </div>
+                          <div class="row">
+                              <div class="col-md-12">
+                                  <div class="col-md-3">
+                                        <p><b>Locomoção:</b></p> <p>R$ {{ refund.expenses_locomotion }}</p>
+                                  </div>
+                                  <div class="col-md-3">
+                                        <p><b>Alimentação:</b></p> <p>R$ {{ refund.meal_expenses }}</p>
+                                  </div>
+                                  <div class="col-md-3">
+                                        <p><b>Diária:</b></p> <p>R$ {{ refund.daily }}</p>
+                                  </div>
+                                  <div class="col-md-3">
+                                        <p><b>Quilometragem:</b></p> <p>R${{ refund.mileage }}</p>
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="box-header with-border">
+                              <h3 class="box-title">Histórico</h3>
+                          </div>
+                          <div class="row">
+                              <div class="col-md-12">
+                                <div class="col-md-12">
+                                  {{ refund.history }}
+                                </div>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
                 {% endfor %}
               </tbody></table>
             </div>
