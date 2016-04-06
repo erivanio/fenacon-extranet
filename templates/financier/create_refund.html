@@ -1,15 +1,24 @@
 {% extends 'elements/base.html' %}
 {% load widget_tweaks %}
-{% block title %}Criar solicitação de reembolso{% endblock %}
+{% block title %}Solicitação de reembolso de viagem{% endblock %}
 {% block content %}
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            Criar solicitação de reembolso
+             {% if object %}
+                Editar solicitação
+            {% else %}
+                Nova solicitação
+            {% endif %}
         </h1>
         <ol class="breadcrumb">
             <li><a href="{% url 'dashboard' request.user.slug %}"><i class="fa fa-clock-o"></i> Início</a></li>
-            <li class="active">Criar solicitação de reembolso</li>
+            <li><a href="{% url 'list_refund' %}">Reembolsos de viagem</a></li>
+            {% if object %}
+                <li class="active">Editar solicitação</li>
+            {% else %}
+                <li class="active">Nova solicitação</li>
+            {% endif %}
         </ol>
     </section>
 
@@ -23,116 +32,140 @@
                 <div class="box box-info">
                     <!-- /.box-header -->
                     <div style="color:red">{{ form.non_field_errors }}</div>
-                    <form role="form" method="POST" action="{% url 'create_refund' %}">
+                    <form role="form" method="POST" action="{% if object %}{% url 'update_refund' object.pk %}{% else %}{% url 'create_refund' %}{% endif %}">
                         <div class="box-body">
                             {% csrf_token %}
                             <!-- text input -->
-                            <div class="form-group">
-                                <label>Estado</label>
-                                {{ form.status|append_attr:"class: form-control" }}
-                            </div>
-                            <div class="form-group">
-                                <label>Beneficiário *</label>
-                                {{ form.beneficiary|append_attr:"class: form-control" }}
-                            </div>
-                            <div class="form-group">
-                                <label>Autorizador *</label>
-                                {{ form.authorizer|append_attr:"class: form-control" }}
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <label>Beneficiário *</label>
+                                    {{ form.beneficiary|append_attr:"class: form-control" }}
+                                </div>
+                                <div class="col-lg-4">
+                                    <label>Autorizador *</label>
+                                    {{ form.authorizer|append_attr:"class: form-control" }}
+                                </div>
+                                <div class="col-lg-4">
+                                    <label>Estado</label>
+                                    {{ form.status|append_attr:"class: form-control" }}
+                                </div>
                             </div>
                             <div class="box-header with-border">
                               <h3 class="box-title">Ida</h3>
                             </div>
-                            <div class="form-group">
-                                <label>Data *</label>
-                                <div class="input-group date">
-                                  <div class="input-group-addon">
-                                    <i class="fa fa-calendar"></i>
-                                  </div>
-                                  {{ form.going_date|append_attr:"class: form-control pull-right"|attr:"id:datepicker" }}
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label>Empresa *</label>
-                                {{ form.going_enterprise|append_attr:"class: form-control" }}
-                            </div>
-                            <div class="bootstrap-timepicker">
-                                <div class="form-group">
-                                    <label>Hora de saída</label>
-                                    <div class="input-group">
-                                        <div class="input-group-addon">
-                                            <i class="fa fa-clock-o"></i>
-                                        </div>
-                                        {{ form.going_exit_time|append_attr:"class:form-control timepicker" }}
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <label>Data *</label>
+                                    <div class="input-group date">
+                                      <div class="input-group-addon">
+                                        <i class="fa fa-calendar"></i>
+                                      </div>
+                                      {{ form.going_date|append_attr:"class: form-control pull-right"|attr:"id:datepicker" }}
                                     </div>
                                 </div>
+                                <div class="col-lg-6">
+                                    <label>Empresa *</label>
+                                    {{ form.going_enterprise|append_attr:"class: form-control" }}
+                                </div>
                             </div>
-                            <div class="bootstrap-timepicker">
-                                <div class="form-group">
-                                    <label>Hora de chegada</label>
-                                    <div class="input-group">
-                                        <div class="input-group-addon">
-                                            <i class="fa fa-clock-o"></i>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="bootstrap-timepicker">
+                                        <label>Hora de saída</label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-clock-o"></i>
+                                            </div>
+                                            {{ form.going_exit_time|append_attr:"class:form-control timepicker" }}
                                         </div>
-                                        {{ form.going_arrival_time|append_attr:"class:form-control timepicker" }}
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="bootstrap-timepicker">
+                                        <label>Hora de chegada</label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-clock-o"></i>
+                                            </div>
+                                            {{ form.going_arrival_time|append_attr:"class:form-control timepicker" }}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="box-header with-border">
                               <h3 class="box-title">Volta</h3>
                             </div>
-                            <div class="form-group">
-                                <label>Data *</label>
-                                <div class="input-group date">
-                                  <div class="input-group-addon">
-                                    <i class="fa fa-calendar"></i>
-                                  </div>
-                                  {{ form.back_date|append_attr:"class: form-control pull-right"|attr:"id:datepicker" }}
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label>Empresa *</label>
-                                {{ form.back_enterprise|append_attr:"class: form-control" }}
-                            </div>
-                            <div class="bootstrap-timepicker">
-                                <div class="form-group">
-                                    <label>Hora de saída</label>
-                                    <div class="input-group">
-                                        <div class="input-group-addon">
-                                            <i class="fa fa-clock-o"></i>
-                                        </div>
-                                        {{ form.back_exit_time|append_attr:"class:form-control timepicker" }}
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <label>Data *</label>
+                                    <div class="input-group date">
+                                      <div class="input-group-addon">
+                                        <i class="fa fa-calendar"></i>
+                                      </div>
+                                      {{ form.back_date|append_attr:"class: form-control pull-right"|attr:"id:datepicker" }}
                                     </div>
                                 </div>
+                                <div class="col-lg-6">
+                                    <label>Empresa *</label>
+                                    {{ form.back_enterprise|append_attr:"class: form-control" }}
+                                </div>
                             </div>
-                            <div class="bootstrap-timepicker">
-                                <div class="form-group">
-                                    <label>Hora de chegada</label>
-                                    <div class="input-group">
-                                        <div class="input-group-addon">
-                                            <i class="fa fa-clock-o"></i>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="bootstrap-timepicker">
+                                        <label>Hora de saída</label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-clock-o"></i>
+                                            </div>
+                                            {{ form.back_exit_time|append_attr:"class:form-control timepicker" }}
                                         </div>
-                                        {{ form.back_arrival_time|append_attr:"class:form-control timepicker" }}
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="bootstrap-timepicker">
+                                        <label>Hora de chegada</label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-clock-o"></i>
+                                            </div>
+                                            {{ form.back_arrival_time|append_attr:"class:form-control timepicker" }}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="box-header with-border">
                               <h3 class="box-title">Despesas</h3>
                             </div>
-                            <div class="form-group">
-                                <label>Despesas com locomoção</label>
-                                {{ form.expenses_locomotion|append_attr:"class: form-control" }}
-                            </div>
-                            <div class="form-group">
-                                <label>Despesas com alimentação</label>
-                                {{ form.meal_expenses|append_attr:"class: form-control" }}
-                            </div>
-                            <div class="form-group">
-                                <label>Diária</label>
-                                {{ form.daily|append_attr:"class: form-control" }}
-                            </div>
-                            <div class="form-group">
-                                <label>Quilometragem</label>
-                                {{ form.mileage|append_attr:"class: form-control" }}
+                            <div class="row">
+                                <div class="col-lg-3">
+                                    <label>Despesas com locomoção</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">R$</span>
+                                        {{ form.expenses_locomotion|append_attr:"class: form-control" }}
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <label>Despesas com alimentação</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">R$</span>
+                                        {{ form.meal_expenses|append_attr:"class: form-control" }}
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <label>Diária</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">R$</span>
+                                        {{ form.daily|append_attr:"class: form-control" }}
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <label>Quilometragem</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">R$</span>
+                                        {{ form.mileage|append_attr:"class: form-control" }}
+                                    </div>
+                                </div>
                             </div>
                             <div class="box-header with-border">
                                 <h3 class="box-title">Histórico</h3>
