@@ -4,6 +4,7 @@ from fenacon_extranet import settings
 
 urlpatterns = [
     url(r'^', include('apps.core.urls')),
+    url(r'^financeiro/', include('apps.financier.urls')),
     url(r'^admin/', include(admin.site.urls), name='admin'),
 ]
 

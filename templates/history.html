@@ -8,9 +8,8 @@
             <small>Atividades recentes</small>
         </h1>
         <ol class="breadcrumb">
-            <li><a href="#"><i class="fa fa-clock-o"></i> Início</a></li>
-            <li><a href="#">UI</a></li>
-            <li class="active">Timeline</li>
+            <li><a href="{% url 'dashboard' request.user.slug %}"><i class="fa fa-clock-o"></i>Início</a></li>
+            <li class="active">Histórico de atividades</li>
         </ol>
     </section>
 
@@ -23,129 +22,25 @@
                 <!-- The time line -->
                 <ul class="timeline">
                     <!-- timeline time label -->
-                    <li class="time-label">
-                  <span class="bg-grey">
-                    Hoje
-                  </span>
-                    </li>
+                    <!--<li class="time-label">-->
+                  <!--<span class="bg-grey">-->
+                    <!--Hoje-->
+                  <!--</span>-->
+                    <!--</li>-->
                     <!-- /.timeline-label -->
                     <!-- timeline item -->
+                    {% for history in object_list %}
                     <li>
-                        <i class="fa fa-file-o bg-blue"></i>
+                        <i class="fa {{ history.icon }} {% if 'file' in history.icon %}bg-blue{% elif 'user' in history.icon %}bg-purple{% elif 'folder' in history.icon %}bg-maroon{% endif %}"></i>
 
                         <div class="timeline-item">
-                            <span class="time"><i class="fa fa-clock-o"></i> 12:05</span>
+                            <span class="time"><i class="fa fa-clock-o"></i> {{ history.created_at|timesince  }}</span>
 
-                            <h3 class="timeline-header"><a href="#">ProjetoExtranet.pdf</a> foi adicionado à pasta <a
-                                    href="#">Projetos</a></h3>
+                            <h3 class="timeline-header">{{ history.content|safe }}</h3>
 
-                            <div class="timeline-body">
-                                <span class="breadcrumb_recent">Área de Projetos <i class="fa fa-angle-right"></i> Projetos</span>
-                            </div>
                         </div>
                     </li>
-                    <!-- END timeline item -->
-                    <!-- timeline item -->
-                    <li>
-                        <i class="fa fa-file-o bg-blue"></i>
-
-                        <div class="timeline-item">
-                            <span class="time"><i class="fa fa-clock-o"></i> 12:05</span>
-
-                            <h3 class="timeline-header"><a href="#">SolicitacaoReembolso.xlsx</a> foi adicionado à pasta
-                                <a href="#">Fevereiro</a></h3>
-
-                            <div class="timeline-body">
-                                <span class="breadcrumb_recent">Financeiro <i
-                                        class="fa fa-angle-right"></i> Reembolso <i class="fa fa-angle-right"></i> Fevereiro</span>
-                            </div>
-                        </div>
-                    </li>
-                    <!-- END timeline item -->
-                    <!-- timeline time label -->
-                    <li class="time-label">
-                  <span class="bg-grey">
-                    Ontem
-                  </span>
-                    </li>
-                    <!-- /.timeline-label -->
-                    <!-- timeline item -->
-                    <li>
-                        <i class="fa fa-camera bg-purple"></i>
-
-                        <div class="timeline-item">
-                            <span class="time"><i class="fa fa-clock-o"></i> 1 dia atrás</span>
-
-                            <h3 class="timeline-header"><a href="#">Mina Lee</a> fez upload de novas fotos na pasta <a
-                                    href="#">Evento 2015</a></h3>
-
-                            <div class="timeline-body">
-                                <span class="breadcrumb_recent">Comunicação <i class="fa fa-angle-right"></i> Material de divulgação <i
-                                        class="fa fa-angle-right"></i> Eventos <i class="fa fa-angle-right"></i> Evento 2015<br/></span>
-                                <img src="http://placehold.it/150x100" alt="..." class="margin">
-                                <img src="http://placehold.it/150x100" alt="..." class="margin">
-                                <img src="http://placehold.it/150x100" alt="..." class="margin">
-                                <img src="http://placehold.it/150x100" alt="..." class="margin">
-                            </div>
-                        </div>
-                    </li>
-                    <!-- END timeline item -->
-                    <!-- timeline item -->
-                    <li>
-                        <i class="fa fa-video-camera bg-maroon"></i>
-
-                        <div class="timeline-item">
-                            <span class="time"><i class="fa fa-clock-o"></i> 1 dia atrás</span>
-
-                            <h3 class="timeline-header"><a href="#">ApresentacaoFenacon.mp4</a> foi adicionado à pasta
-                                <a href="#">Vídeos Institucionais</a></h3>
-
-                            <div class="timeline-body">
-                                <span class="breadcrumb_recent">Comunicação <i class="fa fa-angle-right"></i> Vídeos Institucionais</span>
-                            </div>
-                        </div>
-                    </li>
-                    <!-- END timeline item -->
-                    <!-- timeline item -->
-                    <li>
-                        <i class="fa fa-file-o bg-blue"></i>
-
-                        <div class="timeline-item">
-                            <span class="time"><i class="fa fa-clock-o"></i> 1 dia atrás</span>
-
-                            <h3 class="timeline-header"><a href="#">ProjetoExtranet.pdf</a> foi adicionado à pasta <a
-                                    href="#">Projetos</a></h3>
-
-                            <div class="timeline-body">
-                                <span class="breadcrumb_recent">Área de Projetos <i class="fa fa-angle-right"></i> Projetos</span>
-                            </div>
-                        </div>
-                    </li>
-                    <!-- END timeline item -->
-                    <!-- timeline time label -->
-                    <li class="time-label">
-                  <span class="bg-grey">
-                    10 de Janeiro
-                  </span>
-                    </li>
-                    <!-- /.timeline-label -->
-                    <!-- timeline item -->
-                    <li>
-                        <i class="fa fa-file-o bg-blue"></i>
-
-                        <div class="timeline-item">
-                            <span class="time"><i class="fa fa-clock-o"></i> 10 de janeiro</span>
-
-                            <h3 class="timeline-header"><a href="#">SolicitacaoReembolso.xlsx</a> foi adicionado à pasta
-                                <a href="#">Fevereiro</a></h3>
-
-                            <div class="timeline-body">
-                                <span class="breadcrumb_recent">Financeiro <i
-                                        class="fa fa-angle-right"></i> Reembolso <i class="fa fa-angle-right"></i> Fevereiro</span>
-                            </div>
-                        </div>
-                    </li>
-                    <!-- END timeline item -->
+                    {% endfor %}
                     <li>
                         <i class="fa fa-clock-o bg-gray"></i>
                     </li>

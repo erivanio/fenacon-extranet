@@ -30,7 +30,7 @@
                     {% for area in areas %}
                         {% has_area request.user area as result %}
                         {% if request.user.is_superuser or result %}
-                            <li><a href="{% url 'detail_area' area.slug area.pk %}"><i class="fa fa-circle-o"></i> {{ area.name }}</a></li>
+                            <li><a href="{% url 'detail_area' area.slug area.pk %}"><i class="fa fa-circle-o text-red"></i> {{ area.name }}</a></li>
                         {% endif %}
                     {% endfor %}
                 </ul>
@@ -40,16 +40,18 @@
                     <i class="fa fa-users"></i> <span>Usuários</span>
                 </a>
             </li>
-{#            <li>#}
-{#                <a href="widgets.html">#}
-{#                    <i class="fa fa-credit-card"></i> <span>Reembolso de Viagens</span>#}
-{#                </a>#}
-{#            </li>#}
-{#            <li>#}
-{#                <a href="log.html">#}
-{#                    <i class="fa fa-calendar"></i> <span>Histórico de atividades</span>#}
-{#                </a>#}
-{#            </li>#}
+            <li>
+                <a href="{% url 'list_refund' %}">
+                    <i class="fa fa-credit-card"></i> <span>Reembolso de Viagens</span>
+                </a>
+            </li>
+            {% if request.user.is_superuser or request.user|has_history_permission %}
+            <li>
+                <a href="{% url 'history' %}">
+                    <i class="fa fa-calendar"></i> <span>Histórico de atividades</span>
+                </a>
+            </li>
+            {% endif %}
 
             <li><a href="{% url 'garbage' request.user.slug %}"><i class="fa fa-trash"></i> <span>Arquivos excluídos</span></a></li>
             {% if request.user.is_superuser %}
