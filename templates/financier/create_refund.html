@@ -1,5 +1,6 @@
 {% extends 'elements/base.html' %}
 {% load widget_tweaks %}
+{% load utils %}
 {% block title %}Solicitação de reembolso de viagem{% endblock %}
 {% block content %}
     <!-- Content Header (Page header) -->
@@ -47,10 +48,12 @@
                                     {{ form.authorizer|append_attr:"class: form-control" }}
                                     <div style="color:red">{{ form.authorizer.errors }}</div>
                                 </div>
+                                {% if request.user.is_superuser or request.user|has_status_refund_permission %}
                                 <div class="col-lg-4">
                                     <label>Estado</label>
                                     {{ form.status|append_attr:"class: form-control" }}
                                 </div>
+                                {% endif %}
                             </div>
                             <br>
                             <div class="box-header with-border">

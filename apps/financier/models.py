@@ -28,6 +28,7 @@ class TravelRefund(models.Model):
     daily = models.FloatField(verbose_name='Diária', null=True, blank=True)
     mileage = models.FloatField(verbose_name='Quilometragem', null=True, blank=True)
     history = models.TextField(verbose_name='Histórico', null=True, blank=True)
+    reason = models.CharField(max_length=200, null=True, blank=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICE, default='1')
     created_at = models.DateTimeField(verbose_name='Data de Criação', default=datetime.now)
 

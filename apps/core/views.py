@@ -87,7 +87,7 @@ class UserCreateView(CreateView):
         history = History()
         history.created_at = datetime.now()
         history.icon = 'fa-user'
-        history.content = '<a href="%s">%s</a> adicionou o usuário <a href="%s">%s</a>' % (self.request.user.get_absolute_url(), self.request.user.get_display_name(), self.object.get_absolute_url(), self.object.get_display_name())
+        history.content = '<a href="%s">%s</a> adicionou a conta <a href="%s">%s</a>' % (self.request.user.get_absolute_url(), self.request.user.get_display_name(), self.object.get_absolute_url(), self.object.get_display_name())
         history.save()
 
         return HttpResponseRedirect(self.get_success_url())
@@ -109,13 +109,12 @@ class UserEditView(UpdateView):
         return obj
 
     def form_valid(self, form):
-        self.object = form.save(commit=False)
-        self.object.save()
+        form.save()
         history = History()
         history.created_at = datetime.now()
         history.icon = 'fa-user'
         if self.request.user != self.object:
-            history.content = '<a href="%s">%s</a> editou o perfil do usuário <a href="%s">%s</a>' % (self.request.user.get_absolute_url(), self.request.user.get_display_name(), self.object.get_absolute_url(), self.object.get_display_name())
+            history.content = '<a href="%s">%s</a> editou o perfil de <a href="%s">%s</a>' % (self.request.user.get_absolute_url(), self.request.user.get_display_name(), self.object.get_absolute_url(), self.object.get_display_name())
         else:
             history.content = '<a href="%s">%s</a> editou seu perfil' % (self.request.user.get_absolute_url(), self.request.user.get_display_name())
         history.save()
@@ -124,7 +123,7 @@ class UserEditView(UpdateView):
 
     def get_success_url(self):
         messages.success(self.request, 'Perfil modificado com sucesso!')
-        return reverse('edit_user', kwargs={'slug': self.request.user.slug})
+        return reverse('edit_user', kwargs={'slug': self.object.slug})
 
 
 class DashboardDetailView(DetailView):

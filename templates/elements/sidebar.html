@@ -40,11 +40,13 @@
                     <i class="fa fa-users"></i> <span>Usuários</span>
                 </a>
             </li>
+            {% if request.user.is_superuser or request.user|has_refund_permission %}
             <li>
                 <a href="{% url 'list_refund' %}">
                     <i class="fa fa-credit-card"></i> <span>Reembolso de Viagens</span>
                 </a>
             </li>
+            {% endif %}
             {% if request.user.is_superuser or request.user|has_history_permission %}
             <li>
                 <a href="{% url 'history' %}">
