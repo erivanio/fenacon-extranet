@@ -51,10 +51,27 @@
                                 {% if request.user.is_superuser or request.user|has_status_refund_permission %}
                                 <div class="col-lg-4">
                                     <label>Estado</label>
-                                    {{ form.status|append_attr:"class: form-control" }}
+                                    {{ form.status|append_attr:"class: form-control"|attr:"onchange: yesnoCheck(this);" }}
                                 </div>
                                 {% endif %}
                             </div>
+                            {% if request.user.is_superuser or request.user|has_status_refund_permission %}
+                            <div class="row" id="ifYes" {% if not form.status.value == '4' %}style="display: none;"{% endif %}>
+                                <div class="col-lg-12">
+                                    <label>Motivo</label>
+                                    {{ form.reason|append_attr:"class: form-control" }}
+                                </div>
+                            </div>
+                            <script>
+                                function yesnoCheck(that) {
+                                    if (that.value == "4") {
+                                        document.getElementById("ifYes").style.display = "block";
+                                    } else {
+                                        document.getElementById("ifYes").style.display = "none";
+                                    }
+                                }
+                            </script>
+                            {% endif %}
                             <br>
                             <div class="box-header with-border">
                               <h3 class="box-title">Ida</h3>
