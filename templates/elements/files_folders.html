@@ -1,0 +1,92 @@
+{% load utils %}
+<div class="row">
+    {% include 'elements/messages.html' %}
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-body table-responsive no-padding">
+                <table class="table table-hover">
+                    <tbody>
+                    <tr>
+                        <th></th>
+                        <th>Nome</th>
+                        <th>Criação</th>
+                        <th>Tamanho</th>
+                        <th>Ações</th>
+                    </tr>
+                    {% for folder in folders %}
+                    {% if request.user == folder.user or request.user.is_superuser or folder.permission == 'public' %}
+                    <tr id="div_folder_{{ folder.pk }}">
+                        <td><a href="{% url 'detail_folder' folder.slug folder.pk %}"><i class="ion ion-ios-folder"></i></a></td>
+                        <td><a href="{% url 'detail_folder' folder.slug folder.pk %}">{{ folder.name }}</a></td>
+                        <td>{{ folder.created_at }}</td>
+                        <td> -- </td>
+                        <td>
+                        <a href="{% url 'update_folder' folder.slug folder.pk %}" title="editar" type="button" class="btn btn-xs btn-flat btn-warning"><i class="fa fa-pencil"></i></a>
+                        {% if request.user.is_superuser or request.user|has_remove_permission %}
+                        <a data-toggle="modal" data-target="#modal_pasta_{{ folder.pk }}" title="excluir" type="button" class="btn btn-xs btn-flat btn-danger" data-widget="remove"><i class="fa fa-trash-o fa-fw"></i>
+                        </a>
+                        {% endif %}</td>
+                    </tr>
+                    <div class="modal fade" id="modal_pasta_{{ folder.pk }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                            aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title" id="exampleModalLabel">Excluir pasta</h4>
+                                </div>
+                                <div class="modal-body">
+                                        <div class="box-body">
+                                            Tem certeza que deseja excluir esta pasta?
+                                        </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Não</button>
+                                    <button type="button" onclick="del_folder({{ folder.pk }});" id="id_btn_file" class="btn btn-primary">Sim</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                    {% for file in files %}
+                    <tr id="div_file_{{ file.pk }}">
+                        <td><a href="{{ MEDIA_URL }}{{ file.file }}" download><i class="fa fa-file"></i></a></td>
+                        <td><a href="{{ MEDIA_URL }}{{ file.file }}" download>{{ file.name }}</a></td>
+                        <td>{{ file.created_at }}</td>
+                        <td>{{ file.file.size|filesizeformat }}</td>
+                        <td>
+                        <a href="{{ MEDIA_URL }}{{ file.file }}" title="Download" class="btn btn-xs btn-flat btn-info" download><i class="glyphicon glyphicon-download-alt"></i></a>
+                        {% if request.user.is_superuser or request.user|has_remove_permission %}
+                        <a data-toggle="modal" data-target="#modal_arquivo_{{ file.pk }}" title="excluir" class="btn btn-xs btn-flat btn-danger" data-widget="remove"><i class="fa fa-trash-o fa-fw"></i>
+                        </a>
+                        {% endif %}
+                        </td>
+                    </tr>
+                    <div class="modal fade" id="modal_arquivo_{{ file.pk }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                            aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title" id="exampleModalLabel">Excluir arquivo</h4>
+                                </div>
+                                <div class="modal-body">
+                                        <div class="box-body">
+                                            Tem certeza que deseja excluir este arquivo?
+                                        </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Não</button>
+                                    <button type="button" onclick="del_file({{ file.pk }});" id="id_btn_file" class="btn btn-primary">Sim</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

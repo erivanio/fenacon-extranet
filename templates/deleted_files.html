@@ -16,147 +16,149 @@
     <section class="content">
         <div class="row">
             {% include 'elements/messages.html' %}
-            {% for folder in folders %}
-            <div class="col-md-3 col-sm-6 col-xs-12" id="div_folder_{{ folder.pk }}">
-                <div class="info-box">
-                    <div class="box-tools pull-right">
-                        {% if user.is_superuser or user|has_folder_permission %}
-                        <a href="{% url 'update_folder' folder.slug folder.pk %}" title="editar" type="button" class="btn btn-box-tool"><i class="fa fa-pencil"></i></a>
-                        {% endif %}
-                        {% if user.is_superuser or user|has_remove_permission %}
-                        <a data-toggle="modal" data-target="#restaurar_pasta_{{ folder.pk }}" title="restaurar" type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-rotate-left"></i>
-                        </a>
-                        <a data-toggle="modal" data-target="#modal_pasta_{{ folder.pk }}" title="excluir" type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-trash-o fa-fw"></i>
-                        </a>
-                        {% endif %}
-                      </div>
-                    <a href="{% url 'detail_folder' folder.slug folder.pk %}">
-                        <span class="info-box-icon bg-aqua"><i class="ion ion-ios-folder"></i></span>
-
-                        <div class="info-box-content">
-                            <span class="info-box-text">{{ folder.name }}</span>
-                            <span class="info-box-number">{{ folder|len_files }}
-                                <small>{% if folder|len_files > 1 %}arquivos{% else %}arquivo{% endif %}</small>
-                            </span>
-                        </div>
-                    </a>
-
-                    <!-- /.info-box-content -->
-                </div>
-
-                <!-- /.info-box -->
-            </div>
-            <div class="modal fade" id="restaurar_pasta_{{ folder.pk }}" tabindex="-1" role="dialog" aria-labelledby="restoreModalLabel">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                    aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title" id="restoreModalLabel">Restaurar pasta</h4>
-                        </div>
-                        <div class="modal-body">
-                                <div class="box-body">
-                                    Tem certeza que deseja restaurar esta pasta?
+            <div class="col-xs-12">
+                <div class="box">
+                    <div class="box-body table-responsive no-padding">
+                        <table class="table table-hover">
+                            <tbody>
+                            <tr>
+                                <th></th>
+                                <th>Nome</th>
+                                <th>Criação</th>
+                                <th>Exclusão</th>
+                                <th>Tamanho</th>
+                                <th>Ações</th>
+                            </tr>
+                            {% for folder in folders %}
+                            {% if request.user == folder.user or request.user.is_superuser or folder.permission == 'public' %}
+                            <tr id="div_folder_{{ folder.pk }}">
+                                <td><a href="{% url 'detail_folder' folder.slug folder.pk %}"><i class="ion ion-ios-folder"></i></a></td>
+                                <td><a href="{% url 'detail_folder' folder.slug folder.pk %}">{{ folder.name }}</a></td>
+                                <td>{{ folder.created_at }}</td>
+                                <td>{{ folder.deleted_at }}</td>
+                                <td> -- </td>
+                                <td>
+                                {% if request.user.is_superuser or request.user|has_folder_permission %}
+                                <a href="{% url 'update_folder' folder.slug folder.pk %}" title="editar" type="button" class="btn btn-xs btn-flat btn-warning"><i class="fa fa-pencil"></i></a>
+                                {% endif %}
+                                {% if request.user.is_superuser or request.user|has_remove_permission %}
+                                <a data-toggle="modal" data-target="#restaurar_pasta_{{ folder.pk }}" title="restaurar" type="button" class="btn btn-xs btn-flat btn-success" data-widget="remove"><i class="fa fa-rotate-left"></i>
+                                </a>
+                                <a data-toggle="modal" data-target="#modal_pasta_{{ folder.pk }}" title="excluir" type="button" class="btn btn-xs btn-flat btn-danger" data-widget="remove"><i class="fa fa-trash-o fa-fw"></i>
+                                </a>
+                                {% endif %}</td>
+                            </tr>
+                            <div class="modal fade" id="restaurar_pasta_{{ folder.pk }}" tabindex="-1" role="dialog" aria-labelledby="restoreModalLabel">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                                    aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title" id="restoreModalLabel">Restaurar pasta</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                                <div class="box-body">
+                                                    Tem certeza que deseja restaurar esta pasta?
+                                                </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Não</button>
+                                            <button type="button" onclick="add_folder({{ folder.pk }});" id="id_btn_restore_folder" class="btn btn-primary">Sim</button>
+                                        </div>
+                                    </div>
                                 </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Não</button>
-                            <button type="button" onclick="add_folder({{ folder.pk }});" id="id_btn_restore_folder" class="btn btn-primary">Sim</button>
-                        </div>
+                            </div>
+                            <div class="modal fade" id="modal_pasta_{{ folder.pk }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                                    aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title" id="exampleFolderLabel">Excluir pasta</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                                <div class="box-body">
+                                                    Tem certeza que deseja excluir permanentemente esta pasta?
+                                                </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <form method="POST" action="{% url 'folder_delete' folder.pk %}">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Não</button>
+                                            {% csrf_token %}
+                                            <input type="submit" id="id_btn_folder" value="Sim" class="btn btn-primary">
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% endfor %}
+                            {% for file in files %}
+                            <tr id="div_file_{{ file.pk }}">
+                                <td><a href="{{ MEDIA_URL }}{{ file.file }}" download><i class="fa fa-file"></i></a></td>
+                                <td><a href="{{ MEDIA_URL }}{{ file.file }}" download>{{ file.name }}</a></td>
+                                <td>{{ file.created_at }}</td>
+                                <td>{{ file.deleted_at }}</td>
+                                <td>{{ file.file.size|filesizeformat }}</td>
+                                <td>
+                                <a href="{{ MEDIA_URL }}{{ file.file }}" title="Download" class="btn btn-xs btn-flat btn-info" download><i class="glyphicon glyphicon-download-alt"></i></a>
+                                {% if request.user.is_superuser or request.user|has_remove_permission %}
+                                <a data-toggle="modal" data-target="#restaurar_arquivo_{{ file.pk }}" title="restaurar" type="button" class="btn btn-xs btn-flat btn-success" data-widget="remove"><i class="fa fa-rotate-left"></i>
+                                </a>
+                                <a data-toggle="modal" data-target="#modal_arquivo_{{ file.pk }}" title="excluir" type="button" class="btn btn-xs btn-flat btn-danger" data-widget="remove"><i class="fa fa fa-trash-o fa-fw"></i>
+                                </a>
+                                {% endif %}
+                                </td>
+                            </tr>
+                            <div class="modal fade" id="restaurar_arquivo_{{ file.pk }}" tabindex="-1" role="dialog" aria-labelledby="restoreFileModalLabel">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                                    aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title" id="restoreFileModalLabel">Restaurar arquivo</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                                <div class="box-body">
+                                                    Tem certeza que deseja restaurar este arquivo?
+                                                </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Não</button>
+                                            <button type="button" onclick="add_file({{ file.pk }});" id="id_btn_restore_file" class="btn btn-primary">Sim</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal fade" id="modal_arquivo_{{ file.pk }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                                    aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title" id="exampleModalLabel">Excluir arquivo</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                                <div class="box-body">
+                                                    Tem certeza que deseja excluir permanentemente este arquivo?
+                                                </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <form method="POST" action="{% url 'file_delete' file.pk %}">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Não</button>
+                                                {% csrf_token %}
+                                                <input type="submit" id="id_btn_file" value="Sim" class="btn btn-primary">
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
-            <div class="modal fade" id="modal_pasta_{{ folder.pk }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                    aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title" id="exampleFolderLabel">Excluir pasta</h4>
-                        </div>
-                        <div class="modal-body">
-                                <div class="box-body">
-                                    Tem certeza que deseja excluir permanentemente esta pasta?
-                                </div>
-                        </div>
-                        <div class="modal-footer">
-                            <form method="POST" action="{% url 'folder_delete' folder.pk %}">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Não</button>
-                            {% csrf_token %}
-                            <input type="submit" id="id_btn_folder" value="Sim" class="btn btn-primary">
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-            {% for file in files %}
-            <div class="col-md-3 col-sm-6 col-xs-12" id="div_file_{{ file.pk }}">
-                <div class="info-box">
-                    <div class="box-tools pull-right">
-                        {% if user.is_superuser or user|has_remove_permission %}
-                        <a data-toggle="modal" data-target="#restaurar_arquivo_{{ file.pk }}" title="restaurar" type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-rotate-left"></i>
-                        </a>
-                        <a data-toggle="modal" data-target="#modal_arquivo_{{ file.pk }}" title="excluir" type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa fa-trash-o fa-fw"></i>
-                        </a>
-                        {% endif %}
-                      </div>
-                    <a href="{{ MEDIA_URL }}{{ file.file }}" download>
-                        <span class="info-box-icon bg-green"><i class="glyphicon glyphicon-download-alt"></i></span>
-
-                        <div class="info-box-content">
-                            <span class="info-box-text">{{ file.name }}</span>
-                            <span class="info-box-number">{{ file.file.size|filesizeformat }}</span>
-                        </div>
-                    </a>
-                    <!-- /.info-box-content -->
-                </div>
-                <!-- /.info-box -->
-            </div>
-            <div class="modal fade" id="restaurar_arquivo_{{ file.pk }}" tabindex="-1" role="dialog" aria-labelledby="restoreFileModalLabel">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                    aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title" id="restoreFileModalLabel">Restaurar arquivo</h4>
-                        </div>
-                        <div class="modal-body">
-                                <div class="box-body">
-                                    Tem certeza que deseja restaurar este arquivo?
-                                </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Não</button>
-                            <button type="button" onclick="add_file({{ file.pk }});" id="id_btn_restore_file" class="btn btn-primary">Sim</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal fade" id="modal_arquivo_{{ file.pk }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                    aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title" id="exampleModalLabel">Excluir arquivo</h4>
-                        </div>
-                        <div class="modal-body">
-                                <div class="box-body">
-                                    Tem certeza que deseja excluir permanentemente este arquivo?
-                                </div>
-                        </div>
-                        <div class="modal-footer">
-                            <form method="POST" action="{% url 'file_delete' file.pk %}">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Não</button>
-                                {% csrf_token %}
-                                <input type="submit" id="id_btn_file" value="Sim" class="btn btn-primary">
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
         </div>
     </section>
 {% endblock %}

@@ -54,7 +54,7 @@
 <!-- AdminLTE for demo purposes -->
 <script src="{{ MEDIA_URL }}dist/js/demo.js"></script>
 <script type="text/javascript">
-    $('#id_btn_folder').click(function(e){
+    $('#id_form_folder').submit(function(e){
         $.ajax({
             type: "POST",
             url: "{% url 'create_folder' %}",
