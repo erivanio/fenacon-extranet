@@ -3,7 +3,8 @@ from django.conf.urls import patterns, url
 from django.views.generic import TemplateView
 from apps.core.views import LogoutView, LoginView, DashboardDetailView, \
     FolderDetailView, AreaDetailView, AreaCreateView, UserCreateView, UserEditView, GarbageDetailView, FileDeleteView, \
-    FolderDeleteView, AreaUpdateView, FolderUpdateView, GroupCreateView, AreaDeleteView, UserListView, HistoryListView
+    FolderDeleteView, AreaUpdateView, FolderUpdateView, GroupCreateView, AreaDeleteView, UserListView, HistoryListView, \
+    UserDeleteView
 
 urlpatterns = patterns('',
     url(r'^$', LoginView.as_view(), name='login'),
@@ -15,6 +16,7 @@ urlpatterns = patterns('',
     url(r'^pasta/criar-pasta/$', 'apps.core.views.create_folder', name='create_folder'),
     url(r'^pasta/pasta-listar/(?P<slug>[\w_-]+)-(?P<pk>\d+)/', FolderDetailView.as_view(), name='detail_folder'),
     url(r'^(?P<slug>[\w_-]+)/lixeira/$', GarbageDetailView.as_view(), name='garbage'),
+    url(r'^usuario/deletar/(?P<pk>\d+)', UserDeleteView.as_view(), name='delete_user'),
     url(r'^usuario/(?P<slug>[\w_-]+)/editar/', UserEditView.as_view(), name='edit_user'),
     url(r'^usuario/novo/', UserCreateView.as_view(), name='create_user'),
     url(r'^usuario/lista/', UserListView.as_view(), name='list_user'),

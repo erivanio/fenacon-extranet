@@ -288,6 +288,18 @@ class FolderDeleteView(DeleteView):
         return u'/%s/lixeira/' % self.request.user.slug
 
 
+class UserDeleteView(DeleteView):
+    model = User
+
+    def get_object(self, queryset=None):
+        obj = super(UserDeleteView, self).get_object()
+        return obj
+
+    def get_success_url(self):
+        messages.success(self.request, 'Usuário deletado com sucesso!')
+        return reverse('list_user')
+
+
 class FileDeleteView(DeleteView):
     model = File
 

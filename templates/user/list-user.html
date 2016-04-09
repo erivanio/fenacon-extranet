@@ -24,6 +24,12 @@
                     <div class="box box-widget widget-user-2">
                         <!-- Add the bg color to the header using any of the bg-* classes -->
                         <div class="widget-user-header bg-aqua-active">
+                            {% if request.user.is_superuser %}
+                            <div class="box-tools pull-right">
+                                <a href="{% url 'edit_user' user.slug %}" title='editar' class="btn btn-xs btn-warning"><i class="fa fa-pencil"></i></a>
+                                <a data-toggle="modal" data-target="#modal_user_{{ user.pk }}" data-widget="remove" title='excluir' class="btn btn-xs btn-danger"><i class="fa fa-trash-o fa-fw"></i></a>
+                            </div>
+                            {% endif %}
                             <div class="widget-user-image">
                                 {% if user.photo %}
                                     <img src="{{ user.get_photo_thumb }}" class="img-circle" alt="User Image">
@@ -44,6 +50,31 @@
                     </div>
                     <!-- /.widget-user -->
                 </div>
+                {% if request.user.is_superuser %}
+                <div class="modal fade" id="modal_user_{{ user.pk }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                            aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title" id="exampleModalLabel">Excluir usuário</h4>
+                                </div>
+                                <div class="modal-body">
+                                        <div class="box-body">
+                                            Tem certeza que deseja excluir este usuário?
+                                        </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <form method="POST" action="{% url 'delete_user' user.pk %}">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Não</button>
+                                        {% csrf_token %}
+                                        <input type="submit" value="Sim" class="btn btn-primary">
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
             {% endfor %}
         </div>
     </section>
