@@ -69,7 +69,9 @@
                             {% endif %}
                         </div>
                         <div class="box-footer">
+                            {% if request.user == user %}
                             <a href="{% url 'password_change' %}" class="btn btn-warning">Alterar senha</a>
+                            {% endif %}
                             <button type="submit" class="btn btn-primary pull-right">Salvar</button>
                         </div>
                     </form>
