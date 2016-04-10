@@ -2,6 +2,7 @@
 from datetime import datetime
 from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.tokens import default_token_generator
+from django.db.models import Q
 from django.template.response import TemplateResponse
 from django.views.decorators.csrf import csrf_protect
 from django.utils.translation import ugettext as _
@@ -75,6 +76,17 @@ class UserListView(ListView):
     def dispatch(self, *args, **kwargs):
         return super(UserListView, self).dispatch(*args, **kwargs)
 
+    def get_queryset(self):
+        q = self.request.GET.get('q')
+        object_list = User.objects.all()
+        if q:
+            object_list = object_list.filter(Q(first_name__icontains=q) |
+                                             Q(username__icontains=q) |
+                                             Q(last_name__icontains=q) |
+                                             Q(email__icontains=q) |
+                                             Q(job__icontains=q))
+
+        return object_list
 
 class UserCreateView(CreateView):
     model = User
@@ -142,9 +154,9 @@ class DashboardDetailView(DetailView):
         context = super(DashboardDetailView, self).get_context_data(**kwargs)
         if self.request.GET.get('q'):
             q = self.request.GET.get('q')
-            context['folders'] = Folder.objects.filter(user__slug=self.kwargs['slug'], name__icontains=q,
+            context['folders'] = Folder.objects.filter(name__icontains=q,
                                                        parent__isnull=True, status=True).order_by('-name')
-            context['files'] = File.objects.filter(user__slug=self.kwargs['slug'], name__icontains=q,
+            context['files'] = File.objects.filter(name__icontains=q,
                                                    folder__isnull=True, status=True).order_by('-name')
         else:
             context['folders'] = Folder.objects.filter(user__slug=self.kwargs['slug'],

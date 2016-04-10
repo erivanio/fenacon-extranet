@@ -11,6 +11,7 @@
                         <th>Nome</th>
                         <th>Criação</th>
                         <th>Tamanho</th>
+                        <th>Adicionado por</th>
                         <th>Ações</th>
                     </tr>
                     {% for folder in folders %}
@@ -20,6 +21,7 @@
                         <td><a href="{% url 'detail_folder' folder.slug folder.pk %}">{{ folder.name }}</a></td>
                         <td>{{ folder.created_at }}</td>
                         <td> -- </td>
+                        <td>{{ folder.user }}</td>
                         <td>
                         <a href="{% url 'update_folder' folder.slug folder.pk %}" title="editar" type="button" class="btn btn-xs btn-flat btn-warning"><i class="fa fa-pencil"></i></a>
                         {% if request.user.is_superuser or request.user|has_remove_permission %}
@@ -50,11 +52,13 @@
                     {% endif %}
                     {% endfor %}
                     {% for file in files %}
+                    {% if not file.folder.permission == 'private' and not file.user == requet.user %}
                     <tr id="div_file_{{ file.pk }}">
                         <td><a href="{{ MEDIA_URL }}{{ file.file }}" download><i class="fa fa-file"></i></a></td>
                         <td><a href="{{ MEDIA_URL }}{{ file.file }}" download>{{ file.name }}</a></td>
                         <td>{{ file.created_at }}</td>
                         <td>{{ file.file.size|filesizeformat }}</td>
+                        <td>{{ file.user}}</td>
                         <td>
                         <a href="{{ MEDIA_URL }}{{ file.file }}" title="Download" class="btn btn-xs btn-flat btn-info" download><i class="glyphicon glyphicon-download-alt"></i></a>
                         {% if request.user.is_superuser or request.user|has_remove_permission %}
@@ -83,6 +87,7 @@
                             </div>
                         </div>
                     </div>
+                    {% endif %}
                     {% endfor %}
                     </tbody>
                 </table>
