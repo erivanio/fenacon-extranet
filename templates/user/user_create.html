@@ -29,11 +29,6 @@
                             <!-- text input -->
                             <div class="form-group">
                                 <label>CPF *</label>
-                                <input type="text" name='cpf' id="id_cpf" class="form-control" data-inputmask="'mask': '999.999.999-99'" data-mask="">
-                                <div style="color:red">{{ form.cpf.errors }}</div>
-                            </div>
-                            <div class="form-group">
-                                <label>Usuário *</label>
                                 {{ form.username|append_attr:"class: form-control" }}
                                 <div style="color:red">{{ form.username.errors }}</div>
                             </div>
@@ -108,7 +103,7 @@
 {% block extrajs %}
 <script src="{{ MEDIA_URL }}dist/js/jquery.maskedinput.js"></script>
 <script type="text/javascript">
-    jQuery("#id_cpf").mask("999.999.999-99");
+    jQuery("#id_username").mask("999.999.999-99");
     jQuery("#id_telephone")
         .mask("(99) 9999-9999?9")
         .focusout(function (event) {

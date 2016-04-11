@@ -17,11 +17,11 @@ class GroupCreateForm(forms.ModelForm):
 
 
 class UserCreateForm(forms.ModelForm):
-    cpf = BRCPFField(max_length=14, min_length=11)
+    username = BRCPFField(max_length=14, min_length=11)
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'is_superuser', 'receive_email', 'first_name', 'last_name', 'cpf', 'telephone', 'job', 'groups', 'permissions', 'areas')
+        fields = ('username', 'email', 'is_superuser', 'receive_email', 'first_name', 'last_name', 'telephone', 'job', 'groups', 'permissions', 'areas')
 
     def clean(self):
         password1 = self.data.get("password1")
