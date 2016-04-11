@@ -88,6 +88,7 @@ class User(AbstractBaseUser):
     email = models.EmailField(verbose_name='Email', max_length=255, blank=True, null=True)
     username = models.CharField('Nome', max_length=50, unique=True)
     slug = models.SlugField(max_length=150, blank=True, unique=True)
+    receive_email = models.BooleanField('Receber notificação de reembolso?', default=False)
     is_active = models.BooleanField('Ativo?', default=True)
     is_member = models.BooleanField('Membro?', default=True)
     is_superuser = models.BooleanField('Administrador?', default=False)
@@ -128,6 +129,8 @@ class User(AbstractBaseUser):
     def get_display_name(self):
         if self.first_name and self.last_name:
             return self.get_full_name()
+        elif self.first_name and not self.last_name:
+            return self.get_short_name()
         else:
             return self.username
 

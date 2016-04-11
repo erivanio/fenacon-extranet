@@ -55,6 +55,10 @@
                                 <p>{{ form.is_superuser }}</p>
                             </div>
                             <div class="form-group">
+                                <label>Receber notificação de reembolso</label>
+                                <p>{{ form.receive_email }}</p>
+                            </div>
+                            <div class="form-group">
                                 <label>Grupos</label>
                                 {{ form.groups|append_attr:"class: form-control" }}
                             </div>
