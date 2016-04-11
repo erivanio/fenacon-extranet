@@ -7,3 +7,4 @@ django-ckeditor==4.4.4
 django-widget-tweaks==1.4.1
 django-annoying==0.8.1
 gunicorn==19.3.0
+django-localflavor==1.2

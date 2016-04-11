@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django import forms
+from localflavor.br.forms import BRCPFField
 from apps.core.models import Folder, User, Area, Group
 
 
@@ -16,9 +17,11 @@ class GroupCreateForm(forms.ModelForm):
 
 
 class UserCreateForm(forms.ModelForm):
+    cpf = BRCPFField(max_length=14, min_length=11)
+
     class Meta:
         model = User
-        fields = ('username', 'email', 'is_superuser', 'receive_email', 'first_name', 'last_name', 'job', 'groups', 'permissions', 'areas')
+        fields = ('username', 'email', 'is_superuser', 'receive_email', 'first_name', 'last_name', 'cpf', 'telephone', 'job', 'groups', 'permissions', 'areas')
 
     def clean(self):
         password1 = self.data.get("password1")
@@ -51,7 +54,7 @@ class UserCreateForm(forms.ModelForm):
 class UserEditForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['email', 'photo', 'first_name', 'last_name', 'job', 'receive_email', 'is_superuser', 'groups', 'permissions', 'areas']
+        fields = ['email', 'photo', 'telephone', 'first_name', 'last_name', 'job', 'receive_email', 'is_superuser', 'groups', 'permissions', 'areas']
 
 
 class FolderForm(forms.ModelForm):

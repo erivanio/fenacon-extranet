@@ -28,20 +28,39 @@
                             {% csrf_token %}
                             <!-- text input -->
                             <div class="form-group">
+                                <label>CPF *</label>
+                                <input type="text" name='cpf' id="id_cpf" class="form-control" data-inputmask="'mask': '999.999.999-99'" data-mask="">
+                                <div style="color:red">{{ form.cpf.errors }}</div>
+                            </div>
+                            <div class="form-group">
                                 <label>Usuário *</label>
                                 {{ form.username|append_attr:"class: form-control" }}
+                                <div style="color:red">{{ form.username.errors }}</div>
                             </div>
                             <div class="form-group">
-                                <label>Email</label>
+                                <label>Email *</label>
                                 {{ form.email|append_attr:"class: form-control"|attr:"type:email" }}
+                                <div style="color:red">{{ form.email.errors }}</div>
                             </div>
                             <div class="form-group">
-                                <label>Primeiro Nome</label>
+                                <label>Primeiro Nome *</label>
                                 {{ form.first_name|append_attr:"class: form-control" }}
+                                <div style="color:red">{{ form.first_name.errors }}</div>
                             </div>
                             <div class="form-group">
                                 <label>Sobrenome</label>
                                 {{ form.last_name|append_attr:"class: form-control" }}
+                            </div>
+                            <div class="form-group">
+                                <label>Celular:</label>
+
+                                <div class="input-group">
+                                  <div class="input-group-addon">
+                                    <i class="fa fa-mobile"></i>
+                                  </div>
+                                  {{ form.telephone|append_attr:"class: form-control" }}
+                                </div>
+                                <!-- /.input group -->
                             </div>
                             <div class="form-group">
                                 <label>Cargo</label>
@@ -85,4 +104,25 @@
             </div>
         </div>
     </section>
+{% endblock %}
+{% block extrajs %}
+<script src="{{ MEDIA_URL }}dist/js/jquery.maskedinput.js"></script>
+<script type="text/javascript">
+    jQuery("#id_cpf").mask("999.999.999-99");
+    jQuery("#id_telephone")
+        .mask("(99) 9999-9999?9")
+        .focusout(function (event) {
+            var target, phone, element;
+            target = (event.currentTarget) ? event.currentTarget : event.srcElement;
+            phone = target.value.replace(/\D/g, '');
+            element = $(target);
+            element.unmask();
+            if(phone.length > 10) {
+                element.mask("(99) 99999-999?9");
+            } else {
+                element.mask("(99) 9999-9999?9");
+            }
+        });
+</script>
+
 {% endblock %}

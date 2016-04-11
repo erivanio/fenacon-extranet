@@ -82,10 +82,12 @@ class User(AbstractBaseUser):
         verbose_name = 'Usuário'
         verbose_name_plural = 'Usuários'
 
-    first_name = models.CharField('Primeiro nome', max_length=50, blank=True, null=True)
+    first_name = models.CharField('Primeiro nome', max_length=50)
     last_name = models.CharField('Sobrenome', max_length=50, blank=True, null=True)
     job = models.CharField('Cargo', max_length=50, blank=True, null=True)
-    email = models.EmailField(verbose_name='Email', max_length=255, blank=True, null=True)
+    email = models.EmailField(verbose_name='Email', max_length=255)
+    cpf = models.CharField('CPF', max_length=11, unique=True)
+    telephone = models.CharField('Celular', max_length=11, blank=True, null=True)
     username = models.CharField('Nome', max_length=50, unique=True)
     slug = models.SlugField(max_length=150, blank=True, unique=True)
     receive_email = models.BooleanField('Receber notificação de reembolso?', default=False)

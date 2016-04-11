@@ -28,16 +28,29 @@
                             {% csrf_token %}
                             <!-- text input -->
                             <div class="form-group">
-                                <label>Email</label>
+                                <label>Email*</label>
                                 {{ form.email|append_attr:"class: form-control"|attr:"type:email" }}
+                                <div style="color:red">{{ form.email.errors }}</div>
                             </div>
                             <div class="form-group">
-                                <label>Primeiro Nome</label>
+                                <label>Primeiro Nome*</label>
                                 {{ form.first_name|append_attr:"class: form-control" }}
+                                <div style="color:red">{{ form.first_name.errors }}</div>
                             </div>
                             <div class="form-group">
                                 <label>Sobrenome</label>
                                 {{ form.last_name|append_attr:"class: form-control" }}
+                            </div>
+                            <div class="form-group">
+                                <label>Celular:</label>
+
+                                <div class="input-group">
+                                  <div class="input-group-addon">
+                                    <i class="fa fa-mobile"></i>
+                                  </div>
+                                  {{ form.telephone|append_attr:"class: form-control" }}
+                                </div>
+                                <!-- /.input group -->
                             </div>
                             <div class="form-group">
                                 <label>Cargo</label>

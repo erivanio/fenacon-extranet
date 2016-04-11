@@ -49,6 +49,7 @@ INSTALLED_APPS = (
     'widget_tweaks',
     'ckeditor',
     'annoying',
+    'localflavor',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
