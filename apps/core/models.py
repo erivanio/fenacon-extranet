@@ -5,7 +5,6 @@ import os
 import random
 import string
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
-from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models import signals
