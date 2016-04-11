@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
+import hashlib
 import os
 import random
 import string
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models import signals
@@ -200,6 +202,10 @@ class Folder(models.Model):
     def __unicode__(self):
         return self.name
 
+    def get_hash_slug(self):
+        hash_object = hashlib.md5(self.slug)
+        return hash_object.hexdigest()
+
     def get_absolute_url(self):
         return reverse('detail_folder', kwargs={'slug': self.slug, 'pk': self.pk})
 
@@ -231,6 +237,10 @@ class File(models.Model):
             return self.name
         else:
             return u'%s' % str(self.file).split('/')[-1]
+
+    def get_hash_slug(self):
+        hash_object = hashlib.md5(self.name)
+        return hash_object.hexdigest()
 
 
 def file_pre_save(signal, instance, sender, **kwargs):

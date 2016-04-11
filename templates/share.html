@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Fenacon | Compartilhado</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.5 -->
+    <link rel="stylesheet" href="{{ MEDIA_URL }}bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{{ MEDIA_URL }}dist/css/AdminLTE.css">
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+    <link rel="stylesheet" href="{{ MEDIA_URL }}dist/css/skins/skin-purple-light.min.css">
+    {% block extracss %}{% endblock %}
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body class="hold-transition skin-purple-light sidebar-mini">
+<div class="wrapper">
+    <header class="main-header">
+        <span class="logo logo-lg"><b>FENACON</b>Extranet</span>
+        <nav class="navbar navbar-static-top">
+        </nav>
+    </header>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="hold-transition lockscreen">
+        {% load utils %}
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="box">
+                    <div class="box-body table-responsive no-padding">
+                        <table class="table table-hover">
+                            <tbody>
+                            <tr>
+                                <th></th>
+                                <th>Nome</th>
+                                <th>Criação</th>
+                                <th>Tamanho</th>
+                                <th>Adicionado por</th>
+                            </tr>
+                            {% if 'file' in request.path %}
+                            <tr id="div_file_{{ object.pk }}">
+                                <td><a href="{{ MEDIA_URL }}{{ object.file }}" download><i class="fa fa-file"></i></a></td>
+                                <td><a href="{{ MEDIA_URL }}{{ object.file }}" download>{{ object.name }}</a></td>
+                                <td>{{ object.created_at }}</td>
+                                <td>{{ object.file.size|filesizeformat }}</td>
+                                <td>{{ object.user}}</td>
+                            </tr>
+                            {% else %}
+                            {% for folder in folders %}
+                            <tr id="div_folder_{{ folder.pk }}">
+                                <td><a href="{% url 'share_folder' folder.get_hash_slug folder.pk %}"><i class="ion ion-ios-folder"></i></a></td>
+                                <td><a href="{% url 'share_folder' folder.get_hash_slug folder.pk %}">{{ folder.name }}</a></td>
+                                <td>{{ folder.created_at }}</td>
+                                <td> -- </td>
+                                <td>{{ folder.user }}</td>
+                            </tr>
+                            {% endfor %}
+                            {% for file in files %}
+                            <tr id="div_file_{{ file.pk }}">
+                                <td><a href="{{ MEDIA_URL }}{{ file.file }}" download><i class="fa fa-file"></i></a></td>
+                                <td><a href="{{ MEDIA_URL }}{{ file.file }}" download>{{ file.name }}</a></td>
+                                <td>{{ file.created_at }}</td>
+                                <td>{{ file.file.size|filesizeformat }}</td>
+                                <td>{{ file.user}}</td>
+                            </tr>
+                            {% endfor %}
+                            {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+<!-- ./wrapper -->
+
+<!-- jQuery 2.1.4 -->
+<script src="{{ MEDIA_URL }}plugins/jQuery/jQuery-2.1.4.min.js"></script>
+<!-- Bootstrap 3.3.5 -->
+<script src="{{ MEDIA_URL }}bootstrap/js/bootstrap.min.js"></script>
+<!-- FastClick -->
+<script src="{{ MEDIA_URL }}plugins/fastclick/fastclick.min.js"></script>
+<!-- AdminLTE App -->
+<script src="{{ MEDIA_URL }}dist/js/app.min.js"></script>
+{% block extrajs %}{% endblock %}
+</body>
+</html>

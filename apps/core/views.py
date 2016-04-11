@@ -220,6 +220,23 @@ class FolderDetailView(DetailView):
         return context
 
 
+class FolderShareView(DetailView):
+    model = Folder
+    template_name = 'share.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(FolderShareView, self).get_context_data(**kwargs)
+        context['folders'] = Folder.objects.filter(parent=kwargs['object'], status=True).order_by('-name')
+        context['files'] = File.objects.filter(folder=kwargs['object'], status=True).order_by('-name')
+
+        return context
+
+
+class FileShareView(DetailView):
+    model = File
+    template_name = 'share.html'
+
+
 class AreaDetailView(DetailView):
     model = Area
     template_name = 'area/detail_area.html'

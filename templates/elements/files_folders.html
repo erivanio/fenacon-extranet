@@ -23,12 +23,29 @@
                         <td> -- </td>
                         <td>{{ folder.user }}</td>
                         <td>
-                        <a href="{% url 'update_folder' folder.slug folder.pk %}" title="editar" type="button" class="btn btn-xs btn-flat btn-warning"><i class="fa fa-pencil"></i></a>
+                        <a data-toggle="modal" data-target="#modal_compartilhar_{{ folder.pk }}" title="compartilhar" type="button" class="btn btn-xs btn-success"><i class="fa fa-share-square-o"></i></a>
+                        <a href="{% url 'update_folder' folder.slug folder.pk %}" title="editar" type="button" class="btn btn-xs btn-warning"><i class="fa fa-pencil"></i></a>
                         {% if request.user.is_superuser or request.user|has_remove_permission %}
-                        <a data-toggle="modal" data-target="#modal_pasta_{{ folder.pk }}" title="excluir" type="button" class="btn btn-xs btn-flat btn-danger" data-widget="remove"><i class="fa fa-trash-o fa-fw"></i>
+                        <a data-toggle="modal" data-target="#modal_pasta_{{ folder.pk }}" title="excluir" type="button" class="btn btn-xs btn-danger" data-widget="remove"><i class="fa fa-trash-o fa-fw"></i>
                         </a>
                         {% endif %}</td>
                     </tr>
+                    <div class="modal fade" id="modal_compartilhar_{{ folder.pk }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                            aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title" id="exampleModalLabel">Link de compartilhamento</h4>
+                                </div>
+                                <div class="modal-body">
+                                        <div class="box-body">
+                                            <a href="{% url 'share_folder' folder.get_hash_slug folder.pk %}">http://{{ request.get_host }}/share/{{ folder.get_hash_slug }}/{{ folder.pk }}/</a>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="modal fade" id="modal_pasta_{{ folder.pk }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
@@ -60,13 +77,30 @@
                         <td>{{ file.file.size|filesizeformat }}</td>
                         <td>{{ file.user}}</td>
                         <td>
-                        <a href="{{ MEDIA_URL }}{{ file.file }}" title="Download" class="btn btn-xs btn-flat btn-info" download><i class="glyphicon glyphicon-download-alt"></i></a>
+                        <a data-toggle="modal" data-target="#arquivo_compartilhar_{{ file.pk }}" title="compartilhar" type="button" class="btn btn-xs btn-success"><i class="fa fa-share-square-o"></i></a>
+                        <a href="{{ MEDIA_URL }}{{ file.file }}" title="Download" class="btn btn-xs btn-info" download><i class="glyphicon glyphicon-download-alt"></i></a>
                         {% if request.user.is_superuser or request.user|has_remove_permission %}
-                        <a data-toggle="modal" data-target="#modal_arquivo_{{ file.pk }}" title="excluir" class="btn btn-xs btn-flat btn-danger" data-widget="remove"><i class="fa fa-trash-o fa-fw"></i>
+                        <a data-toggle="modal" data-target="#modal_arquivo_{{ file.pk }}" title="excluir" class="btn btn-xs btn-danger" data-widget="remove"><i class="fa fa-trash-o fa-fw"></i>
                         </a>
                         {% endif %}
                         </td>
                     </tr>
+                    <div class="modal fade" id="arquivo_compartilhar_{{ file.pk }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                            aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title" id="exampleModalLabel">Link de compartilhamento</h4>
+                                </div>
+                                <div class="modal-body">
+                                        <div class="box-body">
+                                            <a href="{% url 'share_file' file.get_hash_slug file.pk %}">http://{{ request.get_host }}/file/{{ file.get_hash_slug }}/{{ file.pk }}/</a>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="modal fade" id="modal_arquivo_{{ file.pk }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">

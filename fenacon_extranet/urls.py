@@ -1,11 +1,14 @@
 from django.conf.urls import include, url, patterns
 from django.contrib import admin
-from apps.core.views import PasswordResetUnregister
+from django.views.generic import TemplateView
+from apps.core.views import PasswordResetUnregister, FolderShareView, FileShareView
 from fenacon_extranet import settings
 
 urlpatterns = [
     url(r'^', include('apps.core.urls')),
     url(r'^financeiro/', include('apps.financier.urls')),
+    url(r'^share/(?P<hash>\w+)/(?P<pk>\d+)/', FolderShareView.as_view(), name='share_folder'),
+    url(r'^file/(?P<hash>\w+)/(?P<pk>\d+)/', FileShareView.as_view(), name='share_file'),
     url(r'^admin/', include(admin.site.urls), name='admin'),
     url(r'^password_change/$', 'django.contrib.auth.views.password_change', name='password_change'),
     url(r'^password_change/done/$', 'django.contrib.auth.views.password_change_done', name='password_change_done'),
