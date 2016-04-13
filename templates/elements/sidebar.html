@@ -33,12 +33,12 @@
                     <i class="fa fa-clock-o"></i> <span>Início</span>
                 </a>
             </li>
-            <li class="treeview">
+            <li class="treeview active">
                 <a href="#">
                     <i class="fa fa-suitcase"></i> <span>Áreas</span>
                     <i class="fa fa-angle-left pull-right"></i>
                 </a>
-                <ul class="treeview-menu">
+                <ul class="treeview-menu menu-opem">
                     {% for area in areas %}
                         {% has_area request.user area as result %}
                         {% if request.user.is_superuser or result %}
@@ -46,11 +46,6 @@
                         {% endif %}
                     {% endfor %}
                 </ul>
-            </li>
-            <li>
-                <a href="{% url 'list_user' %}">
-                    <i class="fa fa-users"></i> <span>Usuários</span>
-                </a>
             </li>
             {% if request.user.is_superuser or request.user|has_refund_permission %}
             <li>
@@ -68,6 +63,11 @@
             {% endif %}
 
             <li><a href="{% url 'garbage' request.user.slug %}"><i class="fa fa-trash"></i> <span>Arquivos excluídos</span></a></li>
+             <li>
+                <a href="{% url 'list_user' %}">
+                    <i class="fa fa-users"></i> <span>Usuários</span>
+                </a>
+            </li>
             {% if request.user.is_superuser %}
             <li class="treeview">
                 <a href="#">
