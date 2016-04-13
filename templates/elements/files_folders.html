@@ -37,12 +37,21 @@
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                             aria-hidden="true">&times;</span></button>
                                     <h4 class="modal-title" id="exampleModalLabel">Link de compartilhamento</h4>
+                                    {% if folder.status_link %}<span class="label label-success">Ativo</span>
+                                            {% else %}<span class="label label-danger">Desativado</span>{% endif %}
                                 </div>
                                 <div class="modal-body">
                                         <div class="box-body">
                                             <a href="{% url 'share_folder' folder.get_hash_slug folder.pk %}">http://{{ request.get_host }}/share/{{ folder.get_hash_slug }}/{{ folder.pk }}/</a>
                                         </div>
                                 </div>
+{#                                <div class="modal-footer">#}
+{#                                    {% if folder.status_link %}#}
+{#                                    <button type="button" class="btn btn-danger">Desativar</button>#}
+{#                                    {% else %}#}
+{#                                    <button type="button" class="btn btn-success">Ativar</button>#}
+{#                                    {% endif %}#}
+{#                                </div>#}
                             </div>
                         </div>
                     </div>
@@ -92,12 +101,21 @@
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                             aria-hidden="true">&times;</span></button>
                                     <h4 class="modal-title" id="exampleModalLabel">Link de compartilhamento</h4>
+                                    {% if file.status_link %}<span class="label label-success">Ativo</span>
+                                            {% else %}<span class="label label-danger">Desativado</span>{% endif %}
                                 </div>
                                 <div class="modal-body">
                                         <div class="box-body">
                                             <a href="{% url 'share_file' file.get_hash_slug file.pk %}">http://{{ request.get_host }}/file/{{ file.get_hash_slug }}/{{ file.pk }}/</a>
                                         </div>
                                 </div>
+{#                                <div class="modal-footer">#}
+{#                                    {% if file.status_link %}#}
+{#                                    <button type="button" class="btn btn-danger">Desativar</button>#}
+{#                                    {% else %}#}
+{#                                    <button type="button" class="btn btn-success">Ativar</button>#}
+{#                                    {% endif %}#}
+{#                                </div>#}
                             </div>
                         </div>
                     </div>

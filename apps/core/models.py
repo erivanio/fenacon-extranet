@@ -196,6 +196,7 @@ class Folder(models.Model):
     status = models.BooleanField(default=True)
     permission = models.CharField(max_length=10, choices=PERMISSION_FOLDER, default='public')
     slug = models.SlugField(max_length=150, blank=True)
+    status_link = models.BooleanField(default=True)
 
     class Meta:
         verbose_name = 'Pastas'
@@ -229,6 +230,7 @@ class File(models.Model):
     deleted_at = models.DateTimeField(verbose_name='Data de deleção', null=True, blank=True)
     user = models.ForeignKey(User, verbose_name='Usuário')
     status = models.BooleanField(default=True)
+    status_link = models.BooleanField(default=True)
 
     class Meta:
         verbose_name = 'Arquivo'

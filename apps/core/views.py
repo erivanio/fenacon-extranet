@@ -224,6 +224,12 @@ class FolderShareView(DetailView):
     model = Folder
     template_name = 'share.html'
 
+    def get_object(self, *args, **kwargs):
+        obj = super(FolderShareView, self).get_object(*args, **kwargs)
+        if not obj.status_link:
+            raise Http404
+        return obj
+
     def get_context_data(self, **kwargs):
         context = super(FolderShareView, self).get_context_data(**kwargs)
         context['folders'] = Folder.objects.filter(parent=kwargs['object'], status=True).order_by('-name')
@@ -236,6 +242,11 @@ class FileShareView(DetailView):
     model = File
     template_name = 'share.html'
 
+    def get_object(self, *args, **kwargs):
+        obj = super(FileShareView, self).get_object(*args, **kwargs)
+        if not obj.status_link:
+            raise Http404
+        return obj
 
 class AreaDetailView(DetailView):
     model = Area
