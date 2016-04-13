@@ -242,7 +242,7 @@ class File(models.Model):
             return u'%s' % str(self.file).split('/')[-1]
 
     def get_hash_slug(self):
-        hash_object = hashlib.md5(self.name)
+        hash_object = hashlib.md5(slugify(self.name))
         return hash_object.hexdigest()
 
 
