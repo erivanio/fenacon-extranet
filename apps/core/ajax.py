@@ -3,6 +3,28 @@ from apps.core.models import Folder, File, History
 from datetime import datetime
 
 @ajax_request
+def status_link_folder(request, folder_pk=None):
+    folder = Folder.objects.get(pk=folder_pk)
+    if folder.status_link:
+        folder.status_link = False
+    else:
+        folder.status_link = True
+    folder.save()
+    return folder.status_link
+
+
+@ajax_request
+def status_link_file(request, file_pk=None):
+    file = File.objects.get(pk=file_pk)
+    if file.status_link:
+        file.status_link = False
+    else:
+        file.status_link = True
+    file.save()
+    return file.status_link
+
+
+@ajax_request
 def remove_status_folder(request, folder_pk=None):
     folder = Folder.objects.get(pk=folder_pk)
     folder.status = False

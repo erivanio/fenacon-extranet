@@ -9,6 +9,8 @@ from apps.core.views import LogoutView, LoginView, DashboardDetailView, \
 urlpatterns = patterns('',
     url(r'^$', LoginView.as_view(), name='login'),
     url(r'^logout/$', LogoutView.as_view(), name='logout'),
+    url(r'^status-link/folder/(?P<folder_pk>\d+)/$', 'apps.core.ajax.status_link_folder', name='link_folder'),
+    url(r'^status-link/file/(?P<file_pk>\d+)/$', 'apps.core.ajax.status_link_file', name='link_file'),
     url(r'^pasta/restaurar/(?P<folder_pk>\d+)/$', 'apps.core.ajax.add_status_folder', name='add_folder'),
     url(r'^pasta/deletar/(?P<folder_pk>\d+)/$', 'apps.core.ajax.remove_status_folder', name='remove_folder'),
     url(r'^pasta/excluir/(?P<pk>\d+)/$', FolderDeleteView.as_view(), name='folder_delete'),

@@ -35,6 +35,46 @@
 {% endblock %}
 {% block extrajs %}
 <script type="text/javascript">
+    function status_link_folder(folder_pk) {
+        $.ajax({
+            type: "GET",
+            url: "/status-link/folder/" + folder_pk + "/",
+            success: function (data) {
+                if (data == true) {
+                    $("#enable_folder_link_" + folder_pk).hide();
+                    $("#disable_folder_link_" + folder_pk).show();
+                } else {
+                    $("#enable_folder_link_" + folder_pk).show();
+                    $("#disable_folder_link_" + folder_pk).hide();
+                }
+            },
+            error: function (data) {
+                alert("Ocorreu um erro, por favor, tente novamente.");
+            }
+        });
+    }
+</script>
+<script type="text/javascript">
+    function status_link_file(file_pk) {
+        $.ajax({
+            type: "GET",
+            url: "/status-link/file/" + file_pk + "/",
+            success: function (data) {
+                if (data == true) {
+                    $("#enable_file_link_" + file_pk).hide();
+                    $("#disable_file_link_" + file_pk).show();
+                } else {
+                    $("#enable_file_link_" + file_pk).show();
+                    $("#disable_file_link_" + file_pk).hide();
+                }
+            },
+            error: function (data) {
+                alert("Ocorreu um erro, por favor, tente novamente.");
+            }
+        });
+    }
+</script>
+<script type="text/javascript">
     function del_folder(folder_pk) {
         $.ajax({
             type: "GET",
