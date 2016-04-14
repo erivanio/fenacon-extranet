@@ -69,6 +69,20 @@
                                 <p>{{ form.is_superuser }}</p>
                             </div>
                             <div class="form-group">
+                                <label>Ativo?</label>
+                                <p>{{ form.is_active }}</p>
+                            </div>
+                            <div class="form-group">
+                                <label>Expirar em</label>
+                                <div class="input-group date">
+                                  <div class="input-group-addon">
+                                    <i class="fa fa-calendar"></i>
+                                  </div>
+                                  {{ form.expirated_date|append_attr:"class: form-control pull-right datepicker" }}
+                                </div>
+                                <div style="color:red">{{ form.expirated_date.errors }}</div>
+                            </div>
+                            <div class="form-group">
                                 <label>Receber notificação de reembolso</label>
                                 <p>{{ form.receive_email }}</p>
                             </div>
@@ -99,6 +113,10 @@
         </div>
     </section>
 {% endblock %}
+{% block extracss %}
+  <!-- bootstrap datepicker -->
+  <link rel="stylesheet" href="{{ MEDIA_URL }}plugins/datepicker/datepicker3.css">
+{% endblock %}
 {% block extrajs %}
 <script src="{{ MEDIA_URL }}dist/js/jquery.maskedinput.js"></script>
 <script type="text/javascript">
@@ -117,5 +135,16 @@
             }
         });
 </script>
-
+<script src="{{ MEDIA_URL }}plugins/datepicker/bootstrap-datepicker.js"></script>
+<script src="{{ MEDIA_URL }}plugins/datepicker/locales/bootstrap-datepicker.pt-BR.js"></script>
+<script>
+$(function () {
+    //Date picker
+    $('.datepicker').datepicker({
+        format: 'dd/mm/yyyy',
+        language: 'pt-BR',
+        autoclose: true
+    });
+});
+</script>
 {% endblock %}

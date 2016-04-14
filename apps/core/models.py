@@ -94,6 +94,7 @@ class User(AbstractBaseUser):
     is_member = models.BooleanField('Membro?', default=True)
     is_superuser = models.BooleanField('Administrador?', default=False)
     created_date = models.DateTimeField('Criado em', default=datetime.now)
+    expirated_date = models.DateField('Expirar em', blank=True, null=True)
     photo = models.ImageField('Foto', upload_to=update_filename, blank=True, null=True)
     photo_thumb = ImageRatioField('photo', '65x65')
     permissions = models.ManyToManyField(Permission, verbose_name="Permissões", blank=True)
