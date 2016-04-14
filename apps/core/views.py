@@ -63,9 +63,35 @@ class GroupCreateView(CreateView):
     def dispatch(self, *args, **kwargs):
         return super(GroupCreateView, self).dispatch(*args, **kwargs)
 
+    def get_context_data(self, **kwargs):
+        context = super(GroupCreateView, self).get_context_data(**kwargs)
+        context['groups'] = Group.objects.all()
+
+        return context
+
     def get_success_url(self):
         messages.success(self.request, 'Grupo criado com sucesso!')
         return reverse('create_group')
+
+
+class GroupUpdateView(UpdateView):
+    model = Group
+    form_class = GroupCreateForm
+    template_name = 'user/group_create.html'
+
+    @method_decorator(user_passes_test(lambda u: u.is_superuser))
+    def dispatch(self, *args, **kwargs):
+        return super(GroupUpdateView, self).dispatch(*args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(GroupUpdateView, self).get_context_data(**kwargs)
+        context['groups'] = Group.objects.all()
+
+        return context
+
+    def get_success_url(self):
+        messages.success(self.request, 'Grupo editado com sucesso!')
+        return reverse('update_group')
 
 
 class UserListView(ListView):

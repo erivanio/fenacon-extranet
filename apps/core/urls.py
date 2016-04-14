@@ -4,7 +4,7 @@ from django.views.generic import TemplateView
 from apps.core.views import LogoutView, LoginView, DashboardDetailView, \
     FolderDetailView, AreaDetailView, AreaCreateView, UserCreateView, UserEditView, GarbageDetailView, FileDeleteView, \
     FolderDeleteView, AreaUpdateView, FolderUpdateView, GroupCreateView, AreaDeleteView, UserListView, HistoryListView, \
-    UserDeleteView
+    UserDeleteView, GroupUpdateView
 
 urlpatterns = patterns('',
     url(r'^$', LoginView.as_view(), name='login'),
@@ -23,6 +23,7 @@ urlpatterns = patterns('',
     url(r'^usuario/novo/', UserCreateView.as_view(), name='create_user'),
     url(r'^usuario/lista/', UserListView.as_view(), name='list_user'),
     url(r'^grupo/novo/', GroupCreateView.as_view(), name='create_group'),
+    url(r'^grupo/editar/(?P<pk>\d+)/', GroupUpdateView.as_view(), name='update_group'),
     url(r'^arquivo/adicionar-arquivo/', 'apps.core.views.create_file', name='create_file'),
     url(r'^arquivo/restaurar/(?P<file_pk>\d+)/$', 'apps.core.ajax.add_status_file', name='add_file'),
     url(r'^arquivo/deletar/(?P<file_pk>\d+)/$', 'apps.core.ajax.remove_status_file', name='remove_file'),
