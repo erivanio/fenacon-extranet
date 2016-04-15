@@ -11,3 +11,4 @@ media/uploads/
 static/
 fenacon_extranet/settings.ini
 migration/
+db.sqlite3

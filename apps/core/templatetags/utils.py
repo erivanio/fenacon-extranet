@@ -46,6 +46,16 @@ def has_refund_permission(user):
 
 
 @register.filter
+def has_approve_refund_permission(user):
+    if 'aprovar_solicitacao_de_reembolso' in user.permissions.values_list('slug', flat=True):
+        return True
+    for group in user.groups.all():
+        if 'aprovar_solicitacao_de_reembolso' in group.permissions.values_list('slug', flat=True):
+            return True
+    return False
+
+
+@register.filter
 def has_status_refund_permission(user):
     if 'editar_estado_solicitacao_reembolso' in user.permissions.values_list('slug', flat=True):
         return True

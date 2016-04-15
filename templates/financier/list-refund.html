@@ -1,16 +1,16 @@
 {% extends 'elements/base.html' %}
 {% load widget_tweaks %}
 {% load utils %}
-{% block title %}Reembolsos de viagem{% endblock %}
+{% block title %}Solicitações de reembolso{% endblock %}
 {% block content %}
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            Reembolsos de viagem
+            Solicitações de reembolso
         </h1>
         <ol class="breadcrumb">
             <li><a href="{% url 'dashboard' request.user.slug %}"><i class="fa fa-clock-o"></i>Início</a></li>
-            <li class="active">Reembolsos de viagem</li>
+            <li class="active">Solicitações de reembolso</li>
         </ol>
     </section>
 
@@ -30,7 +30,6 @@
                 <tbody>
                 <tr>
                   <th>Beneficiário</th>
-                  <th>Autorizador</th>
                   <th>Data da Ida</th>
                   <th>Data da Volta</th>
                   <th>Status</th>
@@ -39,7 +38,6 @@
                 {% for refund in object_list %}
                 <tr>
                   <td>{{ refund.beneficiary.get_display_name }}</td>
-                  <td>{{ refund.authorizer }}</td>
                   <td>{{ refund.going_date }}</td>
                   <td>{{ refund.back_date }}</td>
                   <td>{% if refund.status == '1' %}<span class="label label-warning">Aguardando</span>
@@ -49,7 +47,9 @@
                   </td>
                 <td>
                     <button type="button" class="btn btn-xs btn-flat btn-info" data-toggle="modal" data-target="#refund_{{ refund.pk }}"><i class="fa fa-eye"></i></button>
+                    {% if request.user.is_superuser or request.user|has_status_refund_permission or request.user == refund.beneficiary or request.user|has_approve_refund_permission %}
                     <a href="{% url 'update_refund' refund.pk %}" class="btn btn-xs btn-flat btn-warning"><i class="fa fa-pencil"></i></a>
+                    {% endif %}
                 </td>
                 </tr>
                 <!-- Modal -->
@@ -58,21 +58,14 @@
                     <div class="modal-content">
                       <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="myModalLabel">Reembolso de Viagem</h4>
+                        <h4 class="modal-title" id="myModalLabel">Solicitação de reembolso</h4>
                       </div>
                       <div class="modal-body">
                           <div class="row">
                               <div class="col-md-12">
                                   <div class="col-md-6">
-                                        <p><b>Estado:</b> {{ refund.beneficiary.get_display_name }}</p>
+                                        <p><b>Beneficiário:</b> {{ refund.beneficiary.get_display_name }}</p>
                                   </div>
-                                  <div class="col-md-6">
-                                        <p><b>Autorizador:</b> {{ refund.authorizer }}</p>
-                                  </div>
-                              </div>
-                          </div>
-                          <div class="row">
-                              <div class="col-md-12">
                                   <div class="col-md-6">
                                     <p><b>Estado:</b>
                                     {% if refund.status == '1' %}<span class="label label-warning">Aguardando</span>
@@ -82,6 +75,12 @@
                                   </div>
                               </div>
                           </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    {% if refund.reason %}<p><b>Motivo da rejeição:</b>{{ refund.reason }}</p>
+                                    {% elif refund.observation %}<p><b>Observação:</b>{{ refund.observation }}</p>{% endif %}
+                                </div>
+                            </div>
                           <div class="box-header with-border">
                               <h3 class="box-title">Ida</h3>
                           </div>

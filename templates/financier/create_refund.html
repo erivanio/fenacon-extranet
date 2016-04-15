@@ -38,36 +38,64 @@
                             {% csrf_token %}
                             <!-- text input -->
                             <div class="row">
-                                <div class="col-lg-4">
+                            {% if object and request.user|has_approve_refund_permission and not request.user == object.beneficiary %}
+                                <div class="col-lg-6">
+                                    <label>Beneficiário *</label>
+                                    <select class=" form-control" id="id_beneficiary" name="beneficiary" readonly>
+                                    <option value="{{ object.beneficiary.id }}" selected="selected">{{ object.beneficiary.get_display_name }}</option>
+                                    </select>
+                                </div>
+                                <div class="col-lg-6">
+                                    <label>Estado</label>
+                                    <select class=" form-control" id="id_status" name="status">
+                                        <option value="1" selected="selected">Aguardando</option>
+                                        <option value="2">Aprovada</option>
+                                        <option value="4">Rejeitada</option>
+                                    </select>
+                                </div>
+                                {% else %}
+                                <div class="col-lg-6">
                                     <label>Beneficiário *</label>
                                     {{ form.beneficiary|append_attr:"class: form-control" }}
                                     <div style="color:red">{{ form.beneficiary.errors }}</div>
                                 </div>
-                                <div class="col-lg-4">
-                                    <label>Autorizador *</label>
-                                    {{ form.authorizer|append_attr:"class: form-control" }}
-                                    <div style="color:red">{{ form.authorizer.errors }}</div>
-                                </div>
                                 {% if request.user.is_superuser or request.user|has_status_refund_permission %}
-                                <div class="col-lg-4">
+                                <div class="col-lg-6">
+                                    <label>Estado</label>
+                                    {{ form.status|append_attr:"class: form-control"|attr:"onchange: yesnoCheck(this);" }}
+                                </div>
+                                {% else %}
+                                <div class="col-lg-6" style="display:none">
                                     <label>Estado</label>
                                     {{ form.status|append_attr:"class: form-control"|attr:"onchange: yesnoCheck(this);" }}
                                 </div>
                                 {% endif %}
+                            {% endif %}
                             </div>
                             {% if request.user.is_superuser or request.user|has_status_refund_permission %}
-                            <div class="row" id="ifYes" {% if not form.status.value == '4' %}style="display: none;"{% endif %}>
+                            <div class="row" id="ifreason" {% if not form.status.value == '4' %}style="display: none;"{% endif %}>
                                 <div class="col-lg-12">
                                     <label>Motivo</label>
                                     {{ form.reason|append_attr:"class: form-control" }}
                                 </div>
                             </div>
+                            <div class="row" id="ifobservation" {% if not form.status.value == '3' %}style="display: none;"{% endif %}>
+                                <div class="col-lg-12">
+                                    <label>Observação</label>
+                                    {{ form.observation|append_attr:"class: form-control" }}
+                                </div>
+                            </div>
                             <script>
                                 function yesnoCheck(that) {
                                     if (that.value == "4") {
-                                        document.getElementById("ifYes").style.display = "block";
+                                        document.getElementById("ifreason").style.display = "block";
                                     } else {
-                                        document.getElementById("ifYes").style.display = "none";
+                                        document.getElementById("ifreason").style.display = "none";
+                                    }
+                                    if (that.value == "3") {
+                                        document.getElementById("ifobservation").style.display = "block";
+                                    } else {
+                                        document.getElementById("ifobservation").style.display = "none";
                                     }
                                 }
                             </script>
@@ -76,6 +104,132 @@
                             <div class="box-header with-border">
                               <h3 class="box-title">Ida</h3>
                             </div>
+                            {% if object and request.user|has_approve_refund_permission and not request.user == object.beneficiary %}
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <label>Data *</label>
+                                    <div class="input-group date">
+                                      <div class="input-group-addon">
+                                        <i class="fa fa-calendar"></i>
+                                      </div>
+                                    {{ form.going_date|append_attr:"class: form-control pull-right"|attr:"readonly" }}
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <label>Empresa *</label>
+                                    {{ form.going_enterprise|append_attr:"class: form-control"|attr:"readonly" }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="bootstrap-timepicker">
+                                        <label>Hora de saída</label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-clock-o"></i>
+                                            </div>
+                                            {{ form.going_exit_time|append_attr:"class:form-control"|attr:"readonly" }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="bootstrap-timepicker">
+                                        <label>Hora de chegada</label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-clock-o"></i>
+                                            </div>
+                                            {{ form.going_arrival_time|append_attr:"class:form-control"|attr:"readonly" }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="box-header with-border">
+                              <h3 class="box-title">Volta</h3>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <label>Data *</label>
+                                    <div class="input-group date">
+                                      <div class="input-group-addon">
+                                        <i class="fa fa-calendar"></i>
+                                      </div>
+                                      {{ form.back_date|append_attr:"class: form-control pull-right"|attr:"readonly" }}
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <label>Empresa *</label>
+                                    {{ form.back_enterprise|append_attr:"class: form-control"|attr:"readonly" }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="bootstrap-timepicker">
+                                        <label>Hora de saída</label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-clock-o"></i>
+                                            </div>
+                                            {{ form.back_exit_time|append_attr:"class:form-control"|attr:"readonly" }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="bootstrap-timepicker">
+                                        <label>Hora de chegada</label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-clock-o"></i>
+                                            </div>
+                                            {{ form.back_arrival_time|append_attr:"class:form-control"|attr:"readonly" }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="box-header with-border">
+                              <h3 class="box-title">Despesas</h3>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-3">
+                                    <label>Despesas com locomoção</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">R$</span>
+                                        {{ form.expenses_locomotion|append_attr:"class: form-control"|attr:"readonly" }}
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <label>Despesas com alimentação</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">R$</span>
+                                        {{ form.meal_expenses|append_attr:"class: form-control"|attr:"readonly" }}
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <label>Diária</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">R$</span>
+                                        {{ form.daily|append_attr:"class: form-control"|attr:"readonly" }}
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <label>Quilometragem</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">R$</span>
+                                        {{ form.mileage|append_attr:"class: form-control"|attr:"readonly" }}
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Histórico</h3>
+                            </div>
+                            <div class="form-group">
+                                <label></label>
+                                {{ form.history|append_attr:"class: form-control"|attr:"readonly" }}
+                            </div>
+                            {% else %}
                             <div class="row">
                                 <div class="col-lg-6">
                                     <label>Data *</label>
@@ -204,6 +358,7 @@
                                 <label></label>
                                 {{ form.history|append_attr:"class: form-control" }}
                             </div>
+                            {% endif %}
                         </div>
                         <div class="box-footer">
                             <button type="submit" class="btn btn-primary">Salvar</button>

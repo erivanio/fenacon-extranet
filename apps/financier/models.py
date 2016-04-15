@@ -14,7 +14,6 @@ class TravelRefund(models.Model):
         ('4', 'Rejeitada')
     )
     beneficiary = models.ForeignKey(User, verbose_name='Beneficiário')
-    authorizer = models.CharField('Autorizador', max_length=200)
     going_date = models.DateField(verbose_name='Data')
     going_enterprise = models.CharField(verbose_name='Empresa', max_length=200)
     going_exit_time = models.TimeField(verbose_name='Data de saída', blank=True)
@@ -29,6 +28,7 @@ class TravelRefund(models.Model):
     mileage = models.FloatField(verbose_name='Quilometragem', null=True, blank=True)
     history = models.TextField(verbose_name='Histórico', null=True, blank=True)
     reason = models.CharField(max_length=200, null=True, blank=True)
+    observation = models.CharField(max_length=200, null=True, blank=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICE, default='1')
     created_at = models.DateTimeField(verbose_name='Data de Criação', default=datetime.now)
 

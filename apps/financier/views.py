@@ -25,17 +25,32 @@ class TravelRefundCreateView(CreateView):
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.save()
-        html = render_to_string('financier/notification_email.html', {'object': self.object})
         users = User.objects.filter(receive_email=True)
         email_list = []
-        subject = u'[Extranet-Fenacon] Solicitação de reembolso de viagem de %s' % self.object.beneficiary
-        for user in users:
-            email_list.append(user.email)
+        text = ''
+        subject = u'[Extranet-Fenacon]'
+        if self.object.status == '1':
+            text = u'Nova solicitação de reembolso'
+            subject = u'[Extranet-Fenacon] %s de %s' % (text, self.object.beneficiary)
+            for user in users:
+                email_list.append(user.email)
+        elif self.object.status == '2' or self.object.status == '4':
+            text = u'Alteração no estado da solicitação de reembolso'
+            subject = u'[Extranet-Fenacon] %s de %s' % (text, self.object.beneficiary)
+            for user in users:
+                email_list.append(user.email)
+            email_list.append(self.object.beneficiary.email)
+        elif self.object.status == '3':
+            text = u'Solicitação de reembolso paga'
+            subject = u'[Extranet-Fenacon] %s' % text
+            email_list.append(self.object.beneficiary.email)
+        html = render_to_string('financier/notification_email.html', {'object': self.object, 'text': text})
         mail = EmailMultiAlternatives(subject, '', '', email_list)
         mail.attach_alternative(html, 'text/html')
         mail.send()
 
         return HttpResponseRedirect(self.get_success_url())
+
 
     def get_success_url(self):
         messages.success(self.request, 'Solicitação modificada com sucesso!')
@@ -55,6 +70,35 @@ class TravelRefundUpdateView(UpdateView):
     model = TravelRefund
     form_class = TravelRefundForm
     template_name = 'financier/create_refund.html'
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.save()
+        users = User.objects.filter(receive_email=True)
+        email_list = []
+        text = ''
+        subject = u'[Extranet-Fenacon]'
+        if self.object.status == '1':
+            text = u'Nova solicitação de reembolso'
+            subject = u'[Extranet-Fenacon] %s de %s' % (text, self.object.beneficiary)
+            for user in users:
+                email_list.append(user.email)
+        elif self.object.status == '2' or self.object.status == '4':
+            text = u'Alteração no estado da solicitação de reembolso'
+            subject = u'[Extranet-Fenacon] %s de %s' % (text, self.object.beneficiary)
+            for user in users:
+                email_list.append(user.email)
+            email_list.append(self.object.beneficiary.email)
+        elif self.object.status == '3':
+            text = u'Solicitação de reembolso paga'
+            subject = u'[Extranet-Fenacon] %s' % text
+            email_list.append(self.object.beneficiary.email)
+        html = render_to_string('financier/notification_email.html', {'object': self.object, 'text': text})
+        mail = EmailMultiAlternatives(subject, '', '', email_list)
+        mail.attach_alternative(html, 'text/html')
+        mail.send()
+
+        return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
         messages.success(self.request, 'Solicitação modificada com sucesso!')

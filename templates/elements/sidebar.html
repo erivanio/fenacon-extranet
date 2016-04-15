@@ -50,7 +50,7 @@
             {% if request.user.is_superuser or request.user|has_refund_permission %}
             <li>
                 <a href="{% url 'list_refund' %}">
-                    <i class="fa fa-credit-card"></i> <span>Reembolso de Viagens</span>
+                    <i class="fa fa-credit-card"></i> <span>Solicitação de reembolso</span>
                 </a>
             </li>
             {% endif %}
