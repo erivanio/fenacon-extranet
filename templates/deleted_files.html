@@ -95,7 +95,7 @@
                             {% endfor %}
                             {% for file in files %}
                             <tr id="div_file_{{ file.pk }}">
-                                <td><a href="{{ MEDIA_URL }}{{ file.file }}" download><i class="fa fa-file"></i></a></td>
+                                <td><a href="{{ MEDIA_URL }}{{ file.file }}" download><i class="fa fa-file-o"></i></a></td>
                                 <td><a href="{{ MEDIA_URL }}{{ file.file }}" download>{{ file.name }}</a></td>
                                 <td>{{ file.created_at }}</td>
                                 <td>{{ file.deleted_at }}</td>

@@ -80,7 +80,7 @@
                     {% for file in files %}
                     {% if not file.folder.permission == 'private' and not file.user == requet.user %}
                     <tr id="div_file_{{ file.pk }}">
-                        <td><a href="{{ MEDIA_URL }}{{ file.file }}" download><i class="fa fa-file"></i></a></td>
+                        <td><a href="{{ MEDIA_URL }}{{ file.file }}" download><i class="fa fa-file-o"></i></a></td>
                         <td><a href="{{ MEDIA_URL }}{{ file.file }}" download>{{ file.name }}</a></td>
                         <td>{{ file.created_at }}</td>
                         <td>{{ file.file.size|filesizeformat }}</td>

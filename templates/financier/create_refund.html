@@ -46,7 +46,7 @@
                                     </select>
                                 </div>
                                 <div class="col-lg-6">
-                                    <label>Estado</label>
+                                    <label>Status</label>
                                     <select class=" form-control" id="id_status" name="status">
                                         <option value="1" selected="selected">Aguardando</option>
                                         <option value="2">Aprovada</option>
@@ -61,12 +61,12 @@
                                 </div>
                                 {% if request.user.is_superuser or request.user|has_status_refund_permission %}
                                 <div class="col-lg-6">
-                                    <label>Estado</label>
+                                    <label>Status</label>
                                     {{ form.status|append_attr:"class: form-control"|attr:"onchange: yesnoCheck(this);" }}
                                 </div>
                                 {% else %}
                                 <div class="col-lg-6" style="display:none">
-                                    <label>Estado</label>
+                                    <label>Status</label>
                                     {{ form.status|append_attr:"class: form-control"|attr:"onchange: yesnoCheck(this);" }}
                                 </div>
                                 {% endif %}
