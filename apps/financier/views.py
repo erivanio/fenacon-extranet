@@ -73,6 +73,8 @@ class TravelRefundUpdateView(UpdateView):
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
+        if 'status' in form.changed_data and self.object.status == '2':
+            self.object.approved_by = self.request.user
         self.object.save()
         users = User.objects.filter(receive_email=True)
         email_list = []

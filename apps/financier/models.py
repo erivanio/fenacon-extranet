@@ -13,7 +13,8 @@ class TravelRefund(models.Model):
         ('3', 'Pago'),
         ('4', 'Rejeitada')
     )
-    beneficiary = models.ForeignKey(User, verbose_name='Beneficiário')
+    beneficiary = models.ForeignKey(User, verbose_name='Beneficiário', related_name='refund_beneficiary')
+    approved_by = models.ForeignKey(User, verbose_name='Aprovado por', related_name='aproves', null=True, blank=True)
     going_date = models.DateField(verbose_name='Data')
     going_enterprise = models.CharField(verbose_name='Empresa', max_length=200)
     going_exit_time = models.TimeField(verbose_name='Data de saída', blank=True)

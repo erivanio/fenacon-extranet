@@ -63,16 +63,21 @@
                       <div class="modal-body">
                           <div class="row">
                               <div class="col-md-12">
-                                  <div class="col-md-6">
+                                  <div class="col-md-4">
                                         <p><b>Beneficiário:</b> {{ refund.beneficiary.get_display_name }}</p>
                                   </div>
-                                  <div class="col-md-6">
+                                  <div class="col-md-4">
                                     <p><b>Status:</b>
                                     {% if refund.status == '1' %}<span class="label label-warning">Aguardando</span>
                                     {% elif refund.status == '2' %}<span class="label label-success">Aprovada</span>
                                     {% elif refund.status == '3' %}<span class="label label-primary">Pago</span>
                                     {% elif refund.status == '4' %}<span class="label label-danger">Rejeitado</span>{% endif %}</p>
                                   </div>
+                              {% if refund.approved_by %}
+                                <div class="col-md-4">
+                                        <p><b>Aprovado por:</b> {{ refund.approved_by.get_display_name }}</p>
+                                  </div>
+                              {% endif %}
                               </div>
                           </div>
                             <div class="row">
