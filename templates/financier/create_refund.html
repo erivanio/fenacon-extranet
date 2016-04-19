@@ -70,15 +70,15 @@
                                     {{ form.status|append_attr:"class: form-control"|attr:"onchange: yesnoCheck(this);" }}
                                 </div>
                                 {% endif %}
+                                <div class="row" id="ifreason" {% if not form.status.value == '4' %}style="display: none;"{% endif %}>
+                                    <div class="col-lg-12">
+                                        <label>Motivo</label>
+                                        {{ form.reason|append_attr:"class: form-control" }}
+                                    </div>
+                                </div>
                             {% endif %}
                             </div>
                             {% if request.user.is_superuser or request.user|has_status_refund_permission %}
-                            <div class="row" id="ifreason" {% if not form.status.value == '4' %}style="display: none;"{% endif %}>
-                                <div class="col-lg-12">
-                                    <label>Motivo</label>
-                                    {{ form.reason|append_attr:"class: form-control" }}
-                                </div>
-                            </div>
                             <div class="row" id="ifobservation" {% if not form.status.value == '3' %}style="display: none;"{% endif %}>
                                 <div class="col-lg-12">
                                     <label>Observação</label>

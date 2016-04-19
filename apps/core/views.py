@@ -127,6 +127,7 @@ class UserCreateView(CreateView):
         self.object = form.save(commit=False)
         self.object.save()
         history = History()
+        history.user = self.request.user
         history.created_at = datetime.now()
         history.icon = 'fa-user'
         history.content = '<a href="%s">%s</a> adicionou a conta <a href="%s">%s</a>' % (self.request.user.get_absolute_url(), self.request.user.get_display_name(), self.object.get_absolute_url(), self.object.get_display_name())
@@ -153,6 +154,7 @@ class UserEditView(UpdateView):
     def form_valid(self, form):
         form.save()
         history = History()
+        history.user = self.request.user
         history.created_at = datetime.now()
         history.icon = 'fa-user'
         if self.request.user != self.object:
@@ -222,6 +224,7 @@ class FolderUpdateView(UpdateView):
         self.object = form.save(commit=False)
         self.object.save()
         history = History()
+        history.user = self.request.user
         history.created_at = datetime.now()
         history.icon = 'fa-folder'
         history.content = '<a href="%s">%s</a> editou a pasta <a href="%s">%s</a>' % (self.request.user.get_absolute_url(), self.request.user.get_display_name(), self.object.get_absolute_url(), self.object.name)
@@ -387,6 +390,19 @@ class HistoryListView(ListView):
         return super(HistoryListView, self).dispatch(*args, **kwargs)
 
 
+class MyActionsListView(ListView):
+    model = History
+    template_name = 'history.html'
+
+    @method_decorator(login_required(login_url='/'))
+    def dispatch(self, *args, **kwargs):
+        return super(MyActionsListView, self).dispatch(*args, **kwargs)
+
+    def get_queryset(self):
+        object_list = History.objects.filter(user=self.request.user)
+        return object_list
+
+
 def create_folder(request):
     if request.method == 'POST':
         folder = Folder()
@@ -398,6 +414,7 @@ def create_folder(request):
             folder.parent = parent
             folder.save()
             history = History()
+            history.user = request.user
             history.created_at = datetime.now()
             history.icon = 'fa-folder'
             history.content = '<a href="%s">%s</a> adicionou a pasta "%s" na pasta <a href="%s">%s</a>' % (folder.user.get_absolute_url(), folder.user.get_display_name(), folder.name, parent.get_absolute_url(), parent.name)
@@ -409,6 +426,7 @@ def create_folder(request):
             folder.area = area
             folder.save()
             history = History()
+            history.user = request.user
             history.created_at = datetime.now()
             history.icon = 'fa-folder'
             history.content = '<a href="%s">%s</a> adicionou a pasta "%s" em <a href="%s">%s</a>' % (folder.user.get_absolute_url(), folder.user.get_display_name(), folder.name, area.get_absolute_url(), area.name)
@@ -418,6 +436,7 @@ def create_folder(request):
         else:
             folder.save()
             history = History()
+            history.user = request.user
             history.created_at = datetime.now()
             history.icon = 'fa-folder'
             history.content = '<a href="%s">%s</a> adicionou a pasta "%s"' % (folder.user.get_absolute_url(), folder.user.get_display_name(), folder.name)
@@ -437,6 +456,7 @@ def create_file(request):
             file.folder = folder
             file.save()
             history = History()
+            history.user = request.user
             history.created_at = datetime.now()
             history.icon = 'fa-file'
             history.content = '<a href="%s">%s</a> adicionou o arquivo "%s" a pasta <a href="%s">%s</a>' % (file.user.get_absolute_url(), file.user.get_display_name(), file.name, folder.get_absolute_url(), folder.name)
@@ -448,6 +468,7 @@ def create_file(request):
             file.area = area
             file.save()
             history = History()
+            history.user = request.user
             history.created_at = datetime.now()
             history.icon = 'fa-file'
             history.content = '<a href="%s">%s</a> adicionou o arquivo "%s" em <a href="%s">%s</a>' % (file.user.get_absolute_url(), file.user.get_display_name(), file.name, area.get_absolute_url(), area.name)
@@ -457,6 +478,7 @@ def create_file(request):
         else:
             file.save()
             history = History()
+            history.user = request.user
             history.created_at = datetime.now()
             history.icon = 'fa-file'
             history.content = '<a href="%s">%s</a> adicionou o arquivo "%s"' % (file.user.get_absolute_url(), file.user.get_display_name(), file.name)

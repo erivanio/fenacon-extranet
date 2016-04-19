@@ -1,15 +1,21 @@
 {% extends 'elements/base.html' %}
-{% block title %}Histórico{% endblock %}
+{% block title %}{% if 'historico' in request.path %}Histórico{% else %}Minhas ações{% endif %}{% endblock %}
 {% block content %}
     <!-- Content Header (Page header) -->
     <section class="content-header">
+        {% if 'historico' in request.path %}
         <h1>
             Recentes
             <small>Atividades recentes</small>
         </h1>
+        {% else %}
+        <h1>
+            Minhas ações
+        </h1>
+        {% endif %}
         <ol class="breadcrumb">
             <li><a href="{% url 'dashboard' request.user.slug %}"><i class="fa fa-clock-o"></i>Início</a></li>
-            <li class="active">Histórico de atividades</li>
+            <li class="active">{% if 'historico' in request.path %}Histórico de Atividates{% else %}Minhas ações{% endif %}</li>
         </ol>
     </section>
 

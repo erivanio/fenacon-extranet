@@ -61,7 +61,11 @@
                 </a>
             </li>
             {% endif %}
-
+            <li>
+                <a href="{% url 'my_actions' %}">
+                    <i class="fa fa-bar-chart"></i> <span>Minhas ações</span>
+                </a>
+            </li>
             <li><a href="{% url 'garbage' request.user.slug %}"><i class="fa fa-trash"></i> <span>Arquivos excluídos</span></a></li>
              <li>
                 <a href="{% url 'list_user' %}">

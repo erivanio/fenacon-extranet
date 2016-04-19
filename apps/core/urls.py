@@ -4,7 +4,7 @@ from django.views.generic import TemplateView
 from apps.core.views import LogoutView, LoginView, DashboardDetailView, \
     FolderDetailView, AreaDetailView, AreaCreateView, UserCreateView, UserEditView, GarbageDetailView, FileDeleteView, \
     FolderDeleteView, AreaUpdateView, FolderUpdateView, GroupCreateView, AreaDeleteView, UserListView, HistoryListView, \
-    UserDeleteView, GroupUpdateView
+    UserDeleteView, GroupUpdateView, MyActionsListView
 
 urlpatterns = patterns('',
     url(r'^$', LoginView.as_view(), name='login'),
@@ -34,4 +34,5 @@ urlpatterns = patterns('',
     url(r'^area/deletar/(?P<pk>\d+)/$', AreaDeleteView.as_view(), name='delete_area'),
     url(r'^usuario/(?P<slug>[\w_-]+)/$', DashboardDetailView.as_view(), name='dashboard'),
     url(r'^historico/$', HistoryListView.as_view(), name='history'),
+    url(r'^minhas-acoes/$', MyActionsListView.as_view(), name='my_actions'),
 )

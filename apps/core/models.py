@@ -260,6 +260,7 @@ class History(models.Model):
     created_at = models.DateTimeField(verbose_name='Data de Criação', default=datetime.now)
     content = models.TextField('Conteúdo')
     icon = models.CharField(max_length=200, null=True, blank=True)
+    user = models.ForeignKey(User, null=True, blank=True)
 
     class Meta:
         verbose_name = 'Histórico'
