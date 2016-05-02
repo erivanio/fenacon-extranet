@@ -33,7 +33,7 @@ def remove_status_folder(request, folder_pk=None):
     history = History()
     history.created_at = datetime.now()
     history.icon = 'fa-folder'
-    history.content = '<a href="%s">%s</a> removeu a pasta %s' % (folder.user.get_absolute_url(), folder.user.get_display_name(), folder.name)
+    history.content = '<a href="%s">%s</a> removeu a pasta "%s"' % (request.user.get_absolute_url(), request.user.get_display_name(), folder.name)
     history.save()
 
 
@@ -46,7 +46,7 @@ def remove_status_file(request, file_pk=None):
     history = History()
     history.created_at = datetime.now()
     history.icon = 'fa-file'
-    history.content = '<a href="%s">%s</a> removeu o arquivo %s' % (file.user.get_absolute_url(), file.user.get_display_name(), file.name)
+    history.content = '<a href="%s">%s</a> removeu o arquivo "%s"' % (request.user.get_absolute_url(), request.user.get_display_name(), file.name)
     history.save()
 
 
@@ -59,7 +59,7 @@ def add_status_folder(request, folder_pk=None):
     history = History()
     history.created_at = datetime.now()
     history.icon = 'fa-folder'
-    history.content = '<a href="%s">%s</a> restaurou a pasta %s' % (folder.user.get_absolute_url(), folder.user.get_display_name(), folder.name)
+    history.content = '<a href="%s">%s</a> restaurou a pasta "%s"' % (request.user.get_absolute_url(), request.user.get_display_name(), folder.name)
     history.save()
 
 
@@ -72,5 +72,5 @@ def add_status_file(request, file_pk=None):
     history = History()
     history.created_at = datetime.now()
     history.icon = 'fa-file'
-    history.content = '<a href="%s">%s</a> restaurou o arquivo %s' % (file.user.get_absolute_url(), file.user.get_display_name(), file.name)
+    history.content = '<a href="%s">%s</a> restaurou o arquivo "%s"' % (request.user.get_absolute_url(), request.user.get_display_name(), file.name)
     history.save()

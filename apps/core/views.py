@@ -205,8 +205,8 @@ class GarbageDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(GarbageDetailView, self).get_context_data(**kwargs)
-        context['folders'] = Folder.objects.filter(user=self.request.user, status=False).order_by('-name')
-        context['files'] = File.objects.filter(user=self.request.user, status=False).order_by('-name')
+        context['folders'] = Folder.objects.filter(status=False).order_by('-name')
+        context['files'] = File.objects.filter(status=False).order_by('-name')
 
         return context
 

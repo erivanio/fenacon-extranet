@@ -30,7 +30,7 @@
                                 <th>Ações</th>
                             </tr>
                             {% for folder in folders %}
-                            {% if request.user == folder.user or request.user.is_superuser or folder.permission == 'public' %}
+                            {% if request.user == folder.user or request.user.is_superuser %}
                             <tr id="div_folder_{{ folder.pk }}">
                                 <td><a href="{% url 'detail_folder' folder.slug folder.pk %}"><i class="ion ion-ios-folder"></i></a></td>
                                 <td><a href="{% url 'detail_folder' folder.slug folder.pk %}">{{ folder.name }}</a></td>
@@ -94,6 +94,7 @@
                             {% endif %}
                             {% endfor %}
                             {% for file in files %}
+                            {% if request.user == file.user or request.user.is_superuser %}
                             <tr id="div_file_{{ file.pk }}">
                                 <td><a href="{{ MEDIA_URL }}{{ file.file }}" download><i class="fa fa-file-o"></i></a></td>
                                 <td><a href="{{ MEDIA_URL }}{{ file.file }}" download>{{ file.name }}</a></td>
@@ -153,6 +154,7 @@
                                     </div>
                                 </div>
                             </div>
+                            {% endif %}
                             {% endfor %}
                             </tbody>
                         </table>
