@@ -385,7 +385,7 @@ class FileUpdateView(UpdateView):
         history.user = self.request.user
         history.created_at = datetime.now()
         history.icon = 'fa-file'
-        history.content = '<a href="%s">%s</a> editou o arquivo %s' % (self.request.user.get_absolute_url(), self.request.user.get_display_name(), self.object.name)
+        history.content = '<a href="%s">%s</a> renomeou o arquivo "%s"' % (self.request.user.get_absolute_url(), self.request.user.get_display_name(), self.object.name)
         history.save()
 
         return HttpResponseRedirect(self.get_success_url())
