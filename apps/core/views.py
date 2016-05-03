@@ -14,7 +14,7 @@ from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import redirect, resolve_url
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView, DetailView, CreateView, UpdateView, DeleteView, ListView
-from apps.core.forms import LoginForm, UserEditForm, UserCreateForm, AreaForm, FolderForm, GroupCreateForm
+from apps.core.forms import LoginForm, UserEditForm, UserCreateForm, AreaForm, FolderForm, GroupCreateForm, FileForm
 from apps.core.models import User, Folder, File, Area, Group, History
 
 
@@ -367,6 +367,37 @@ class UserDeleteView(DeleteView):
     def get_success_url(self):
         messages.success(self.request, 'Usuário deletado com sucesso!')
         return reverse('list_user')
+
+
+class FileUpdateView(UpdateView):
+    model = File
+    form_class = FileForm
+    template_name = 'folder/update-file.html'
+
+    def get_object(self, *args, **kwargs):
+        obj = super(FileUpdateView, self).get_object(*args, **kwargs)
+        return obj
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.save()
+        history = History()
+        history.user = self.request.user
+        history.created_at = datetime.now()
+        history.icon = 'fa-file'
+        history.content = '<a href="%s">%s</a> editou o arquivo %s' % (self.request.user.get_absolute_url(), self.request.user.get_display_name(), self.object.name)
+        history.save()
+
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self):
+        messages.success(self.request, 'Arquivo modificada com sucesso!')
+        if self.object.folder:
+            return reverse('detail_folder', kwargs={'slug': self.object.folder.slug, 'pk': self.object.folder.pk})
+        elif self.object.area:
+            return reverse('detail_area', kwargs={'slug': self.object.area.slug, 'pk': self.object.area.pk})
+        else:
+            return reverse('dashboard', kwargs={'slug': self.object.user.slug})
 
 
 class FileDeleteView(DeleteView):

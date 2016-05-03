@@ -87,6 +87,7 @@
                         <td>{{ file.user}}</td>
                         <td>
                         <a data-toggle="modal" data-target="#arquivo_compartilhar_{{ file.pk }}" title="compartilhar" type="button" class="btn btn-xs btn-success"><i class="fa fa-share-square-o"></i></a>
+                        <a href="{% url 'update_file' file.pk %}" title="editar" type="button" class="btn btn-xs btn-warning"><i class="fa fa-pencil"></i></a>
                         <a href="{{ MEDIA_URL }}{{ file.file }}" title="Download" class="btn btn-xs btn-info" download><i class="glyphicon glyphicon-download-alt"></i></a>
                         {% if request.user.is_superuser or request.user|has_remove_permission %}
                         <a data-toggle="modal" data-target="#modal_arquivo_{{ file.pk }}" title="excluir" class="btn btn-xs btn-danger" data-widget="remove"><i class="fa fa-trash-o fa-fw"></i>

@@ -4,7 +4,7 @@ from django.views.generic import TemplateView
 from apps.core.views import LogoutView, LoginView, DashboardDetailView, \
     FolderDetailView, AreaDetailView, AreaCreateView, UserCreateView, UserEditView, GarbageDetailView, FileDeleteView, \
     FolderDeleteView, AreaUpdateView, FolderUpdateView, GroupCreateView, AreaDeleteView, UserListView, HistoryListView, \
-    UserDeleteView, GroupUpdateView, MyActionsListView
+    UserDeleteView, GroupUpdateView, MyActionsListView, FileUpdateView
 
 urlpatterns = patterns('',
     url(r'^$', LoginView.as_view(), name='login'),
@@ -17,6 +17,7 @@ urlpatterns = patterns('',
     url(r'^pasta/editar/(?P<slug>[\w_-]+)-(?P<pk>\d+)/$', FolderUpdateView.as_view(), name='update_folder'),
     url(r'^pasta/criar-pasta/$', 'apps.core.views.create_folder', name='create_folder'),
     url(r'^pasta/pasta-listar/(?P<slug>[\w_-]+)-(?P<pk>\d+)/', FolderDetailView.as_view(), name='detail_folder'),
+    url(r'^arquivo/editar/(?P<pk>\d+)/$', FileUpdateView.as_view(), name='update_file'),
     url(r'^(?P<slug>[\w_-]+)/lixeira/$', GarbageDetailView.as_view(), name='garbage'),
     url(r'^usuario/deletar/(?P<pk>\d+)', UserDeleteView.as_view(), name='delete_user'),
     url(r'^usuario/(?P<slug>[\w_-]+)/editar/', UserEditView.as_view(), name='edit_user'),

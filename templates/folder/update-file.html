@@ -1,0 +1,62 @@
+{% extends 'elements/base.html' %}
+{% load widget_tweaks %}
+{% block title %}Editar arquivo{% endblock %}
+{% block content %}
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            Editar arquivo
+        </h1>
+        <ol class="breadcrumb">
+            {% if object.status %}
+            <li><a href="{% url 'dashboard' request.user.slug %}"><i class="fa fa-clock-o"></i>Início</a></li>
+            {% else %}
+            <li><a href="{% url 'garbage' request.user.slug %}"><i class="fa fa-clock-o"></i>Lixeira</a></li>
+            {% endif %}
+            {% if object.folder.parent %}
+            <li>...</li>
+            {% endif %}
+            {% if object.area %}
+            <li><a href="{% url 'detail_area' object.area.slug object.area.pk %}">{{ object.area }}</a></li>
+            {% elif object.folder %}
+            <li><a href="{% url 'detail_folder' object.folder.slug object.folder.pk %}">{{ object.folder }}</a></li>
+            {% endif %}
+            <li class="active">Editar</li>
+        </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+
+        <!-- row -->
+        <div class="row">
+            <div class="col-md-12">
+                {% if messages %}
+                      {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                              {{ message }}
+                        </div>
+                      {% endfor %}
+                  {% endif %}
+                <div class="box box-info">
+                    <!-- /.box-header -->
+                    {{ form.non_field_errors }}
+                    <form role="form" method="POST" action="{% url 'update_file' object.pk %}">
+                        <div class="box-body">
+                            {% csrf_token %}
+                            <!-- text input -->
+                            <div class="form-group">
+                                <label>Nome</label>
+                                {{ form.name|append_attr:"class: form-control" }}
+                            </div>
+                        </div>
+                        <div class="box-footer">
+                            <button type="submit" class="btn btn-primary">Salvar</button>
+                        </div>
+                    </form>
+                    <!-- /.box-body -->
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
