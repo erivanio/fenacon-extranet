@@ -60,7 +60,7 @@ class UserEditForm(forms.ModelForm):
 class FolderForm(forms.ModelForm):
     class Meta:
         model = Folder
-        fields = ['name', 'permission']
+        fields = ['name', 'permission', 'users']
 
     PERMISSION_FOLDER = (
         ('public', 'Público'),

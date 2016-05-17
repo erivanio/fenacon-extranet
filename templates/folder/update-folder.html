@@ -54,6 +54,10 @@
                                 <label>Permissão</label>
                                 {{ form.permission|append_attr:"class: form-control" }}
                             </div>
+                            <div class="form-group">
+                                <label>Compartilhar com</label>
+                                {{ form.users|append_attr:"class: form-control" }}
+                            </div>
                         </div>
                         <div class="box-footer">
                             <button type="submit" class="btn btn-primary">Salvar</button>

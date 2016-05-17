@@ -15,7 +15,7 @@
                         <th>Ações</th>
                     </tr>
                     {% for folder in folders %}
-                    {% if request.user == folder.user or request.user.is_superuser or folder.permission == 'public' %}
+                    {% if request.user == folder.user or request.user.is_superuser or folder.permission == 'public' or request.user in folder.users.all %}
                     <tr id="div_folder_{{ folder.pk }}">
                         <td><a href="{% url 'detail_folder' folder.slug folder.pk %}"><i class="ion ion-ios-folder"></i></a></td>
                         <td><a href="{% url 'detail_folder' folder.slug folder.pk %}">{{ folder.name }}</a></td>

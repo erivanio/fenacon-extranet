@@ -223,6 +223,7 @@ class FolderUpdateView(UpdateView):
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.save()
+        form.save_m2m()
         history = History()
         history.user = self.request.user
         history.created_at = datetime.now()
