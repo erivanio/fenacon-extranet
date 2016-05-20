@@ -72,6 +72,19 @@
                     <i class="fa fa-users"></i> <span>Usuários</span>
                 </a>
             </li>
+            {% if request.user.is_superuser or request.user|has_informative_permission %}
+            <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-newspaper-o"></i>
+                    <span>Informativos</span>
+                    <i class="fa fa-angle-left pull-right"></i>
+                </a>
+                <ul class="treeview-menu">
+                    <li><a href="{% url 'create_informative' %}"><i class="fa fa-plus"></i>Adicionar</a></li>
+                    <li><a href="{% url 'list_informative' %}"><i class="fa fa-list"></i>Listar</a></li>
+                </ul>
+            </li>
+            {% endif %}
             {% if request.user.is_superuser %}
             <li class="treeview">
                 <a href="#">

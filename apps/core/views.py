@@ -188,6 +188,7 @@ class DashboardDetailView(DetailView):
             context['files'] = File.objects.filter(name__icontains=q,
                                                    folder__isnull=True, status=True).order_by('-name')
         else:
+            context['informatives'] = Informative.objects.filter(status=True).order_by('-created_at')[:3]
             context['folders'] = Folder.objects.filter(user__slug=self.kwargs['slug'],
                                                        parent__isnull=True, status=True).order_by('-name')
             context['files'] = File.objects.filter(user__slug=self.kwargs['slug'],
@@ -348,9 +349,13 @@ class InformativeCreateView(CreateView):
     form_class = InformativeForm
     template_name = 'informative/informative_form.html'
 
+    @method_decorator(login_required(login_url='/'))
+    def dispatch(self, *args, **kwargs):
+        return super(InformativeCreateView, self).dispatch(*args, **kwargs)
+
     def get_success_url(self):
         messages.success(self.request, 'Informativo criado com sucesso!')
-        return reverse('create_informative')
+        return reverse('list_informative')
 
     def form_valid(self, form):
         informative = Informative()
@@ -367,13 +372,30 @@ class InformativeUpdateView(UpdateView):
     form_class = InformativeForm
     template_name = 'informative/informative_form.html'
 
+    @method_decorator(login_required(login_url='/'))
+    def dispatch(self, *args, **kwargs):
+        return super(InformativeUpdateView, self).dispatch(*args, **kwargs)
+
     def get_success_url(self):
         messages.success(self.request, 'Informativo modificado com sucesso!')
-        return reverse('update_informative', kwargs={'pk': self.object.pk})
+        return reverse('list_informative')
+
+
+class InformativeListView(ListView):
+    model = Informative
+    template_name = 'informative/informative_list.html'
+
+    @method_decorator(login_required(login_url='/'))
+    def dispatch(self, *args, **kwargs):
+        return super(InformativeListView, self).dispatch(*args, **kwargs)
 
 
 class InformativeDeleteView(DeleteView):
     model = Informative
+
+    @method_decorator(login_required(login_url='/'))
+    def dispatch(self, *args, **kwargs):
+        return super(InformativeDeleteView, self).dispatch(*args, **kwargs)
 
     def get_object(self, queryset=None):
         obj = super(InformativeDeleteView, self).get_object()
@@ -381,7 +403,7 @@ class InformativeDeleteView(DeleteView):
 
     def get_success_url(self):
         messages.success(self.request, 'Informativo deletado com sucesso!')
-        return reverse('dashboard', kwargs={'slug': self.request.user.slug})
+        return reverse('list_informative')
 
 
 class FolderDeleteView(DeleteView):

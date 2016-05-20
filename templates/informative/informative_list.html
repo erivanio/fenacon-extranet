@@ -1,0 +1,77 @@
+{% extends 'elements/base.html' %}
+{% load widget_tweaks %}
+{% block title %}Informativos{% endblock %}
+{% block content %}
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            Informativos
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-clock-o"></i> Início</a></li>
+            <li class="active">Informativos</li>
+        </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <!-- row -->
+        <div class="row">
+            <div class="col-xs-12">
+        <div class="box">
+            <div class="box-body table-responsive no-padding">
+                <table class="table table-hover">
+                    <tbody>
+                        <tr>
+                            <th>Titulo</th>
+                            <th>Criação</th>
+                            <th>Autor</th>
+                            <th>Publicado</th>
+                            <th>Ações</th>
+                        </tr>
+                        {% for informative in object_list %}
+                        <tr>
+                            <td><a href="{% url 'update_informative' informative.pk %}">{{ informative.title }}</a></td>
+                            <td>{{ informative.created_at }}</td>
+                            <td>{{ informative.user }}</td>
+                            <td>{{ informative.status|yesno|capfirst }}</td>
+                            <td>
+                                <a href="{% url 'update_informative' informative.pk %}" title="editar" type="button" class="btn btn-xs btn-warning">
+                                    <i class="fa fa-pencil"></i>
+                                </a>
+                                <a data-toggle="modal" data-target="#modal_informativo_{{ informative.pk }}" title="excluir" type="button" class="btn btn-xs btn-danger" data-widget="remove"><i class="fa fa fa-trash-o fa-fw"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        <div class="modal fade" id="modal_informativo_{{ informative.pk }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                                aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title" id="exampleModalLabel">Excluir informativo</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                            <div class="box-body">
+                                                Tem certeza que deseja excluir permanentemente este informativo?
+                                            </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <form method="POST" action="{% url 'delete_informative' informative.pk %}">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Não</button>
+                                            {% csrf_token %}
+                                            <input type="submit" id="id_btn" value="Sim" class="btn btn-primary">
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+        </div>
+    </section>
+{% endblock %}

@@ -5,7 +5,7 @@ from apps.core.views import LogoutView, LoginView, DashboardDetailView, \
     FolderDetailView, AreaDetailView, AreaCreateView, UserCreateView, UserEditView, GarbageDetailView, FileDeleteView, \
     FolderDeleteView, AreaUpdateView, FolderUpdateView, GroupCreateView, AreaDeleteView, UserListView, HistoryListView, \
     UserDeleteView, GroupUpdateView, MyActionsListView, FileUpdateView, InformativeUpdateView, InformativeCreateView, \
-    InformativeDeleteView
+    InformativeDeleteView, InformativeListView
 
 urlpatterns = patterns('',
     url(r'^$', LoginView.as_view(), name='login'),
@@ -39,5 +39,6 @@ urlpatterns = patterns('',
     url(r'^minhas-acoes/$', MyActionsListView.as_view(), name='my_actions'),
     url(r'^informativo/editar/(?P<pk>\d+)/$', InformativeUpdateView.as_view(), name='update_informative'),
     url(r'^informativo/criar/$', InformativeCreateView.as_view(), name='create_informative'),
+    url(r'^informativo/listar/$', InformativeListView.as_view(), name='list_informative'),
     url(r'^informativo/deletar/(?P<pk>\d+)/$', InformativeDeleteView.as_view(), name='delete_informative'),
 )
