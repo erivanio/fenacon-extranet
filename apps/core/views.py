@@ -14,8 +14,9 @@ from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import redirect, resolve_url
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView, DetailView, CreateView, UpdateView, DeleteView, ListView
-from apps.core.forms import LoginForm, UserEditForm, UserCreateForm, AreaForm, FolderForm, GroupCreateForm, FileForm
-from apps.core.models import User, Folder, File, Area, Group, History
+from apps.core.forms import LoginForm, UserEditForm, UserCreateForm, AreaForm, FolderForm, GroupCreateForm, FileForm, \
+    InformativeForm
+from apps.core.models import User, Folder, File, Area, Group, History, Informative
 
 
 class LoginView(TemplateView):
@@ -339,6 +340,47 @@ class AreaDeleteView(DeleteView):
 
     def get_success_url(self):
         messages.success(self.request, 'Área deletada com sucesso!')
+        return reverse('dashboard', kwargs={'slug': self.request.user.slug})
+
+
+class InformativeCreateView(CreateView):
+    model = Informative
+    form_class = InformativeForm
+    template_name = 'informative/informative_form.html'
+
+    def get_success_url(self):
+        messages.success(self.request, 'Informativo criado com sucesso!')
+        return reverse('create_informative')
+
+    def form_valid(self, form):
+        informative = Informative()
+        informative.title = form.cleaned_data['title']
+        informative.content = form.cleaned_data['content']
+        informative.status = form.cleaned_data['status']
+        informative.user = self.request.user
+        informative.save()
+        return HttpResponseRedirect(self.get_success_url())
+
+
+class InformativeUpdateView(UpdateView):
+    model = Informative
+    form_class = InformativeForm
+    template_name = 'informative/informative_form.html'
+
+    def get_success_url(self):
+        messages.success(self.request, 'Informativo modificado com sucesso!')
+        return reverse('update_informative', kwargs={'pk': self.object.pk})
+
+
+class InformativeDeleteView(DeleteView):
+    model = Informative
+
+    def get_object(self, queryset=None):
+        obj = super(InformativeDeleteView, self).get_object()
+        return obj
+
+    def get_success_url(self):
+        messages.success(self.request, 'Informativo deletado com sucesso!')
         return reverse('dashboard', kwargs={'slug': self.request.user.slug})
 
 

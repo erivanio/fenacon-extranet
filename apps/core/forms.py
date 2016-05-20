@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django import forms
 from localflavor.br.forms import BRCPFField
-from apps.core.models import Folder, User, Area, Group, File
+from apps.core.models import Folder, User, Area, Group, File, Informative
 
 
 class LoginForm(forms.Form):
@@ -79,4 +79,10 @@ class AreaForm(forms.ModelForm):
     class Meta:
         model = Area
         fields = ['name']
+
+
+class InformativeForm(forms.ModelForm):
+    class Meta:
+        model = Informative
+        fields = ['title', 'content', 'status']
 

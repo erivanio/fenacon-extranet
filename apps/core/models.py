@@ -270,3 +270,20 @@ class History(models.Model):
 
     def __unicode__(self):
         return self.content
+
+
+
+class Informative(models.Model):
+    title = models.CharField('Título', max_length=200, null=True, blank=True)
+    content = models.TextField('Conteúdo', null=True, blank=True)
+    status = models.BooleanField(default=True)
+    user = models.ForeignKey(User, null=True, blank=True)
+    created_at = models.DateTimeField(verbose_name='Data de Criação', default=datetime.now)
+
+    class Meta:
+        verbose_name = 'Informativo'
+        verbose_name_plural = 'Informativos'
+        ordering = ['-created_at']
+
+    def __unicode__(self):
+        return self.title
