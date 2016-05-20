@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 from django import forms
 from localflavor.br.forms import BRCPFField
+import selectable.forms as selectable
+
+from apps.core.lookups import UserLookup
 from apps.core.models import Folder, User, Area, Group, File
 
 
@@ -58,15 +61,19 @@ class UserEditForm(forms.ModelForm):
 
 
 class FolderForm(forms.ModelForm):
-    class Meta:
-        model = Folder
-        fields = ['name', 'permission', 'users']
-
     PERMISSION_FOLDER = (
         ('public', 'Público'),
         ('private', 'Somente eu')
     )
     permission = forms.ChoiceField(choices=PERMISSION_FOLDER)
+    users = selectable.AutoCompleteSelectMultipleField(
+        lookup_class=UserLookup,
+        label='Compartilhar com',
+        required=False,
+    )
+    class Meta:
+        model = Folder
+        fields = ['name', 'permission', 'users']
 
 
 class FileForm(forms.ModelForm):

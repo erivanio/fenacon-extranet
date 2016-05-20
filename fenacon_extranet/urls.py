@@ -19,10 +19,12 @@ urlpatterns = [
         'django.contrib.auth.views.password_reset_confirm',
         name='password_reset_confirm'),
     url(r'^reset/done/$', 'django.contrib.auth.views.password_reset_complete', name='password_reset_complete'),
+
 ]
 
 urlpatterns += patterns('',
     url(r'^media/(.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
     url(r'^static/(.*)$', 'django.views.static.serve', {'document_root': settings.STATIC_ROOT}),
     (r'^ckeditor/', include('ckeditor.urls')),
+    (r'^selectable/', include('selectable.urls')),
 )
