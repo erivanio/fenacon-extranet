@@ -198,7 +198,8 @@ class Folder(models.Model):
     permission = models.CharField(max_length=10, choices=PERMISSION_FOLDER, default='public')
     slug = models.SlugField(max_length=150, blank=True)
     status_link = models.BooleanField(default=True)
-    users = models.ManyToManyField(User, related_name='shares', verbose_name='Compartilhar com', null=True, blank=True)
+    users_read = models.ManyToManyField(User, related_name='shares_readonly', verbose_name='Com permissão de leitura', blank=True)
+    users_write = models.ManyToManyField(User, related_name='shares_write', verbose_name='Com permissão de escrita', blank=True)
 
     class Meta:
         verbose_name = 'Pastas'

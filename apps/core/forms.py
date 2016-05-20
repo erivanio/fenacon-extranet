@@ -66,14 +66,17 @@ class FolderForm(forms.ModelForm):
         ('private', 'Somente eu')
     )
     permission = forms.ChoiceField(choices=PERMISSION_FOLDER)
-    users = selectable.AutoCompleteSelectMultipleField(
+    users_read = selectable.AutoCompleteSelectMultipleField(
         lookup_class=UserLookup,
-        label='Compartilhar com',
+        required=False,
+    )
+    users_write = selectable.AutoCompleteSelectMultipleField(
+        lookup_class=UserLookup,
         required=False,
     )
     class Meta:
         model = Folder
-        fields = ['name', 'permission', 'users']
+        fields = ['name', 'permission', 'users_read', 'users_write']
 
 
 class FileForm(forms.ModelForm):

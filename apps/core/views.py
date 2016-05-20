@@ -485,15 +485,18 @@ def create_folder(request):
         folder.user = request.user
         if request.POST.get('parent'):
             parent = Folder.objects.get(id=int(request.POST.get('parent')))
-            folder.parent = parent
-            folder.save()
-            history = History()
-            history.user = request.user
-            history.created_at = datetime.now()
-            history.icon = 'fa-folder'
-            history.content = '<a href="%s">%s</a> adicionou a pasta "%s" na pasta <a href="%s">%s</a>' % (folder.user.get_absolute_url(), folder.user.get_display_name(), folder.name, parent.get_absolute_url(), parent.name)
-            history.save()
-            messages.success(request, 'Pasta criada com sucesso!')
+            if not request.user in parent.users_read.all():
+                folder.parent = parent
+                folder.save()
+                history = History()
+                history.user = request.user
+                history.created_at = datetime.now()
+                history.icon = 'fa-folder'
+                history.content = '<a href="%s">%s</a> adicionou a pasta "%s" na pasta <a href="%s">%s</a>' % (folder.user.get_absolute_url(), folder.user.get_display_name(), folder.name, parent.get_absolute_url(), parent.name)
+                history.save()
+                messages.success(request, 'Pasta criada com sucesso!')
+            else:
+                messages.warning(request, 'Você não possui permissão de escrita nesta pasta')
             return reverse('detail_folder', kwargs={'slug': parent.slug, 'pk': parent.pk})
         elif request.POST.get('area'):
             area = Area.objects.get(id=int(request.POST.get('area')))

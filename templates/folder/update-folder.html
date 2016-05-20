@@ -54,9 +54,19 @@
                                 <label>Permissão</label>
                                 {{ form.permission|append_attr:"class: form-control" }}
                             </div>
-                            <div class="form-group">
-                                <label>Compartilhar com</label>
-                                {{ form.users|append_attr:"class: form-control" }}
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label>Compartilhar(Somente leitura)</label>
+                                        {{ form.users_read|append_attr:"class: form-control" }}
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label>Compartilhar(Leitura e escrita)</label>
+                                        {{ form.users_write|append_attr:"class: form-control" }}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="box-footer">
@@ -69,7 +79,6 @@
         </div>
     </section>
 {% endblock %}
-{% block extrajs %}
-    {{ form.media.css }}
-    {{ form.media.js }}
+{% block update_folder %}
+
 {% endblock %}
