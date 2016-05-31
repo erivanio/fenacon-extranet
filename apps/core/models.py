@@ -198,7 +198,8 @@ class Folder(models.Model):
     permission = models.CharField(max_length=10, choices=PERMISSION_FOLDER, default='public')
     slug = models.SlugField(max_length=150, blank=True)
     status_link = models.BooleanField(default=True)
-    users = models.ManyToManyField(User, related_name='shares', verbose_name='Compartilhar com', null=True, blank=True)
+    users_read = models.ManyToManyField(User, related_name='shares_readonly', verbose_name='Com permissão de leitura', blank=True)
+    users_write = models.ManyToManyField(User, related_name='shares_write', verbose_name='Com permissão de escrita', blank=True)
 
     class Meta:
         verbose_name = 'Pastas'
@@ -270,3 +271,20 @@ class History(models.Model):
 
     def __unicode__(self):
         return self.content
+
+
+
+class Informative(models.Model):
+    title = models.CharField('Título', max_length=200, null=True, blank=True)
+    content = models.TextField('Conteúdo', null=True, blank=True)
+    status = models.BooleanField(default=True)
+    user = models.ForeignKey(User, null=True, blank=True)
+    created_at = models.DateTimeField(verbose_name='Data de Criação', default=datetime.now)
+
+    class Meta:
+        verbose_name = 'Informativo'
+        verbose_name_plural = 'Informativos'
+        ordering = ['-created_at']
+
+    def __unicode__(self):
+        return self.title

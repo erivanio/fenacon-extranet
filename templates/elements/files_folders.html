@@ -15,7 +15,7 @@
                         <th>Ações</th>
                     </tr>
                     {% for folder in folders %}
-                    {% if request.user == folder.user or request.user.is_superuser or folder.permission == 'public' or request.user in folder.users.all %}
+                    {% if request.user == folder.user or request.user.is_superuser or folder.permission == 'public' or request.user in folder.users_read.all or request.user in folder.users_write.all %}
                     <tr id="div_folder_{{ folder.pk }}">
                         <td><a href="{% url 'detail_folder' folder.slug folder.pk %}"><i class="ion ion-ios-folder"></i></a></td>
                         <td><a href="{% url 'detail_folder' folder.slug folder.pk %}">{{ folder.name }}</a></td>
@@ -23,12 +23,14 @@
                         <td> -- </td>
                         <td>{{ folder.user }}</td>
                         <td>
-                        <a data-toggle="modal" data-target="#modal_compartilhar_{{ folder.pk }}" title="compartilhar" type="button" class="btn btn-xs btn-success"><i class="fa fa-share-square-o"></i></a>
-                        <a href="{% url 'update_folder' folder.slug folder.pk %}" title="editar" type="button" class="btn btn-xs btn-warning"><i class="fa fa-pencil"></i></a>
-                        {% if request.user.is_superuser or request.user|has_remove_permission %}
-                        <a data-toggle="modal" data-target="#modal_pasta_{{ folder.pk }}" title="excluir" type="button" class="btn btn-xs btn-danger" data-widget="remove"><i class="fa fa-trash-o fa-fw"></i>
-                        </a>
-                        {% endif %}</td>
+                        {% if request.user == folder.user or request.user.is_superuser or folder.permission == 'public' or request.user in folder.users_write.all %}
+                            <a data-toggle="modal" data-target="#modal_compartilhar_{{ folder.pk }}" title="compartilhar" type="button" class="btn btn-xs btn-success"><i class="fa fa-share-square-o"></i></a>
+                            <a href="{% url 'update_folder' folder.slug folder.pk %}" title="editar" type="button" class="btn btn-xs btn-warning"><i class="fa fa-pencil"></i></a>
+                            {% if request.user.is_superuser or request.user|has_remove_permission %}
+                                <a data-toggle="modal" data-target="#modal_pasta_{{ folder.pk }}" title="excluir" type="button" class="btn btn-xs btn-danger" data-widget="remove"><i class="fa fa-trash-o fa-fw"></i></a>
+                            {% endif %}
+                        {% endif %}
+                        </td>
                     </tr>
                     <div class="modal fade" id="modal_compartilhar_{{ folder.pk }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                         <div class="modal-dialog" role="document">

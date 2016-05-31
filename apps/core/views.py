@@ -14,8 +14,9 @@ from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import redirect, resolve_url
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView, DetailView, CreateView, UpdateView, DeleteView, ListView
-from apps.core.forms import LoginForm, UserEditForm, UserCreateForm, AreaForm, FolderForm, GroupCreateForm, FileForm
-from apps.core.models import User, Folder, File, Area, Group, History
+from apps.core.forms import LoginForm, UserEditForm, UserCreateForm, AreaForm, FolderForm, GroupCreateForm, FileForm, \
+    InformativeForm
+from apps.core.models import User, Folder, File, Area, Group, History, Informative
 
 
 class LoginView(TemplateView):
@@ -187,6 +188,7 @@ class DashboardDetailView(DetailView):
             context['files'] = File.objects.filter(name__icontains=q,
                                                    folder__isnull=True, status=True).order_by('-name')
         else:
+            context['informatives'] = Informative.objects.filter(status=True).order_by('-created_at')[:3]
             context['folders'] = Folder.objects.filter(user__slug=self.kwargs['slug'],
                                                        parent__isnull=True, status=True).order_by('-name')
             context['files'] = File.objects.filter(user__slug=self.kwargs['slug'],
@@ -342,6 +344,68 @@ class AreaDeleteView(DeleteView):
         return reverse('dashboard', kwargs={'slug': self.request.user.slug})
 
 
+class InformativeCreateView(CreateView):
+    model = Informative
+    form_class = InformativeForm
+    template_name = 'informative/informative_form.html'
+
+    @method_decorator(login_required(login_url='/'))
+    def dispatch(self, *args, **kwargs):
+        return super(InformativeCreateView, self).dispatch(*args, **kwargs)
+
+    def get_success_url(self):
+        messages.success(self.request, 'Informativo criado com sucesso!')
+        return reverse('list_informative')
+
+    def form_valid(self, form):
+        informative = Informative()
+        informative.title = form.cleaned_data['title']
+        informative.content = form.cleaned_data['content']
+        informative.status = form.cleaned_data['status']
+        informative.user = self.request.user
+        informative.save()
+        return HttpResponseRedirect(self.get_success_url())
+
+
+class InformativeUpdateView(UpdateView):
+    model = Informative
+    form_class = InformativeForm
+    template_name = 'informative/informative_form.html'
+
+    @method_decorator(login_required(login_url='/'))
+    def dispatch(self, *args, **kwargs):
+        return super(InformativeUpdateView, self).dispatch(*args, **kwargs)
+
+    def get_success_url(self):
+        messages.success(self.request, 'Informativo modificado com sucesso!')
+        return reverse('list_informative')
+
+
+class InformativeListView(ListView):
+    model = Informative
+    template_name = 'informative/informative_list.html'
+
+    @method_decorator(login_required(login_url='/'))
+    def dispatch(self, *args, **kwargs):
+        return super(InformativeListView, self).dispatch(*args, **kwargs)
+
+
+class InformativeDeleteView(DeleteView):
+    model = Informative
+
+    @method_decorator(login_required(login_url='/'))
+    def dispatch(self, *args, **kwargs):
+        return super(InformativeDeleteView, self).dispatch(*args, **kwargs)
+
+    def get_object(self, queryset=None):
+        obj = super(InformativeDeleteView, self).get_object()
+        return obj
+
+    def get_success_url(self):
+        messages.success(self.request, 'Informativo deletado com sucesso!')
+        return reverse('list_informative')
+
+
 class FolderDeleteView(DeleteView):
     model = Folder
 
@@ -443,15 +507,18 @@ def create_folder(request):
         folder.user = request.user
         if request.POST.get('parent'):
             parent = Folder.objects.get(id=int(request.POST.get('parent')))
-            folder.parent = parent
-            folder.save()
-            history = History()
-            history.user = request.user
-            history.created_at = datetime.now()
-            history.icon = 'fa-folder'
-            history.content = '<a href="%s">%s</a> adicionou a pasta "%s" na pasta <a href="%s">%s</a>' % (folder.user.get_absolute_url(), folder.user.get_display_name(), folder.name, parent.get_absolute_url(), parent.name)
-            history.save()
-            messages.success(request, 'Pasta criada com sucesso!')
+            if not request.user in parent.users_read.all():
+                folder.parent = parent
+                folder.save()
+                history = History()
+                history.user = request.user
+                history.created_at = datetime.now()
+                history.icon = 'fa-folder'
+                history.content = '<a href="%s">%s</a> adicionou a pasta "%s" na pasta <a href="%s">%s</a>' % (folder.user.get_absolute_url(), folder.user.get_display_name(), folder.name, parent.get_absolute_url(), parent.name)
+                history.save()
+                messages.success(request, 'Pasta criada com sucesso!')
+            else:
+                messages.warning(request, 'Você não possui permissão de escrita nesta pasta')
             return reverse('detail_folder', kwargs={'slug': parent.slug, 'pk': parent.pk})
         elif request.POST.get('area'):
             area = Area.objects.get(id=int(request.POST.get('area')))

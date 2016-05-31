@@ -86,6 +86,16 @@ def has_folder_permission(user):
 
 
 @register.filter
+def has_informative_permission(user):
+    if 'criar_informativos' in user.permissions.values_list('slug', flat=True):
+        return True
+    for group in user.groups.all():
+        if 'criar_informativos' in group.permissions.values_list('slug', flat=True):
+            return True
+    return False
+
+
+@register.filter
 def has_remove_permission(user):
     if 'excluir_arquivo_pasta' in user.permissions.values_list('slug', flat=True):
         return True

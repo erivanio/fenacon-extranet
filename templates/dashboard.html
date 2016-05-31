@@ -28,6 +28,36 @@
 
     <!-- Main content -->
     <section class="content">
+    <div class="row">
+        {% for informative in informatives %}
+        <div class="col-md-4">
+          <!-- Box Comment -->
+          <div class="box box-widget">
+            <div class="box-header with-border">
+              <div class="user-block">
+                <span class="username">{{ informative.title }}</span>
+                <span class="description">{{ informative.created_at }}</span>
+              </div>
+              <!-- /.user-block -->
+              <div class="box-tools">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                </button>
+              </div>
+              <!-- /.box-tools -->
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body" style="display: block;">
+              <!-- post text -->
+              {{ informative.content }}
+
+            </div>
+
+          </div>
+          <!-- /.box -->
+        </div>
+        <!-- /.col -->
+        {% endfor %}
+      </div>
     {% include 'elements/files_folders.html' %}
     </section>
 {% endblock %}

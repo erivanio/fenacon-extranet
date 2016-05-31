@@ -1,0 +1,62 @@
+{% extends 'elements/base.html' %}
+{% load widget_tweaks %}
+{% block title %}{% if object %}Editar informativo{% else %}Adicionar informativo{% endif %}{% endblock %}
+{% block content %}
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            {% if object %}Editar informativo{% else %}Adicionar informativo{% endif %}
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-clock-o"></i> Início</a></li>
+            {% if object %}
+                <li class="active">Editar informativo</li>
+            {% else %}
+                <li class="active">Adicionar informativo</li>
+            {% endif %}
+        </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+
+        <!-- row -->
+        <div class="row">
+            <div class="col-md-12">
+                {% if messages %}
+                      {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                              {{ message }}
+                        </div>
+                      {% endfor %}
+                  {% endif %}
+                <div class="box box-info">
+                    <!-- /.box-header -->
+                    {{ form.non_field_errors }}
+                    <form role="form" method="POST" action="{% if object %}{% url 'update_informative' object.pk %}{% else %}{% url 'create_informative' %}{% endif %}">
+                        <div class="box-body">
+                            {% csrf_token %}
+                            <!-- text input -->
+                            <div class="form-group">
+                                <label>Título</label>
+                                {{ form.title|append_attr:"class: form-control" }}
+                            </div>
+                            <div class="form-group">
+                                <label>Conteúdo</label>
+                                {{ form.content|append_attr:"class: form-control" }}
+                            </div>
+                            <div class="form-group">
+                                <label>Mostrar</label>
+                                <p>{{ form.status}}</p>
+                            </div>
+                        </div>
+                        <div class="box-footer">
+                            <button type="submit" class="btn btn-primary">Salvar</button>
+                        </div>
+                    </form>
+                    <!-- /.box-body -->
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

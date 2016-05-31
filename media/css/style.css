@@ -1,0 +1,10 @@
+ul.selectable-deck li.selectable-deck-item{
+    margin: 10px !important;
+    list-style-type: none;
+}
+
+.user-block .username,
+.user-block .description{
+  display: block;
+  margin-left: 0;
+}
