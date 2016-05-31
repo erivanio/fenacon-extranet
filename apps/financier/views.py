@@ -71,6 +71,10 @@ class TravelRefundUpdateView(UpdateView):
     form_class = TravelRefundForm
     template_name = 'financier/create_refund.html'
 
+    @method_decorator(login_required(login_url='/'))
+    def dispatch(self, *args, **kwargs):
+        return super(TravelRefundUpdateView, self).dispatch(*args, **kwargs)
+
     def form_valid(self, form):
         self.object = form.save(commit=False)
         if 'status' in form.changed_data and self.object.status == '2':
