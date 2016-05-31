@@ -41,8 +41,11 @@
         </div>
       {% endfor %}
   {% endif %}
-    <form action="{% url 'login' %}" method="post">
-    {% csrf_token %}
+    <form action="{% url 'login' %}" method="post" >
+      {% csrf_token %}
+      {% if request.GET.next %}
+      <input type="hidden" name="next" value="{{ request.GET.next }}">
+      {% endif %}
       <div class="form-group has-feedback">
         <input type="text" id="id_name" name="name" class="form-control" required placeholder="Usuário">
         <span class="glyphicon glyphicon-user form-control-feedback"></span>

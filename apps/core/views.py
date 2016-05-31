@@ -35,7 +35,7 @@ class LoginView(TemplateView):
 
     def post(self, request):
         form = LoginForm(request.POST)
-
+        next_page = request.POST.get('next')
         if form.is_valid():
             if request.POST.has_key('remember_me'):
                 request.session.set_expiry(29030400)
@@ -43,7 +43,10 @@ class LoginView(TemplateView):
             if u is not None:
                 if u.is_active:
                     login(request, u)
-                    return redirect('dashboard', slug=u.slug)
+                    if next_page:
+                        return HttpResponseRedirect(next_page)
+                    else:
+                        return redirect('dashboard', slug=u.slug)
             messages.error(self.request, 'Usuário ou senha inválidos')
 
         return redirect('login')
