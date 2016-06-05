@@ -17,10 +17,10 @@ def len_files(folder):
 
 @register.assignment_tag()
 def has_area(user, area):
-    if area in user.areas.all():
+    if area in user.areas.all() or area in user.areas_read.all():
         return True
     for group in user.groups.all():
-        if area in group.areas.all():
+        if area in group.areas.all() or area in group.areas_read.all():
             return True
     return False
 

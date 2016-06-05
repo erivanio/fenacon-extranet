@@ -60,6 +60,7 @@ class Group(models.Model):
     slug = models.SlugField(max_length=150, blank=True)
     permissions = models.ManyToManyField(Permission, verbose_name="Permissões", blank=True)
     areas = models.ManyToManyField('core.Area', verbose_name="areas", blank=True)
+    areas_read = models.ManyToManyField('core.Area', related_name="group_onlyread_areas", verbose_name="areas", blank=True)
 
     class Meta:
         verbose_name = 'Grupo'
@@ -100,6 +101,7 @@ class User(AbstractBaseUser):
     permissions = models.ManyToManyField(Permission, verbose_name="Permissões", blank=True)
     groups = models.ManyToManyField(Group, verbose_name="Grupos", blank=True)
     areas = models.ManyToManyField('core.Area', related_name="permission_areas", verbose_name="areas", blank=True)
+    areas_read = models.ManyToManyField('core.Area', related_name="onlyread_areas", verbose_name="areas", blank=True)
     objects = UserManager()
 
     USERNAME_FIELD = 'username'

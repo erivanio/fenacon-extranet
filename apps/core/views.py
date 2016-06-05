@@ -522,19 +522,22 @@ def create_folder(request):
                 messages.success(request, 'Pasta criada com sucesso!')
             else:
                 messages.warning(request, 'Você não possui permissão de escrita nesta pasta')
-            return reverse('detail_folder', kwargs={'slug': parent.slug, 'pk': parent.pk})
+            return reverse('detail_folder', request, kwargs={'slug': parent.slug, 'pk': parent.pk})
         elif request.POST.get('area'):
             area = Area.objects.get(id=int(request.POST.get('area')))
-            folder.area = area
-            folder.save()
-            history = History()
-            history.user = request.user
-            history.created_at = datetime.now()
-            history.icon = 'fa-folder'
-            history.content = '<a href="%s">%s</a> adicionou a pasta "%s" em <a href="%s">%s</a>' % (folder.user.get_absolute_url(), folder.user.get_display_name(), folder.name, area.get_absolute_url(), area.name)
-            history.save()
-            messages.success(request, 'Pasta criada com sucesso!')
-            return redirect(reverse('detail_area', kwargs={'slug': area.slug, 'pk': area.pk}))
+            if area in request.user.areas.all() or request.user.is_superuser:
+                folder.area = area
+                folder.save()
+                history = History()
+                history.user = request.user
+                history.created_at = datetime.now()
+                history.icon = 'fa-folder'
+                history.content = '<a href="%s">%s</a> adicionou a pasta "%s" em <a href="%s">%s</a>' % (folder.user.get_absolute_url(), folder.user.get_display_name(), folder.name, area.get_absolute_url(), area.name)
+                history.save()
+                messages.success(request, 'Pasta criada com sucesso!')
+            else:
+                messages.warning(request, 'Você não possui permissão de escrita nesta área')
+            return redirect(reverse('detail_area',request, kwargs={'slug': area.slug, 'pk': area.pk}))
         else:
             folder.save()
             history = History()
@@ -544,7 +547,7 @@ def create_folder(request):
             history.content = '<a href="%s">%s</a> adicionou a pasta "%s"' % (folder.user.get_absolute_url(), folder.user.get_display_name(), folder.name)
             history.save()
             messages.success(request, 'Pasta criada com sucesso!')
-            return reverse('dashboard', kwargs={'slug': request.user.slug})
+            return reverse('dashboard', request, kwargs={'slug': request.user.slug})
 
 
 def create_file(request):
@@ -564,19 +567,22 @@ def create_file(request):
             history.content = '<a href="%s">%s</a> adicionou o arquivo "%s" a pasta <a href="%s">%s</a>' % (file.user.get_absolute_url(), file.user.get_display_name(), file.name, folder.get_absolute_url(), folder.name)
             history.save()
             messages.success(request, 'Arquivo adicionado com sucesso!')
-            return reverse('detail_folder', kwargs={'slug': folder.slug, 'pk': folder.pk})
+            return reverse('detail_folder', request, kwargs={'slug': folder.slug, 'pk': folder.pk})
         elif request.POST.get('area'):
             area = Area.objects.get(id=int(request.POST.get('area')))
-            file.area = area
-            file.save()
-            history = History()
-            history.user = request.user
-            history.created_at = datetime.now()
-            history.icon = 'fa-file'
-            history.content = '<a href="%s">%s</a> adicionou o arquivo "%s" em <a href="%s">%s</a>' % (file.user.get_absolute_url(), file.user.get_display_name(), file.name, area.get_absolute_url(), area.name)
-            history.save()
-            messages.success(request, 'Arquivo adicionado com sucesso!')
-            return reverse('detail_area', kwargs={'slug': area.slug, 'pk': area.pk})
+            if area in request.user.areas.all() or request.user.is_superuser:
+                file.area = area
+                file.save()
+                history = History()
+                history.user = request.user
+                history.created_at = datetime.now()
+                history.icon = 'fa-file'
+                history.content = '<a href="%s">%s</a> adicionou o arquivo "%s" em <a href="%s">%s</a>' % (file.user.get_absolute_url(), file.user.get_display_name(), file.name, area.get_absolute_url(), area.name)
+                history.save()
+                messages.success(request, 'Arquivo adicionado com sucesso!')
+            else:
+                messages.warning(request, 'Você não possui permissão de escrita nesta área')
+            return reverse('detail_area', request, kwargs={'slug': area.slug, 'pk': area.pk})
         else:
             file.save()
             history = History()
@@ -586,7 +592,7 @@ def create_file(request):
             history.content = '<a href="%s">%s</a> adicionou o arquivo "%s"' % (file.user.get_absolute_url(), file.user.get_display_name(), file.name)
             history.save()
             messages.success(request, 'Arquivo adicionado com sucesso!')
-            return reverse('dashboard', kwargs={'slug': request.user.slug})
+            return reverse('dashboard', request, kwargs={'slug': request.user.slug})
 
 
 class PasswordResetUnregister(TemplateView):

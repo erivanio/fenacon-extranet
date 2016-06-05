@@ -35,8 +35,12 @@
                                 {{ form.permissions|append_attr:"class: form-control"}}
                             </div>
                             <div class="form-group">
-                                <label>Acesso a área</label>
+                                <label>Permissão de leitura e escrita as áreas</label>
                                 {{ form.areas|append_attr:"class: form-control" }}
+                            </div>
+                            <div class="form-group">
+                                <label>Permissão de somente leitura as áreas</label>
+                                {{ form.areas_read|append_attr:"class: form-control" }}
                             </div>
                         </div>
                         <div class="box-footer">

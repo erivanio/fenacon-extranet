@@ -16,7 +16,7 @@ class LoginForm(forms.Form):
 class GroupCreateForm(forms.ModelForm):
     class Meta:
         model = Group
-        fields = ('name', 'permissions', 'areas')
+        fields = ('name', 'permissions', 'areas', 'areas_read')
 
 
 class UserCreateForm(forms.ModelForm):
@@ -24,7 +24,7 @@ class UserCreateForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'expirated_date', 'is_superuser', 'receive_email', 'first_name', 'last_name', 'telephone', 'job', 'groups', 'permissions', 'areas')
+        fields = ('username', 'email', 'expirated_date', 'is_superuser', 'receive_email', 'first_name', 'last_name', 'telephone', 'job', 'groups', 'permissions', 'areas', 'areas_read')
 
     def clean(self):
         password1 = self.data.get("password1")
@@ -57,7 +57,7 @@ class UserCreateForm(forms.ModelForm):
 class UserEditForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['email', 'photo', 'telephone', 'first_name', 'last_name', 'job', 'expirated_date', 'receive_email', 'is_active', 'is_superuser', 'groups', 'permissions', 'areas']
+        fields = ['email', 'photo', 'telephone', 'first_name', 'last_name', 'job', 'expirated_date', 'receive_email', 'is_active', 'is_superuser', 'groups', 'permissions', 'areas', 'areas_read']
 
 
 class FolderForm(forms.ModelForm):
