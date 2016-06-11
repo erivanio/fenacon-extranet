@@ -2,6 +2,29 @@
 {% load widget_tweaks %}
 {% load utils %}
 {% block title %}Solicitações de reembolso{% endblock %}
+{% block extracss %}
+<style type="text/css">
+  @media screen {
+    #printSection {
+        display: none;
+    }
+  }
+
+  @media print {
+    body * {
+      visibility:hidden;
+    }
+    #printSection, #printSection * {
+      visibility:visible;
+    }
+    #printSection {
+      position:absolute;
+      left:0;
+      top:0;
+    }
+  }
+</style>  
+{% endblock extracss %}
 {% block content %}
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -87,7 +110,7 @@
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title" id="myModalLabel">Solicitação de reembolso</h4>
                       </div>
-                      <div class="modal-body">
+                      <div id="body_refund_{{ refund.pk }}" class="modal-body">
                           <div class="row">
                               <div class="col-md-12">
                                   <div class="col-md-4">
@@ -167,16 +190,16 @@
                           <div class="row">
                               <div class="col-md-12">
                                   <div class="col-md-3">
-                                        <p><b>Locomoção:</b></p> <p>R$ {{ refund.expenses_locomotion }}</p>
+                                        <p><b>Locomoção:</b></p> <p>R$ {{ refund.expenses_locomotion|default_if_none:"0,0" }}</p>
                                   </div>
                                   <div class="col-md-3">
-                                        <p><b>Alimentação:</b></p> <p>R$ {{ refund.meal_expenses }}</p>
+                                        <p><b>Alimentação:</b></p> <p>R$ {{ refund.meal_expenses|default_if_none:"0,0" }}</p>
                                   </div>
                                   <div class="col-md-3">
-                                        <p><b>Diária:</b></p> <p>R$ {{ refund.daily }}</p>
+                                        <p><b>Diária:</b></p> <p>R$ {{ refund.daily|default_if_none:"0,0" }}</p>
                                   </div>
                                   <div class="col-md-3">
-                                        <p><b>Quilometragem:</b></p> <p>R${{ refund.mileage }}</p>
+                                        <p><b>Quilometragem:</b></p> <p>R$ {{ refund.mileage|default_if_none:"0,0" }}</p>
                                   </div>
                               </div>
                           </div>
@@ -192,11 +215,34 @@
                           </div>
                       </div>
                       <div class="modal-footer">
+                        <button  id="btnPrint-{{ refund.pk }}" type="button" class="btn btn-info" data-dismiss="modal">Imprimir</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
                       </div>
                     </div>
                   </div>
                 </div>
+                <script type="text/javascript">
+                  document.getElementById("btnPrint-{{ refund.pk }}").onclick = function () {
+                      printElement(document.getElementById("body_refund_{{ refund.pk }}"));
+                      window.print();
+                  }
+
+                  function printElement(elem) {
+                      var domClone = elem.cloneNode(true);
+                      
+                      var $printSection = document.getElementById("printSection");
+                      
+                      if (!$printSection) {
+                          var $printSection = document.createElement("div");
+                          $printSection.id = "printSection";
+                          document.body.appendChild($printSection);
+                      }
+                      
+                      $printSection.innerHTML = "";
+                      
+                      $printSection.appendChild(domClone);
+                  }
+                </script>
                 {% endfor %}
               </tbody></table>
             </div>
