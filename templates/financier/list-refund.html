@@ -50,9 +50,36 @@
                     {% if request.user.is_superuser or request.user|has_status_refund_permission or request.user == refund.beneficiary or request.user|has_approve_refund_permission %}
                     <a href="{% url 'update_refund' refund.pk %}" class="btn btn-xs btn-flat btn-warning"><i class="fa fa-pencil"></i></a>
                     {% endif %}
+                    {% if request.user.is_superuser or request.user|has_remove_refund_permission %}
+                    <a data-toggle="modal" data-target="#modal_solicitacao_{{ refund.pk }}" title="excluir" type="button" class="btn btn-xs btn-danger" data-widget="remove"><i class="fa fa fa-trash-o fa-fw"></i>
+                    </a>                            
+                    {% endif %}     
                 </td>
                 </tr>
                 <!-- Modal -->
+                <div class="modal fade" id="modal_solicitacao_{{ refund.pk }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                        aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="exampleModalLabel">Excluir solicitação</h4>
+                            </div>
+                            <div class="modal-body">
+                                    <div class="box-body">
+                                        Tem certeza que deseja excluir permanentemente esta solicitação?
+                                    </div>
+                            </div>
+                            <div class="modal-footer">
+                                <form method="POST" action="{% url 'delete_refund' refund.pk %}">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Não</button>
+                                    {% csrf_token %}
+                                    <input type="submit" id="id_btn" value="Sim" class="btn btn-primary">
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="modal fade" id="refund_{{ refund.pk }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                   <div class="modal-dialog" role="document">
                     <div class="modal-content">

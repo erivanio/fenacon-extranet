@@ -6,7 +6,7 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.template.loader import render_to_string
 from django.utils.decorators import method_decorator
-from django.views.generic import CreateView, ListView, UpdateView
+from django.views.generic import CreateView, ListView, UpdateView, DeleteView
 from apps.core.models import User
 
 from apps.financier.forms import TravelRefundForm
@@ -109,3 +109,21 @@ class TravelRefundUpdateView(UpdateView):
     def get_success_url(self):
         messages.success(self.request, 'Solicitação modificada com sucesso!')
         return reverse('list_refund')
+
+
+class TravelRefundDeleteView(DeleteView):
+    model = TravelRefund
+
+    @method_decorator(login_required(login_url='/'))
+    def dispatch(self, *args, **kwargs):
+        return super(TravelRefundDeleteView, self).dispatch(*args, **kwargs)
+
+    def get_object(self, queryset=None):
+        obj = super(TravelRefundDeleteView, self).get_object()
+        return obj
+
+    def get_success_url(self):
+        messages.success(self.request, 'Solicitação deletada com sucesso!')
+        return reverse('list_refund')
+
+
