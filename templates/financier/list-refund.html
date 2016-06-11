@@ -13,14 +13,19 @@
   @media print {
     body * {
       visibility:hidden;
+      display:none;
     }
     #printSection, #printSection * {
       visibility:visible;
+      display:block;
     }
     #printSection {
       position:absolute;
       left:0;
       top:0;
+    }
+    #printSection:last-child {
+         page-break-after: avoid;
     }
   }
 </style>  
