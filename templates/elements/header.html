@@ -42,7 +42,6 @@
                                 </li>
                                 {% endif %}
                                 <!-- end message -->
-                                {% if request.user.is_superuser or request.user|has_folder_permission %}
                                 <li>
                                     <a data-toggle="modal" data-target="#modal_pasta">
                                         <div class="pull-left">
@@ -53,8 +52,6 @@
                                         </h4>
                                     </a>
                                 </li>
-                                {% endif %}
-                                {% if user.is_superuser or user|has_file_permission %}
                                 <li>
                                     <a  data-toggle="modal" data-target="#modal_arquivo">
                                         <div class="pull-left">
@@ -65,7 +62,6 @@
                                         </h4>
                                     </a>
                                 </li>
-                                {% endif %}
                             </ul>
                         </li>
                     </ul>

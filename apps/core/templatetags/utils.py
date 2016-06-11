@@ -65,24 +65,24 @@ def has_status_refund_permission(user):
     return False
 
 
-@register.filter
-def has_file_permission(user):
-    if 'subir_arquivo' in user.permissions.values_list('slug', flat=True):
-        return True
-    for group in user.groups.all():
-        if 'subir_arquivo' in group.permissions.values_list('slug', flat=True):
-            return True
-    return False
+# @register.filter
+# def has_file_permission(user):
+#     if 'subir_arquivo' in user.permissions.values_list('slug', flat=True):
+#         return True
+#     for group in user.groups.all():
+#         if 'subir_arquivo' in group.permissions.values_list('slug', flat=True):
+#             return True
+#     return False
 
 
-@register.filter
-def has_folder_permission(user):
-    if 'criar_pasta' in user.permissions.values_list('slug', flat=True):
-        return True
-    for group in user.groups.all():
-        if 'criar_pasta' in group.permissions.values_list('slug', flat=True):
-            return True
-    return False
+# @register.filter
+# def has_folder_permission(user):
+#     if 'criar_pasta' in user.permissions.values_list('slug', flat=True):
+#         return True
+#     for group in user.groups.all():
+#         if 'criar_pasta' in group.permissions.values_list('slug', flat=True):
+#             return True
+#     return False
 
 
 @register.filter
@@ -95,14 +95,14 @@ def has_informative_permission(user):
     return False
 
 
-@register.filter
-def has_remove_permission(user):
-    if 'excluir_arquivo_pasta' in user.permissions.values_list('slug', flat=True):
-        return True
-    for group in user.groups.all():
-        if 'excluir_arquivo_pasta' in group.permissions.values_list('slug', flat=True):
-            return True
-    return False
+# @register.filter
+# def has_remove_permission(user):
+#     if 'excluir_arquivo_pasta' in user.permissions.values_list('slug', flat=True):
+#         return True
+#     for group in user.groups.all():
+#         if 'excluir_arquivo_pasta' in group.permissions.values_list('slug', flat=True):
+#             return True
+#     return False
 
 
 @register.filter

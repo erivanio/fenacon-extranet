@@ -38,15 +38,11 @@
                                 <td>{{ folder.deleted_at }}</td>
                                 <td> -- </td>
                                 <td>
-                                {% if request.user.is_superuser or request.user|has_folder_permission %}
                                 <a href="{% url 'update_folder' folder.slug folder.pk %}" title="editar" type="button" class="btn btn-xs btn-flat btn-warning"><i class="fa fa-pencil"></i></a>
-                                {% endif %}
-                                {% if request.user.is_superuser or request.user|has_remove_permission %}
                                 <a data-toggle="modal" data-target="#restaurar_pasta_{{ folder.pk }}" title="restaurar" type="button" class="btn btn-xs btn-flat btn-success" data-widget="remove"><i class="fa fa-rotate-left"></i>
                                 </a>
                                 <a data-toggle="modal" data-target="#modal_pasta_{{ folder.pk }}" title="excluir" type="button" class="btn btn-xs btn-flat btn-danger" data-widget="remove"><i class="fa fa-trash-o fa-fw"></i>
-                                </a>
-                                {% endif %}</td>
+                                </a></td>
                             </tr>
                             <div class="modal fade" id="restaurar_pasta_{{ folder.pk }}" tabindex="-1" role="dialog" aria-labelledby="restoreModalLabel">
                                 <div class="modal-dialog" role="document">
@@ -103,12 +99,10 @@
                                 <td>{{ file.file.size|filesizeformat }}</td>
                                 <td>
                                 <a href="{{ MEDIA_URL }}{{ file.file }}" title="Download" class="btn btn-xs btn-flat btn-info" download><i class="glyphicon glyphicon-download-alt"></i></a>
-                                {% if request.user.is_superuser or request.user|has_remove_permission %}
                                 <a data-toggle="modal" data-target="#restaurar_arquivo_{{ file.pk }}" title="restaurar" type="button" class="btn btn-xs btn-flat btn-success" data-widget="remove"><i class="fa fa-rotate-left"></i>
                                 </a>
                                 <a data-toggle="modal" data-target="#modal_arquivo_{{ file.pk }}" title="excluir" type="button" class="btn btn-xs btn-flat btn-danger" data-widget="remove"><i class="fa fa fa-trash-o fa-fw"></i>
                                 </a>
-                                {% endif %}
                                 </td>
                             </tr>
                             <div class="modal fade" id="restaurar_arquivo_{{ file.pk }}" tabindex="-1" role="dialog" aria-labelledby="restoreFileModalLabel">
