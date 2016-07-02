@@ -136,10 +136,16 @@
                               </div>
                           </div>
                       {% if refund.status == '4' %}
-                            <div class="row">s
+                            <div class="row">
                                 <div class="col-md-12">
-                                    {% if refund.reason %}<p><b>Motivo da rejeição:</b>{{ refund.reason }}</p>
-                                    {% elif refund.observation %}<p><b>Observação:</b>{{ refund.observation }}</p>{% endif %}
+                                    {% if refund.reason %}<p><b>Motivo da rejeição:</b>{{ refund.reason }}</p>{% endif %}
+                                </div>
+                            </div>
+                      {% endif %}
+                      {% if refund.status == '3' %}
+                            <div class="row">
+                                <div class="col-md-12">
+                                    {% if refund.observation %}<p><b>Observação:</b>{{ refund.observation }}</p>{% endif %}
                                 </div>
                             </div>
                       {% endif %}
@@ -220,7 +226,8 @@
                           </div>
                       </div>
                       <div class="modal-footer">
-                        <button  id="btnPrint-{{ refund.pk }}" type="button" class="btn btn-info" data-dismiss="modal">Imprimir</button>
+                        <a href="{% url 'refund_pdf' refund.pk %}" class="btn btn-info">Imprimir</a>
+                        {# <button  id="btnPrint-{{ refund.pk }}" type="button" class="btn btn-info" data-dismiss="modal">Imprimir</button> #}
                         <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
                       </div>
                     </div>

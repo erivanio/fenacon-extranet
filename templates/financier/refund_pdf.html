@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head lang="pt-BR">
+    <meta charset="UTF-8">
+    <title></title>
+
+    <style>
+
+            .page-break {
+                page-break-after: always;
+            }
+
+            .text-left {
+                text-align: left;
+            }
+
+            .text-right {
+                text-align: right;
+            }
+
+            .text-center {
+                text-align: center;
+            }
+
+            .header {
+                color: #000;
+                font-weight: bold;
+            }
+
+            .tr-title {
+                border-bottom: 1px solid #ddd;
+                font-size: 15px;
+                padding-top: 15px;
+            }
+
+
+            @page {
+                size: a4 portrait;
+
+                @frame header_content_title {
+                    -pdf-frame-content: header_content_title;
+                    left: 50pt; width: 512pt; top: 75pt; height: 25pt;
+                }
+
+                @frame content_frame {
+                    left: 50pt; width: 512pt; top: 110pt; height: 687pt;
+                }
+
+                @frame page_info {
+                    -pdf-frame-content: page_info;
+                    left: 50pt; width: 512pt; top: 785pt; height: 20pt;
+                }
+            }
+        </style>
+
+</head>
+<body>
+        <!-- HEADER -->
+        <div class="header">
+            <div id="header_content_title" class="text-center">
+                <h1 style="font-size: 20px;">Solicitação de reembolso</h1>
+            </div>
+
+        </div>
+        <!-- HEADER -->
+
+        <!-- CONTENT -->
+            <div id="content_frame">
+
+
+                    <table cellpadding="0" cellspacing="0" style="padding-top: 5px; width: 1000px; font-size: 12px;">
+                        <tr>
+                             <td colspan="4">
+                                <p><strong>Beneficiário:</strong> {{ refund.beneficiary.get_display_name }}</p>
+                             </td>
+                         </tr>
+                         <tr>    
+                             <td>
+                                <p><strong>Status:</strong> {% if refund.status == '1' %}Aguardando
+                                                           {% elif refund.status == '2' %}Aprovada
+                                                           {% elif refund.status == '3' %}Pago
+                                                           {% elif refund.status == '4' %}Rejeitado{% endif %}</p>
+                             </td>
+                         </tr>
+                         {% if refund.approved_by %}
+                         <tr> 
+                              <td colspan="4">
+                                <p><strong>Aprovador por: </strong>{{ refund.approved_by.get_display_name }}</p>
+                             </td>
+                         </tr> 
+                         {% endif %}
+                         {% if refund.status == '4' and refund.reason %}
+                         <tr>
+                             <td colspan="4">
+                                <p><strong>Motivo rejeição: </strong>{{ refund.reason }}</p>
+                             </td>
+                         </tr>
+                         {% endif %}
+                         {% if refund.status == '3'  and refund.observation %}
+                         <tr>
+                             <td colspan="4">
+                                <p><strong>Observação: </strong>{{ refund.observation }}</p>
+                             </td>
+                         </tr>
+                         {% endif %}
+                        </tr>
+                        <tr class="tr-title">
+                            <td>
+                                <p><strong>Ida</strong></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <p><strong>Data:</strong> {{ refund.going_date }}</p>
+                            </td>
+                            <td colspan="2">
+                                <p><strong>Empresa:</strong> {{ refund.going_enterprise }}</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <p><strong>Hora de saída:</strong> {{ refund.going_exit_time }}</p>
+                            </td>
+                            <td colspan="2">
+                                <p><strong>Hora de chegada:</strong> {{ refund.going_arrival_time }}</p>
+                            </td>
+                        </tr>
+                        <tr class="tr-title">
+                            <td>
+                                <p><strong>Volta</strong></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <p><strong>Data:</strong> {{ refund.back_date }}</p>
+                            </td>
+                            <td colspan="2">
+                                <p><strong>Empresa:</strong> {{ refund.back_enterprise }}</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <p><strong>Hora de saída:</strong> {{ refund.back_exit_time }}</p>
+                            </td>
+                            <td colspan="2">
+                                <p><strong>Hora de chegada:</strong> {{ refund.back_arrival_time }}</p>
+                            </td>
+                        </tr>
+                        <tr class="tr-title">
+                            <td>
+                                <p><strong>Despesas</strong></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p><strong>Locomoção: </strong>R$ {{ refund.expenses_locomotion|default_if_none:"0,0" }}</p>
+                            </td>
+                            <td>
+                                <p><strong>Alimentação: </strong>R$ {{ refund.meal_expenses|default_if_none:"0,0" }}</p>
+                            </td>
+                            <td>
+                                <p><strong>Diária: </strong>R$ {{ refund.daily|default_if_none:"0,0" }}</p>
+                            </td>
+                            <td>
+                                <p><strong>Quilometragem: </strong>R$ {{ refund.mileage|default_if_none:"0,0" }}</p>
+                            </td>
+                        </tr>
+                        <tr class="tr-title">
+                            <td>
+                                <p><strong>Histórico</strong></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <p>{{ refund.history }}</p>
+                            </td>
+                        </tr>
+
+                    </table>
+
+            </div>
+        <!-- CONTENT -->
+
+</body>
+</html>

@@ -44,6 +44,7 @@ TEMPLATE_CONTEXT_PROCESSORS = TCP + (
 )
 
 INSTALLED_APPS = (
+    'easy_pdf',
     'easy_thumbnails',
     'image_cropping',
     'widget_tweaks',

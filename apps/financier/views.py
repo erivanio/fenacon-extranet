@@ -8,9 +8,22 @@ from django.template.loader import render_to_string
 from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView
 from apps.core.models import User
+from easy_pdf.views import PDFTemplateView
 
 from apps.financier.forms import TravelRefundForm
 from apps.financier.models import TravelRefund
+
+
+class TravelRefundPDFView(PDFTemplateView):
+    model = TravelRefund
+    template_name = "financier/refund_pdf.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(TravelRefundPDFView, self).get_context_data(**kwargs)
+        if 'pk' in self.kwargs:
+            context['refund'] = TravelRefund.objects.get(pk=self.kwargs['pk'])
+
+        return context
 
 
 class TravelRefundCreateView(CreateView):
@@ -125,5 +138,3 @@ class TravelRefundDeleteView(DeleteView):
     def get_success_url(self):
         messages.success(self.request, 'Solicitação deletada com sucesso!')
         return reverse('list_refund')
-
-
