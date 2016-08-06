@@ -78,6 +78,15 @@ class TravelRefundListView(ListView):
     def dispatch(self, *args, **kwargs):
         return super(TravelRefundListView, self).dispatch(*args, **kwargs)
 
+    def get_queryset(self):
+        object_list = TravelRefund.objects.none()
+        if self.request.user.is_superuser or self.request.user.permissions.filter(slug='editar_estado_solicitacao_reembolso').exists():
+            object_list = TravelRefund.objects.all()
+        else:
+            object_list = TravelRefund.objects.filter(beneficiary=self.request.user)
+
+        return object_list
+
 
 class TravelRefundUpdateView(UpdateView):
     model = TravelRefund
