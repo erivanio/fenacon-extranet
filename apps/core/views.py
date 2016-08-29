@@ -156,8 +156,12 @@ class UserEditView(UpdateView):
         return obj
 
     def form_valid(self, form):
-        if not self.request.user.is_superuser and 'areas' in form.changed_data or 'is_active' in form.changed_data or 'is_superuser' in form.changed_data or 'groups' in form.changed_data or 'areas_read' in form.changed_data or 'receive_email' in form.changed_data or 'permissions' in form.changed_data or 'expirated_date' in form.changed_data :
-            raise Http404
+        if not self.request.user.is_superuser:
+            superuser_fields = ['is_active', 'is_superuser', 'groups', 'areas_read',
+                                'receive_email', 'permissions', 'expirated_date']
+            for field in superuser_fields:
+                if field in form.changed_data:
+                    raise Http404
         form.save()
         history = History()
         history.user = self.request.user
