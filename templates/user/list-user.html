@@ -26,6 +26,7 @@
                         <div class="widget-user-header bg-aqua-active">
                             {% if request.user.is_superuser %}
                             <div class="box-tools pull-right">
+                                <a href="{% url 'user_actions' user.slug %}" title='ações' class="btn btn-xs btn-success"><i class="fa fa-file-text-o"></i></a>
                                 <a href="{% url 'edit_user' user.slug %}" title='editar' class="btn btn-xs btn-warning"><i class="fa fa-pencil"></i></a>
                                 <a data-toggle="modal" data-target="#modal_user_{{ user.pk }}" data-widget="remove" title='excluir' class="btn btn-xs btn-danger"><i class="fa fa-trash-o fa-fw"></i></a>
                             </div>

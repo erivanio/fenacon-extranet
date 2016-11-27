@@ -508,6 +508,19 @@ class MyActionsListView(ListView):
         return object_list
 
 
+class UserActionsListView(ListView):
+    model = History
+    template_name = 'history.html'
+
+    @method_decorator(login_required(login_url='/'))
+    def dispatch(self, *args, **kwargs):
+        return super(UserActionsListView, self).dispatch(*args, **kwargs)
+
+    def get_queryset(self):
+        object_list = History.objects.filter(user__slug=self.kwargs['slug'])
+        return object_list
+
+
 def create_folder(request):
     if request.method == 'POST':
         folder = Folder()
