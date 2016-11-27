@@ -361,7 +361,28 @@
                             {% endif %}
                         </div>
                         <div class="box-footer">
-                            <button type="submit" class="btn btn-primary">Salvar</button>
+                            <button type="button" data-toggle="modal" data-target="#modal_confirma_solicitacao" class="btn btn-primary">Salvar</button>
+                        </div>
+                        <!-- Modal -->
+                        <div class="modal fade" id="modal_confirma_solicitacao" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                                aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title" id="exampleModalLabel">Enviar solicitação</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                            <div class="box-body">
+                                                Tem certeza que deseja enviar esta solicitação?
+                                            </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Não</button>
+                                        <input type="submit" id="id_btn" value="Sim" class="btn btn-primary">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </form>
                     <!-- /.box-body -->
