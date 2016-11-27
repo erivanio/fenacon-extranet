@@ -72,6 +72,10 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
+SESSION_COOKIE_AGE = 1800
+
+SESSION_SAVE_EVERY_REQUEST = True
+
 ROOT_URLCONF = 'fenacon_extranet.urls'
 
 WSGI_APPLICATION = 'fenacon_extranet.wsgi.application'
